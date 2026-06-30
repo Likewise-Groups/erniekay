@@ -6,30 +6,86 @@ const makeupServices = [
   { icon: "school",          label: "Makeup Consultation & Class",  price: "$180" },
 ];
 
+const gallery = [
+  { src: "/makeup.jpg",  alt: "Soft glam editorial makeup look" },
+  { src: "/makeup2.jpg", alt: "Bold occasion makeup with curls" },
+  { src: "/makeUP3.jpg", alt: "Smiling client in full glam makeover" },
+  { src: "/makeup4.jpg", alt: "Bridal soft glam with sculpted eyes" },
+  { src: "/makeup5.jpg", alt: "Traditional bridal makeup and gele" },
+];
+
 export default function MakeupSection() {
   return (
-    <section id="makeup" className="bg-midnight-ink py-[64px] md:py-[112px] text-on-primary">
+    <section id="makeup" className="bg-midnight-ink py-[64px] md:py-[112px] text-on-primary overflow-hidden">
       <div className="max-w-[1280px] mx-auto px-6 md:px-[64px]">
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-6 items-center">
-          {/* Copy */}
-          <div className="lg:col-span-4">
-            <h2 className="font-[family-name:var(--font-eb-garamond)] text-[32px] md:text-[48px] leading-[40px] md:leading-[56px] tracking-[-0.01em] font-semibold mb-8">
-              Professional Makeup
-            </h2>
-            <p className="font-[family-name:var(--font-montserrat)] text-[16px] leading-[26px] text-white/70 mb-10">
-              From soft glam to high-fashion editorial, our makeup artists specialize in techniques
-              that enhance your features while looking flawless under any lighting.
-            </p>
-            <ul className="space-y-6 mb-12">
+        {/* Section header */}
+        <div className="max-w-2xl mb-10 md:mb-16">
+          <span className="font-[family-name:var(--font-montserrat)] text-[12px] leading-[16px] tracking-[0.15em] uppercase font-bold text-majestic-gold mb-4 block">
+            Editorial &amp; Glam
+          </span>
+          <h2 className="font-[family-name:var(--font-eb-garamond)] text-[32px] md:text-[56px] leading-[40px] md:leading-[60px] tracking-[-0.01em] font-semibold mb-6">
+            Professional Makeup
+          </h2>
+          <p className="font-[family-name:var(--font-montserrat)] text-[16px] leading-[26px] text-white/70">
+            From soft glam to high-fashion editorial, our makeup artists specialize in techniques
+            that enhance your features while looking flawless under any lighting.
+          </p>
+        </div>
+
+        {/* Main video showcase */}
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 lg:gap-8 items-stretch">
+          {/* Hero video */}
+          <div className="lg:col-span-7 group relative rounded-2xl overflow-hidden ring-1 ring-white/10 aspect-[16/10] lg:aspect-auto lg:min-h-[520px]">
+            <video
+              className="absolute inset-0 w-full h-full object-cover object-[center_20%] scale-150"
+              src="/makeupv.mp4"
+              autoPlay
+              loop
+              muted
+              playsInline
+              poster="/makeup.jpg"
+            />
+            <div className="absolute inset-0 bg-gradient-to-t from-midnight-ink/80 via-transparent to-transparent" />
+            <div className="absolute bottom-0 left-0 p-6 md:p-8">
+              <span className="font-[family-name:var(--font-montserrat)] text-[11px] leading-[16px] tracking-[0.15em] uppercase font-bold text-majestic-gold mb-2 block">
+                Behind the Brush
+              </span>
+              <h3 className="font-[family-name:var(--font-eb-garamond)] text-[24px] md:text-[32px] leading-[32px] md:leading-[40px] font-semibold">
+                The Erniekay Glow
+              </h3>
+            </div>
+          </div>
+
+          {/* Copy + services + secondary video */}
+          <div className="lg:col-span-5 flex flex-col gap-6">
+            <div className="relative rounded-2xl overflow-hidden ring-1 ring-white/10 aspect-[16/10]">
+              <video
+                className="absolute inset-0 w-full h-full object-cover"
+                src="/makeupv1.mp4"
+                autoPlay
+                loop
+                muted
+                playsInline
+                poster="/makeup2.jpg"
+              />
+            </div>
+
+            <ul className="space-y-5">
               {makeupServices.map((svc) => (
-                <li key={svc.icon} className="flex items-center gap-4">
-                  <span className="material-symbols-outlined text-majestic-gold">{svc.icon}</span>
-                  <span className="font-[family-name:var(--font-montserrat)] text-[16px] leading-[26px] font-semibold">
-                    {svc.label} — {svc.price}
+                <li key={svc.icon} className="flex items-center justify-between gap-4 border-b border-white/10 pb-4">
+                  <span className="flex items-center gap-3">
+                    <span className="material-symbols-outlined text-majestic-gold">{svc.icon}</span>
+                    <span className="font-[family-name:var(--font-montserrat)] text-[15px] leading-[24px] font-semibold">
+                      {svc.label}
+                    </span>
+                  </span>
+                  <span className="font-[family-name:var(--font-eb-garamond)] text-[20px] font-semibold text-majestic-gold shrink-0">
+                    {svc.price}
                   </span>
                 </li>
               ))}
             </ul>
+
             <button
               id="book-makeup-artist"
               className="bg-majestic-gold text-royal-navy px-8 py-4 font-[family-name:var(--font-montserrat)] text-[12px] leading-[16px] tracking-[0.15em] uppercase font-bold w-full hover:bg-white transition-all"
@@ -37,27 +93,26 @@ export default function MakeupSection() {
               Book Makeup Artist
             </button>
           </div>
+        </div>
 
-          {/* Images — stacked on mobile, side-by-side on desktop */}
-          <div className="lg:col-span-8 grid grid-cols-2 gap-4 mt-10 lg:mt-0">
-            <div className="relative w-full h-60 md:h-[500px] border border-white/10 overflow-hidden">
-              <Image
-                src="https://lh3.googleusercontent.com/aida-public/AB6AXuBKoK_Eqc80zH7pk7BtGiqgJ9Peo3ZBbbEUw9QfXhh_qR5AluvcHhXdW3Qr-pE5FqnEVQONfARhBb8UdIAeVQzGj6XHuo5Oudpn9mO_h5-_Oeyr4aEdGALW9WM4nOsFqddOkRdH2qiZ7ogJNJvRV9H0FEQBqde-G7SdSwj6Ld7IWRmU-3tKy5DWSN8PbrFcKILDj9sMkiZ1zmZOOr7lx0mMU088kepb-5REsG5OUk5yPAEoCwa9XqcA1mfBrDnLeoYOGRez2Ul-jNA"
-                alt="A professional makeup palette with deep rich colors in a luxury studio"
-                fill
-                className="object-cover"
-                unoptimized
-              />
-            </div>
-            <div className="relative w-full h-60 md:h-[500px] border border-white/10 overflow-hidden md:mt-12">
-              <Image
-                src="https://lh3.googleusercontent.com/aida-public/AB6AXuAGV9u9GjGmJPe0JZoQhTyQisW7egMmrBZllgJVaYdbi4oIwpP1I0aV1Feg88UTu2erTeEh8FASMmCYqJY27T-feWCLbA3dXkjHXCP2SWgWCy_vfMamz2O6q7TQnYNQ9jgtmgHiTaoUc7S0pzY1v-gBf1L3W42pLeXVc69YuZ_Ig1XbYGZ9slDCg4-6RvF1KBm2Ozvh3aQPGjpS5ucJXmikCYkE3wK8Fo1uEclDyjs7oEfOx3lZKOUqug2i88R2eYnSopRBGWWcOZk"
-                alt="An artist's hand applying professional makeup to a model"
-                fill
-                className="object-cover"
-                unoptimized
-              />
-            </div>
+        {/* Gallery strip */}
+        <div className="mt-10 md:mt-12">
+          <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-4">
+            {gallery.map((img) => (
+              <div
+                key={img.src}
+                className="group relative aspect-[3/4] rounded-xl overflow-hidden ring-1 ring-white/10"
+              >
+                <Image
+                  src={img.src}
+                  alt={img.alt}
+                  fill
+                  sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 20vw"
+                  className="object-cover transition-transform duration-500 group-hover:scale-105"
+                />
+                <div className="absolute inset-0 bg-midnight-ink/0 group-hover:bg-midnight-ink/20 transition-colors" />
+              </div>
+            ))}
           </div>
         </div>
       </div>

@@ -110,7 +110,7 @@ function ProductCard({ product }: { product: Product }) {
           <button
             id={`add-${product.id}`}
             onClick={() =>
-              addItem({ id: product.id, title: product.title, price: product.price })
+              addItem({ productId: product.id, title: product.title, price: product.price })
             }
             className="w-full bg-white text-royal-navy py-4 font-[family-name:var(--font-montserrat)] text-[12px] leading-[16px] tracking-[0.15em] uppercase font-bold border border-royal-navy hover:bg-royal-navy hover:text-white transition-colors"
           >

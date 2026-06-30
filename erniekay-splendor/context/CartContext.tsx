@@ -7,7 +7,7 @@ interface CartContextValue {
   items: CartItem[];
   count: number;
   total: number;
-  addItem: (item: Omit<CartItem, "id" | "productId">) => void;
+  addItem: (item: Omit<CartItem, "id" | "quantity">) => void;
   removeItem: (itemId: string) => void;
   updateQuantity: (itemId: string, quantity: number) => void;
   clearCart: () => void;
@@ -19,7 +19,7 @@ export function CartProvider({ children }: { children: ReactNode }) {
   const [items, setItems] = useState<CartItem[]>([]);
 
   const addItem = useCallback(
-    (product: Omit<CartItem, "id" | "productId">) => {
+    (product: Omit<CartItem, "id" | "quantity">) => {
       setItems((prev) => {
         const existingIndex = prev.findIndex((i) => i.productId === product.productId);
         if (existingIndex >= 0) {

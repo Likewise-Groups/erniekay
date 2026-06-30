@@ -259,7 +259,8 @@ export interface BridalPackage {
   id: string;
   title: string;
   description: string;
-  price: number;
+  /** Fixed price; omit when the package is priced by `priceRange` instead. */
+  price?: number;
   priceRange?: {
     min: number;
     max: number;

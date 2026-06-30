@@ -34,7 +34,7 @@ export default function SkinSection() {
             The Ritual
           </span>
           <h2 className="font-[family-name:var(--font-eb-garamond)] text-[32px] leading-[40px] tracking-[-0.01em] font-semibold text-royal-navy">
-            Skin Care
+            SPA
           </h2>
         </div>
 
@@ -44,8 +44,8 @@ export default function SkinSection() {
             <div className="absolute -top-10 -left-10 w-40 h-40 border-t-2 border-l-2 border-majestic-gold hidden md:block" />
             <div className="relative w-full h-[340px] md:h-[600px] border border-outline-variant shadow-xl overflow-hidden">
               <Image
-                src="https://lh3.googleusercontent.com/aida-public/AB6AXuAcCIbdBDYi0I-CKIAH-pJJF0GR_H5XY5qcPtu7omM6Q4kLbtUhhsRL-DgFvEj_1YvRkKLqhVdW0yewwsVA8GDJenFinSVUYYd_iU5bNqVpbrGgj4t3ZUbLEdtZJ4rLNFF4CtEb83H3nVtUUnHxlZmFY2De-IfM0_vmY0ZHT8qLsAof5hfQO-jP00o8sGRIfXpMl0pT5mqlSgDrm4EDnr1w3wk1nO2zzZC-Hl-JdHyKSW5kmE5mf0A-jXduPA5CmO2rmW9nK2QnUW8"
-                alt="A serene spa environment focusing on skin care"
+                src="/facial.jpg"
+                alt="A serene spa environment focusing on SPA"
                 fill
                 className="object-cover"
                 unoptimized

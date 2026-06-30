@@ -4,28 +4,28 @@ const nailServices = [
   {
     id: "artisan-manicure",
     title: "Artisan Manicure",
-    price: "$65",
+    price: "150 GH₵",
     description:
       "Includes shaping, cuticle care, luxury exfoliation, and high-shine polish finish.",
   },
   {
     id: "splendor-pedicure",
     title: "The Splendor Pedicure",
-    price: "$95",
+    price: "200 GH₵",
     description:
       "A regenerative treatment with essential oil soak, volcanic stone massage, and paraffin hydration.",
   },
   {
     id: "gel-extensions",
     title: "Gel Extensions (Full Set)",
-    price: "$130",
+    price: "250 GH₵",
     description:
       "Sculpted enhancements tailored to your desired length and shape for ultimate durability and elegance.",
   },
   {
     id: "editorial-nail-art",
     title: "Editorial Nail Art",
-    price: "Custom",
+    price: "From 100 GH₵",
     description:
       "Bespoke designs, hand-painted details, and premium embellishments for a unique statement.",
   },
@@ -33,48 +33,76 @@ const nailServices = [
 
 export default function NailsSection() {
   return (
-    <section id="nails" className="py-[64px] md:py-[112px] max-w-[1280px] mx-auto px-6 md:px-[64px]">
-      {/* Section Header */}
-      <div className="text-center mb-12 md:mb-20">
-        <span className="font-[family-name:var(--font-montserrat)] text-[12px] leading-[16px] tracking-[0.15em] uppercase font-bold text-majestic-gold mb-4 block">
-          Impeccable Finish
-        </span>
-        <h2 className="font-[family-name:var(--font-eb-garamond)] text-[32px] md:text-[48px] leading-[40px] md:leading-[56px] tracking-[-0.01em] font-semibold text-royal-navy">
-          Nail Care &amp; Artistry
-        </h2>
-      </div>
-
-      {/* Services Grid */}
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-x-12 lg:gap-x-24 gap-y-10 md:gap-y-12">
-        {nailServices.map((svc) => (
-          <div key={svc.id} className="group service-card-hover">
-            <div className="flex justify-between items-baseline mb-2">
-              <h4 className="font-[family-name:var(--font-montserrat)] text-[16px] leading-[26px] font-semibold text-royal-navy">
-                {svc.title}
-              </h4>
-              <span className="font-[family-name:var(--font-montserrat)] text-[16px] leading-[26px] font-semibold text-royal-navy">
-                {svc.price}
+    <section id="nails" className="py-[64px] md:py-[112px] bg-background">
+      <div className="max-w-[1280px] mx-auto px-6 md:px-[64px]">
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-16 lg:gap-24 items-center">
+          
+          {/* Left Column: Header & Services */}
+          <div className="lg:col-span-6">
+            <div className="mb-12 md:mb-16">
+              <span className="font-[family-name:var(--font-montserrat)] text-[12px] leading-[16px] tracking-[0.2em] uppercase font-bold text-majestic-gold mb-4 block">
+                Impeccable Finish
               </span>
+              <h2 className="font-[family-name:var(--font-eb-garamond)] text-[40px] md:text-[56px] leading-[48px] md:leading-[64px] tracking-[-0.01em] font-semibold text-royal-navy mb-6">
+                Nail Care &amp; Artistry
+              </h2>
+              <p className="font-[family-name:var(--font-montserrat)] text-[16px] leading-[26px] text-on-surface-variant max-w-lg">
+                Experience our signature nail services designed to provide the ultimate in relaxation and refined beauty. Let our artisans elevate your look.
+              </p>
             </div>
-            {/* Animated underline */}
-            <div className="w-12 h-0.5 bg-outline-variant mb-4 service-line transition-all duration-500" />
-            <p className="font-[family-name:var(--font-montserrat)] text-[14px] md:text-[16px] leading-[22px] md:leading-[26px] text-on-surface-variant">
-              {svc.description}
-            </p>
-          </div>
-        ))}
-      </div>
 
-      {/* Nail Art Image */}
-      <div className="mt-12 md:mt-20">
-        <div className="relative w-full h-52 md:h-80 border border-outline-variant overflow-hidden">
-          <Image
-            src="https://lh3.googleusercontent.com/aida-public/AB6AXuB1NrUNbsg0s6RbLMfJeY5okkEz0ETczZ2cd6WMaQn95y6wDU8KXVmSn8guzcqZ2mBEVBkqnBfRPZxCXhRU-rKQ7Fxi-9OelI_y58Slco_Fpv0hL7_8TUtoOoy8g2JJwtfyyP_jVTispddS2c8hbHHYmxss2lnVEq_OKLvkMPb9ZMepHKVlneuoECVRFoNGOLSJVE4Awk5RE_jwBEiGTgo67thS-70c00HoTGDIBlZ0w7P3-M6br5X6uEoj3HRLqPC0UB9TMElq_3o"
-            alt="Nail Art Display"
-            fill
-            className="object-cover"
-            unoptimized
-          />
+            <div className="flex flex-col gap-6">
+              {nailServices.map((svc) => (
+                <div key={svc.id} className="group relative p-6 rounded-2xl bg-white border border-outline-variant/50 shadow-[0_4px_20px_-10px_rgba(0,0,0,0.05)] hover:shadow-[0_15px_40px_-15px_rgba(212,175,55,0.3)] hover:border-majestic-gold/50 transition-all duration-500 hover:-translate-y-1">
+                  <div className="flex justify-between items-start mb-3">
+                    <h4 className="font-[family-name:var(--font-eb-garamond)] text-[24px] leading-[30px] font-semibold text-royal-navy group-hover:text-majestic-gold transition-colors duration-300">
+                      {svc.title}
+                    </h4>
+                    <span className="font-[family-name:var(--font-montserrat)] text-[14px] font-semibold text-royal-navy bg-alabaster-white px-3 py-1 rounded-full border border-outline-variant/50 whitespace-nowrap shadow-sm">
+                      {svc.price}
+                    </span>
+                  </div>
+                  <p className="font-[family-name:var(--font-montserrat)] text-[14px] leading-[22px] text-on-surface-variant">
+                    {svc.description}
+                  </p>
+                </div>
+              ))}
+            </div>
+          </div>
+
+          {/* Right Column: Staggered Video Collage */}
+          <div className="lg:col-span-6 mt-12 lg:mt-0">
+            <div className="grid grid-cols-2 gap-4 md:gap-6">
+              {/* Left Column of Videos */}
+              <div className="flex flex-col gap-4 md:gap-6 pt-12">
+                <div className="relative w-full aspect-[4/5] rounded-3xl overflow-hidden shadow-xl border border-outline-variant/30 group">
+                  <video src="/nail service.mp4" autoPlay loop muted playsInline className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-1000" />
+                  <div className="absolute inset-0 bg-gradient-to-t from-royal-navy/40 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+                </div>
+                <div className="relative w-full aspect-square rounded-3xl overflow-hidden shadow-xl border border-outline-variant/30 group">
+                  <video src="/nail service 2.mp4" autoPlay loop muted playsInline className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-1000" />
+                  <div className="absolute inset-0 bg-gradient-to-t from-royal-navy/40 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+                </div>
+                <div className="relative w-full aspect-[4/5] rounded-3xl overflow-hidden shadow-xl border border-outline-variant/30 group">
+                  <video src="/nail service 4.mp4" autoPlay loop muted playsInline className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-1000" />
+                  <div className="absolute inset-0 bg-gradient-to-t from-royal-navy/40 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+                </div>
+              </div>
+
+              {/* Right Column of Videos */}
+              <div className="flex flex-col gap-4 md:gap-6">
+                <div className="relative w-full aspect-square rounded-3xl overflow-hidden shadow-xl border border-outline-variant/30 group">
+                  <video src="/nail service 3.mp4" autoPlay loop muted playsInline className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-1000" />
+                  <div className="absolute inset-0 bg-gradient-to-t from-royal-navy/40 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+                </div>
+                <div className="relative w-full aspect-[4/5] rounded-3xl overflow-hidden shadow-xl border border-outline-variant/30 group">
+                  <video src="/nail service 5.mp4" autoPlay loop muted playsInline className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-1000" />
+                  <div className="absolute inset-0 bg-gradient-to-t from-royal-navy/40 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+                </div>
+              </div>
+            </div>
+          </div>
+          
         </div>
       </div>
     </section>

@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
+import { useRouter } from "next/navigation";
 import Image from "next/image";
 import Link from "next/link";
 
@@ -13,23 +14,40 @@ export default function StudentPortalPage() {
   const [emailFocused, setEmailFocused] = useState(false);
   const [passwordFocused, setPasswordFocused] = useState(false);
 
+  const router = useRouter();
+
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    console.log("Portal Login Request:", { email, password, rememberMe });
-    alert("Admissions portal authentication service is currently offline. Please contact the administrator.");
+    
+    // Dummy Routing Logic
+    const normalizedEmail = email.toLowerCase().trim();
+    
+    if (normalizedEmail.includes("admin")) {
+      router.push("/academy/admin");
+    } else if (normalizedEmail.includes("student")) {
+      router.push("/academy/portal/dashboard");
+    } else {
+      alert("Invalid credentials. Try 'admin@test.com' or 'student@test.com'.");
+    }
   };
 
   return (
     <div className="bg-alabaster-white text-on-background min-h-screen flex flex-col font-[family-name:var(--font-montserrat)] antialiased overflow-x-hidden">
       {/* TopAppBar Component */}
-      <header className="fixed top-0 w-full bg-surface z-50 border-b border-champagne-taupe/30 flex items-center justify-between px-6 md:px-[64px] h-16">
+      <header className="fixed top-0 w-full bg-surface z-50 border-b border-champagne-taupe/30 flex items-center justify-between px-6 md:px-[64px] h-20">
         <div className="flex items-center gap-4">
           <button className="material-symbols-outlined text-royal-navy active:opacity-80 transition-opacity">
             menu
           </button>
-          <span className="font-[family-name:var(--font-eb-garamond)] text-[20px] md:text-[24px] tracking-widest text-royal-navy uppercase">
-            LUXE ACADEMY
-          </span>
+          <div className="relative w-56 h-20 -ml-4">
+            <Image 
+              src="/erniekayacademy logo.jpeg" 
+              alt="Erniekay Academy Logo" 
+              fill 
+              className="object-contain object-left" 
+              unoptimized
+            />
+          </div>
         </div>
         <div className="flex items-center gap-6">
           <nav className="hidden md:flex items-center gap-8">
@@ -49,7 +67,7 @@ export default function StudentPortalPage() {
         </div>
       </header>
 
-      <main className="pt-16 min-h-screen flex flex-col">
+      <main className="pt-20 min-h-screen flex flex-col">
         {/* Hero Section - Crafting Excellence */}
         <section className="relative h-[353px] w-full overflow-hidden">
           <Image
@@ -180,7 +198,14 @@ export default function StudentPortalPage() {
             </form>
 
             {/* Secondary Actions */}
-            <div className="mt-10 space-y-4 text-center">
+            <div className="mt-8 text-center">
+              <p className="text-[12px] font-[family-name:var(--font-montserrat)] text-warm-slate opacity-80 mb-4 bg-alabaster-white p-3 border border-champagne-taupe/30">
+                <span className="font-bold text-royal-navy uppercase tracking-widest text-[10px] block mb-1">Demo Environment</span>
+                Login with <strong className="text-royal-navy">admin@test.com</strong> or <strong className="text-royal-navy">student@test.com</strong>
+              </p>
+            </div>
+
+            <div className="mt-6 space-y-4 text-center">
               <p className="font-[family-name:var(--font-montserrat)] text-sm text-warm-slate">
                 Don&apos;t have an account? <br />
                 <Link className="text-royal-navy font-bold hover:text-majestic-gold transition-colors" href="/contact">
@@ -217,9 +242,15 @@ export default function StudentPortalPage() {
 
       {/* Footer Component */}
       <footer className="bg-alabaster-white border-t border-champagne-taupe/20 flex flex-col items-center py-8 px-6 space-y-4 w-full">
-        <h2 className="font-[family-name:var(--font-eb-garamond)] text-royal-navy tracking-widest text-2xl uppercase font-semibold">
-          LUXE ACADEMY
-        </h2>
+        <div className="relative w-64 h-32 mb-2">
+          <Image 
+            src="/erniekayacademy logo.jpeg" 
+            alt="Erniekay Academy Logo" 
+            fill 
+            className="object-contain" 
+            unoptimized
+          />
+        </div>
         <div className="flex flex-wrap justify-center gap-6">
           <a className="font-[family-name:var(--font-montserrat)] text-[12px] leading-[16px] tracking-widest uppercase font-bold text-warm-slate hover:text-royal-navy transition-colors" href="#">
             Privacy Policy

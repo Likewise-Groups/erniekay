@@ -1,15 +1,20 @@
 "use client";
 
+import { useState } from "react";
+
 const categories = [
-  { label: "Hair Artistry", href: "#hair", active: true },
-  { label: "Skin Care", href: "#skin" },
+  { label: "Hair Artistry", href: "#hair" },
   { label: "Nail Care", href: "#nails" },
+  { label: "SPA", href: "#skin" },
   { label: "Professional Makeup", href: "#makeup" },
 ];
 
 export default function CategoryNav() {
-  const handleAnchor = (e: React.MouseEvent<HTMLAnchorElement | HTMLButtonElement>, href: string) => {
+  const [activeLabel, setActiveLabel] = useState(categories[0].label);
+
+  const handleAnchor = (e: React.MouseEvent<HTMLAnchorElement | HTMLButtonElement>, href: string, label: string) => {
     e.preventDefault();
+    setActiveLabel(label);
     const el = document.querySelector(href);
     if (el) el.scrollIntoView({ behavior: "smooth" });
   };
@@ -24,12 +29,11 @@ export default function CategoryNav() {
           {categories.map((cat) => (
             <button
               key={cat.label}
-              onClick={(e) => handleAnchor(e, cat.href)}
-              className={`font-[family-name:var(--font-montserrat)] text-[12px] md:text-[16px] leading-[16px] md:leading-[26px] tracking-[0.15em] uppercase font-bold whitespace-nowrap transition-colors pb-2 ${
-                cat.active
-                  ? "text-royal-navy border-b-2 border-majestic-gold"
-                  : "text-on-surface-variant hover:text-royal-navy"
-              }`}
+              onClick={(e) => handleAnchor(e, cat.href, cat.label)}
+              className={`font-[family-name:var(--font-montserrat)] text-[12px] md:text-[16px] leading-[16px] md:leading-[26px] tracking-[0.15em] uppercase font-bold whitespace-nowrap transition-colors pb-2 ${activeLabel === cat.label
+                ? "text-royal-navy border-b-2 border-majestic-gold"
+                : "text-on-surface-variant hover:text-royal-navy"
+                }`}
             >
               {cat.label}
             </button>

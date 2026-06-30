@@ -9,7 +9,7 @@ import Link from "next/link";
 interface Service {
   id: string;
   name: string;
-  category: "Hair" | "Makeup" | "Bridal" | "Aesthetics";
+  category: "Hair" | "Makeup" | "Bridal" | "Aesthetics" | "Home Services";
   price: string;
   duration: string;
   description: string;
@@ -55,6 +55,22 @@ const servicesData: Service[] = [
     price: "$210",
     duration: "75 MINUTES",
     description: "A high-potency antioxidant treatment designed to brighten the complexion and defend against environmental stressors.",
+  },
+  {
+    id: "home-bridal",
+    name: "Premium Home Bridal Styling",
+    category: "Home Services",
+    price: "$450",
+    duration: "180 MINUTES",
+    description: "Our elite artists travel to your location. Includes comprehensive bridal hair and makeup with luxury touch-up kit.",
+  },
+  {
+    id: "home-glam",
+    name: "At-Home Event Glamour",
+    category: "Home Services",
+    price: "$300",
+    duration: "90 MINUTES",
+    description: "Professional hair styling and makeup application in the comfort of your home or hotel suite.",
   },
 ];
 
@@ -126,6 +142,7 @@ export default function BookingPage() {
   const [fullName, setFullName] = useState("");
   const [email, setEmail] = useState("");
   const [phone, setPhone] = useState("");
+  const [address, setAddress] = useState("");
   const [notes, setNotes] = useState("");
   const [agreeTerms, setAgreeTerms] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -184,18 +201,46 @@ export default function BookingPage() {
     setFullName("");
     setEmail("");
     setPhone("");
+    setAddress("");
     setNotes("");
     setAgreeTerms(false);
   };
 
-  const handleSubmitForm = (e: React.FormEvent) => {
+  const handleSubmitForm = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!agreeTerms) return;
     setIsSubmitting(true);
-    setTimeout(() => {
+    
+    try {
+      const response = await fetch("/api/bookings", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          fullName,
+          email,
+          phone,
+          address,
+          notes,
+          serviceId: isBridalBespokeSelected ? "bespoke-bridal" : selectedService?.id,
+          artistId: selectedArtist?.id,
+          date: selectedDate,
+          time: selectedTimeSlot,
+        }),
+      });
+
+      if (response.ok) {
+        setStep(5);
+      } else {
+        alert("There was an error securing your booking. Please try again.");
+      }
+    } catch (error) {
+      console.error("Booking failed:", error);
+      alert("There was a network error. Please try again.");
+    } finally {
       setIsSubmitting(false);
-      setStep(5);
-    }, 1500);
+    }
   };
 
   const timeSlots = ["09:00 AM", "10:30 AM", "12:00 PM", "01:30 PM", "03:00 PM", "04:30 PM", "06:00 PM"];
@@ -295,7 +340,7 @@ export default function BookingPage() {
               <div className="sticky top-40 space-y-8">
                 <h2 className="text-headline-md font-headline-md text-royal-navy">Select Category</h2>
                 <ul className="flex flex-col gap-6">
-                  {["All", "Hair", "Makeup", "Bridal", "Aesthetics"].map((cat) => {
+                  {["All", "Hair", "Makeup", "Bridal", "Aesthetics", "Home Services"].map((cat) => {
                     const isActive = selectedCategory === cat;
                     return (
                       <li key={cat}>
@@ -710,8 +755,14 @@ export default function BookingPage() {
 
                 <div className="group">
                   <p className="text-label-caps font-label-caps text-champagne-taupe mb-2">LOCATION</p>
-                  <p className="font-body-bold text-body-bold text-royal-navy">Erniekay Flagship Salon</p>
-                  <p className="text-body-base text-warm-slate mt-1">128 Luxury Plaza, Victoria Island, Lagos</p>
+                  <p className="font-body-bold text-body-bold text-royal-navy">
+                    {selectedService?.category === "Home Services" ? "Home Visit" : "Erniekay Flagship Salon"}
+                  </p>
+                  <p className="text-body-base text-warm-slate mt-1">
+                    {selectedService?.category === "Home Services"
+                      ? (address ? address : "Address required in next step")
+                      : "128 Luxury Plaza, Victoria Island, Lagos"}
+                  </p>
                   <div className="h-[1px] bg-gradient-to-r from-[#8E7A5A] to-transparent mt-4 w-1/4 group-hover:w-full transition-all duration-500"></div>
                 </div>
               </div>
@@ -781,6 +832,20 @@ export default function BookingPage() {
                     </div>
                   </div>
                 </div>
+
+                {selectedService?.category === "Home Services" && (
+                  <div className="relative">
+                    <label className="text-label-caps font-label-caps text-champagne-taupe absolute -top-4 left-0">Home Address</label>
+                    <input
+                      required
+                      value={address}
+                      onChange={(e) => setAddress(e.target.value)}
+                      className="w-full bg-white border-b border-champagne-taupe py-4 font-body-base text-royal-navy placeholder:text-[#D1D1D1] focus:outline-none focus:border-b-royal-navy"
+                      placeholder="Enter your full residential address"
+                      type="text"
+                    />
+                  </div>
+                )}
 
                 <div className="relative">
                   <label className="text-label-caps font-label-caps text-champagne-taupe absolute -top-4 left-0">Special Notes or Inquiries</label>

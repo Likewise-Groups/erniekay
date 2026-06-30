@@ -113,6 +113,7 @@ export default function GalleryGrid() {
                   src={galleryItems[0].imgSrc}
                   alt={galleryItems[0].alt}
                   fill
+                  priority
                   className="object-cover transition-transform duration-700 group-hover:scale-105"
                   sizes="(max-w-1024px) 100vw, 58vw"
                 />
@@ -136,6 +137,7 @@ export default function GalleryGrid() {
                     src={galleryItems[1].imgSrc}
                     alt={galleryItems[1].alt}
                     fill
+                    priority
                     className="object-cover transition-transform duration-700 group-hover:scale-105"
                     sizes="(max-w-1024px) 100vw, 42vw"
                   />
@@ -157,6 +159,7 @@ export default function GalleryGrid() {
                     src={galleryItems[2].imgSrc}
                     alt={galleryItems[2].alt}
                     fill
+                    priority
                     className="object-cover transition-transform duration-700 group-hover:scale-105"
                     sizes="(max-w-1024px) 100vw, 42vw"
                   />
@@ -180,6 +183,7 @@ export default function GalleryGrid() {
                   src={galleryItems[3].imgSrc}
                   alt={galleryItems[3].alt}
                   fill
+                  priority
                   className="object-cover transition-transform duration-700 group-hover:scale-105"
                   sizes="(max-w-1024px) 100vw, 33vw"
                 />
@@ -201,6 +205,7 @@ export default function GalleryGrid() {
                   src={galleryItems[4].imgSrc}
                   alt={galleryItems[4].alt}
                   fill
+                  priority
                   className="object-cover transition-transform duration-700 group-hover:scale-105"
                   sizes="(max-w-1024px) 100vw, 66vw"
                 />
@@ -219,7 +224,7 @@ export default function GalleryGrid() {
         ) : (
           /* Filtered state: display active items in a clean responsive grid */
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-            {filteredItems.map((item) => (
+            {filteredItems.map((item, index) => (
               <div
                 key={item.id}
                 className="group relative overflow-hidden bg-royal-navy cursor-pointer transition-all duration-500"
@@ -229,6 +234,7 @@ export default function GalleryGrid() {
                     src={item.imgSrc}
                     alt={item.alt}
                     fill
+                    priority={index < 6}
                     className="object-cover transition-transform duration-700 group-hover:scale-105"
                     sizes="(max-w-768px) 100vw, (max-w-1024px) 50vw, 33vw"
                   />

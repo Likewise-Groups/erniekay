@@ -31,10 +31,16 @@ export default function StudentDashboardPage() {
       
       {/* ── Desktop SideNavBar Navigation ── */}
       <aside className="fixed left-0 top-0 h-full hidden md:flex flex-col z-40 bg-royal-navy w-64 text-white">
-        <div className="p-8">
-          <h1 className="font-[family-name:var(--font-eb-garamond)] text-[28px] font-semibold text-majestic-gold tracking-tight">
-            Erniekay Splendor
-          </h1>
+        <div className="p-6">
+          <div className="relative w-52 h-32 -ml-2">
+            <Image 
+              src="/erniekayacademylogo.jpeg" 
+              alt="Erniekay Academy Logo" 
+              fill 
+              className="object-contain object-left" 
+              unoptimized
+            />
+          </div>
         </div>
         <div className="px-6 py-4 mb-8">
           <div className="flex items-center gap-3">
@@ -98,9 +104,15 @@ export default function StudentDashboardPage() {
         <div className="fixed inset-0 z-50 flex md:hidden bg-midnight-ink/80 backdrop-blur-sm">
           <div className="relative w-64 bg-royal-navy text-white flex flex-col p-6 h-full transition-transform duration-300">
             <div className="flex justify-between items-center mb-8">
-              <h1 className="font-[family-name:var(--font-eb-garamond)] text-[22px] font-semibold text-majestic-gold">
-                Erniekay Splendor
-              </h1>
+              <div className="relative w-48 h-24">
+                <Image 
+                  src="/erniekayacademylogo.jpeg" 
+                  alt="Erniekay Academy Logo" 
+                  fill 
+                  className="object-contain object-left" 
+                  unoptimized
+                />
+              </div>
               <button
                 onClick={() => setMobileMenuOpen(false)}
                 className="text-white hover:text-majestic-gold"

@@ -4,6 +4,7 @@ import Link from "next/link";
 import AdmissionsTopNav from "@/components/academy/AdmissionsTopNav";
 import AdmissionsSideNav from "@/components/academy/AdmissionsSideNav";
 import Footer from "@/components/Footer";
+import { submitAdmission } from "@/app/actions/admissions";
 
 export default function AdmissionsReviewPage() {
   return (
@@ -159,7 +160,21 @@ export default function AdmissionsReviewPage() {
                   Back to Professional
                 </Link>
                 <button
-                  onClick={() => alert("Application submitted successfully!")}
+                  onClick={async () => {
+                    const res = await submitAdmission({
+                      programId: "bridal-mastery",
+                      firstName: "John",
+                      lastName: "Doe",
+                      email: "john@example.com",
+                      phone: "+1 (555) 000-0000",
+                      experience: "5+ years",
+                    });
+                    if (res.success) {
+                      alert("Application submitted successfully!");
+                    } else {
+                      alert(res.error);
+                    }
+                  }}
                   className="bg-royal-navy text-white px-8 py-4 font-label-caps text-label-caps hover:opacity-90 active:scale-95 transition-all"
                 >
                   Submit Application

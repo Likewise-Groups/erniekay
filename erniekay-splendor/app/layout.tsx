@@ -20,7 +20,7 @@ const montserrat = Montserrat({
 export const metadata: Metadata = {
   title: "Salon Services | Erniekay Splendor",
   description:
-    "Step into a sanctuary where clinical precision meets editorial luxury. Explore our curated salon services — hair artistry, skin care, nail care, and professional makeup.",
+    "Step into a sanctuary where clinical precision meets editorial luxury. Explore our curated salon services — hair artistry, nail care, SPA, and professional makeup.",
 };
 
 export default function RootLayout({

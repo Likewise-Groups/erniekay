@@ -1,0 +1,143 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = "file:./dev.db"
+}
+
+model BridalInquiry {
+  id               String   @id @default(uuid())
+  userId           String?
+  user             User?    @relation(fields: [userId], references: [id])
+  fullName         String
+  email            String
+  phone            String
+  socialHandle     String?
+  weddingDate      String
+  venue            String
+  totalGuests      String?
+  bridalPartySize  String?
+  aesthetic        String?
+  selectedServices String? // Stored as JSON or comma separated string
+  package          String?
+  createdAt        DateTime @default(now())
+}
+
+model AdmissionsApplication {
+  id           String   @id @default(uuid())
+  programId    String
+  course       Course?  @relation(fields: [programId], references: [id])
+  firstName    String
+  lastName     String
+  email        String
+  phone        String
+  status       String   @default("Draft") // Draft, Submitted, Reviewed
+  experience   String?
+  portfolioUrl String?
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+}
+
+model User {
+  id           String   @id @default(uuid())
+  email        String   @unique
+  passwordHash String?
+  role         String   @default("CLIENT") // ADMIN, CLIENT, STUDENT
+  firstName    String?
+  lastName     String?
+  phone        String?
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  orders          Order[]
+  appointments    Appointment[]
+  enrollments     Enrollment[]
+  bridalInquiries BridalInquiry[]
+}
+
+model Product {
+  id          String   @id @default(uuid())
+  name        String
+  slug        String   @unique
+  description String?
+  price       Float
+  stock       Int      @default(0)
+  imageUrl    String?
+  category    String?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  orderItems OrderItem[]
+}
+
+model Order {
+  id              String   @id @default(uuid())
+  userId          String
+  user            User     @relation(fields: [userId], references: [id])
+  totalAmount     Float
+  status          String   @default("PENDING") // PENDING, PAID, SHIPPED, DELIVERED
+  shippingAddress String?
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+
+  items OrderItem[]
+}
+
+model OrderItem {
+  id              String  @id @default(uuid())
+  orderId         String
+  order           Order   @relation(fields: [orderId], references: [id], onDelete: Cascade)
+  productId       String
+  product         Product @relation(fields: [productId], references: [id])
+  quantity        Int
+  priceAtPurchase Float
+}
+
+model Service {
+  id              String  @id @default(uuid())
+  name            String
+  category        String // Hair, Skin, Makeup, Nails
+  description     String?
+  durationMinutes Int
+  price           Float
+
+  appointments Appointment[]
+}
+
+model Appointment {
+  id              String   @id @default(uuid())
+  userId          String
+  user            User     @relation(fields: [userId], references: [id])
+  serviceId       String
+  service         Service  @relation(fields: [serviceId], references: [id])
+  appointmentDate DateTime
+  status          String   @default("PENDING") // PENDING, CONFIRMED, COMPLETED, CANCELLED
+  notes           String?
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+}
+
+model Course {
+  id            String  @id @default(uuid())
+  title         String
+  slug          String  @unique
+  description   String?
+  price         Float
+  durationWeeks Int
+  level         String? // Beginner, Intermediate, Advanced
+
+  enrollments  Enrollment[]
+  applications AdmissionsApplication[]
+}
+
+model Enrollment {
+  id         String   @id @default(uuid())
+  userId     String
+  user       User     @relation(fields: [userId], references: [id])
+  courseId   String
+  course     Course   @relation(fields: [courseId], references: [id])
+  status     String   @default("ACTIVE") // ACTIVE, COMPLETED, DROPPED
+  enrolledAt DateTime @default(now())
+}

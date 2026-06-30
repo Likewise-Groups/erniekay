@@ -5,6 +5,7 @@ import Image from "next/image";
 import Link from "next/link";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
+import { submitBridalInquiry } from "@/app/actions/bridal";
 
 export default function BridalInquiryPage() {
   const [fullName, setFullName] = useState("");
@@ -33,12 +34,27 @@ export default function BridalInquiryPage() {
     );
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsSubmitting(true);
     setSubmitStatus("sending");
-    setTimeout(() => {
-      setIsSubmitting(false);
+
+    const result = await submitBridalInquiry({
+      fullName,
+      email,
+      phone,
+      socialHandle: social,
+      weddingDate,
+      venue,
+      totalGuests,
+      bridalPartySize,
+      aesthetic,
+      selectedServices,
+      package: null
+    });
+
+    setIsSubmitting(false);
+    if (result.success) {
       setSubmitStatus("sent");
       setTimeout(() => {
         setSubmitStatus("idle");
@@ -54,7 +70,10 @@ export default function BridalInquiryPage() {
         setAesthetic("");
         setSelectedServices([]);
       }, 3000);
-    }, 1500);
+    } else {
+      setSubmitStatus("idle");
+      alert(result.error);
+    }
   };
 
   return (

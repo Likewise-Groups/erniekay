@@ -16,8 +16,8 @@ export default function SalonServicesPage() {
         <HeroSection />
         <CategoryNav />
         <HairSection />
-        <SkinSection />
         <NailsSection />
+        <SkinSection />
         <MakeupSection />
         <CTASection />
       </main>

@@ -1,21 +1,15 @@
-import Image from "next/image";
+import ShaderBackground from "./ShaderBackground";
 
 export default function HeroSection() {
   return (
     <section className="relative flex items-center justify-center bg-midnight-ink overflow-hidden
       min-h-[60vh] md:min-h-[70vh]
     ">
-      {/* Desktop background image */}
-      <div className="absolute inset-0 opacity-40 hidden md:block">
-        <div className="absolute inset-0 bg-gradient-to-r from-royal-navy to-transparent z-10" />
-        <Image
-          src="https://lh3.googleusercontent.com/aida-public/AB6AXuDyOCBeGIrFKqVfO80u6P6sRNLm4qvbMzPIqTRRThGQPweA2Z-cYXPloRtGmTLn6WtBDc4tRO732ZkKUMbpjlK0e8dThjNYyn4EVgLxVq1YTLfZktzdvKRwbmPuhh1nuL1nFTg39BH3cdnpoGD_2y_iAdM7-SQcp_d2nAP33yViRktJJK54d1ecCK2Rpb9NQIde0qIlMYQyKoWCZm4Qe613kDuqUMsDwc00JZDuTHi4DWQwOJ0QBeE5UI_44MDnsySUgkDAOteiya4"
-          alt="A high-end luxury salon interior with deep navy walls and gold accents"
-          fill
-          className="object-cover"
-          unoptimized
-          priority
-        />
+      {/* WebGL Shader Background */}
+      <div className="absolute inset-0 z-0">
+        <ShaderBackground />
+        {/* Optional gradient overlay to ensure text readability */}
+        <div className="absolute inset-0 bg-gradient-to-r from-midnight-ink/80 via-midnight-ink/50 to-transparent z-10" />
       </div>
 
       {/* ── Mobile layout — centered ── */}

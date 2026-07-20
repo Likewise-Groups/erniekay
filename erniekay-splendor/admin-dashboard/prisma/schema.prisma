@@ -4,7 +4,7 @@ generator client {
 
 datasource db {
   provider = "sqlite"
-  url      = "file:./dev.db"
+  url      = "file:../../prisma/dev.db"
 }
 
 model BridalInquiry {
@@ -20,7 +20,7 @@ model BridalInquiry {
   totalGuests      String?
   bridalPartySize  String?
   aesthetic        String?
-  selectedServices String? // Stored as JSON or comma separated string
+  selectedServices String?
   package          String?
   createdAt        DateTime @default(now())
 }
@@ -33,7 +33,7 @@ model AdmissionsApplication {
   lastName     String
   email        String
   phone        String
-  status       String   @default("Draft") // Draft, Submitted, Reviewed
+  status       String   @default("Draft")
   experience   String?
   portfolioUrl String?
   createdAt    DateTime @default(now())
@@ -44,7 +44,7 @@ model User {
   id           String   @id @default(uuid())
   email        String   @unique
   passwordHash String?
-  role         String   @default("CLIENT") // ADMIN, CLIENT, STUDENT
+  role         String   @default("CLIENT")
   firstName    String?
   lastName     String?
   phone        String?
@@ -77,7 +77,7 @@ model Order {
   userId          String
   user            User     @relation(fields: [userId], references: [id])
   totalAmount     Float
-  status          String   @default("PENDING") // PENDING, PAID, SHIPPED, DELIVERED
+  status          String   @default("PENDING")
   shippingAddress String?
   createdAt       DateTime @default(now())
   updatedAt       DateTime @updatedAt
@@ -96,12 +96,12 @@ model OrderItem {
 }
 
 model Service {
-  id              String  @id @default(uuid())
+  id              String   @id @default(uuid())
   name            String
-  category        String // Hair, Skin, Makeup, Nails
+  category        String
   description     String?
   imageUrl        String?
-  features        String? // Stored as JSON array
+  features        String?
   durationMinutes Int
   price           Float
   createdAt       DateTime @default(now())
@@ -117,7 +117,7 @@ model Appointment {
   serviceId       String
   service         Service  @relation(fields: [serviceId], references: [id])
   appointmentDate DateTime
-  status          String   @default("PENDING") // PENDING, CONFIRMED, COMPLETED, CANCELLED
+  status          String   @default("PENDING")
   notes           String?
   createdAt       DateTime @default(now())
   updatedAt       DateTime @updatedAt
@@ -132,7 +132,7 @@ model Receipt {
   appointment   Appointment @relation(fields: [appointmentId], references: [id], onDelete: Cascade)
   amount        Float
   currency      String      @default("USD")
-  status        String      @default("ISSUED") // ISSUED, PAID, VOID
+  status        String      @default("ISSUED")
   issuedAt      DateTime    @default(now())
   notes         String?
 }
@@ -144,7 +144,7 @@ model Course {
   description   String?
   price         Float
   durationWeeks Int
-  level         String? // Beginner, Intermediate, Advanced
+  level         String?
 
   enrollments  Enrollment[]
   applications AdmissionsApplication[]
@@ -156,6 +156,6 @@ model Enrollment {
   user       User     @relation(fields: [userId], references: [id])
   courseId   String
   course     Course   @relation(fields: [courseId], references: [id])
-  status     String   @default("ACTIVE") // ACTIVE, COMPLETED, DROPPED
+  status     String   @default("ACTIVE")
   enrolledAt DateTime @default(now())
 }

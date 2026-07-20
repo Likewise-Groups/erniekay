@@ -1,12 +1,23 @@
 import { NextResponse } from "next/server";
-import { PrismaClient } from "@prisma/client";
-
-const prisma = new PrismaClient();
+import { prisma } from "@/lib/prisma";
 
 export async function POST(req: Request) {
   try {
     const body = await req.json();
-    const { fullName, email, phone, address, notes, serviceId, artistId, date, time } = body;
+    const {
+      fullName,
+      email,
+      phone,
+      address,
+      notes,
+      serviceId,
+      serviceName,
+      category,
+      selectedServices,
+      totalPrice,
+      date,
+      time,
+    } = body;
 
     if (!email || !fullName || !date || !time) {
       return NextResponse.json({ error: "Missing required fields" }, { status: 400 });
@@ -18,20 +29,45 @@ export async function POST(req: Request) {
     const lastName = nameParts.length > 1 ? nameParts.slice(1).join(" ") : "";
 
     // Format notes to include address if it's a home service
-    const finalNotes = address 
-      ? `Home Service Address: ${address}\n\nClient Notes: ${notes || 'None'}`
-      : `Client Notes: ${notes || 'None'}`;
+    const finalNotes = [
+      address ? `Home Service Address: ${address}` : "",
+      selectedServices ? `Requested Services: ${selectedServices}` : "",
+      `Client Notes: ${notes || "None"}`,
+    ]
+      .filter(Boolean)
+      .join("\n\n");
 
     // For the appointment date, create a basic Date object. 
     // In a real app, you would parse the specific timezone, but this works for local demo.
-    const appointmentDate = new Date(`${date} ${time}`);
+    const appointmentDate = new Date(`${date}T${time}`);
+    const fallbackAppointmentDate = new Date(`${date} ${time}`);
+    const normalizedDate = !isNaN(appointmentDate.getTime())
+      ? appointmentDate
+      : !isNaN(fallbackAppointmentDate.getTime())
+        ? fallbackAppointmentDate
+        : new Date();
+    const normalizedServiceId = serviceId || "custom-service";
+    const normalizedPrice = Number.isFinite(Number(totalPrice)) ? Number(totalPrice) : 0;
 
-    // Create the booking in the database
-    // We use connectOrCreate for the user to avoid duplicates based on email.
-    // For the service, since we're using dummy data on the frontend, we use an existing ID or create a placeholder.
+    await prisma.service.upsert({
+      where: { id: normalizedServiceId },
+      update: {
+        name: serviceName || selectedServices || normalizedServiceId,
+        category: category || "Booking Flow",
+        price: normalizedPrice,
+      },
+      create: {
+        id: normalizedServiceId,
+        name: serviceName || selectedServices || normalizedServiceId,
+        category: category || "Booking Flow",
+        durationMinutes: 60,
+        price: normalizedPrice,
+      },
+    });
+
     const booking = await prisma.appointment.create({
       data: {
-        appointmentDate: isNaN(appointmentDate.getTime()) ? new Date() : appointmentDate,
+        appointmentDate: normalizedDate,
         notes: finalNotes,
         user: {
           connectOrCreate: {
@@ -44,18 +80,7 @@ export async function POST(req: Request) {
             },
           },
         },
-        service: {
-          connectOrCreate: {
-            where: { id: serviceId || "custom-service" },
-            create: {
-              id: serviceId || "custom-service",
-              name: serviceId || "Custom Service",
-              category: "Booking Flow",
-              durationMinutes: 60,
-              price: 0,
-            },
-          },
-        },
+        service: { connect: { id: normalizedServiceId } },
       },
     });
 

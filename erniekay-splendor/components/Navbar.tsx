@@ -5,6 +5,101 @@ import { usePathname } from "next/navigation";
 import Image from "next/image";
 import Link from "next/link";
 import { useCart } from "@/context/CartContext";
+import BookingModal, { ServiceCategory } from "./BookingModal";
+
+/* ─── All Service Categories (mirroring section data) ─── */
+const allServiceCategories: ServiceCategory[] = [
+  {
+    id: "hair-services",
+    title: "Hair Services",
+    subServices: [
+      { name: "Shampooing", price: 120 },
+      { name: "Relaxing", price: 200 },
+      { name: "Perm Cut Only", price: 100 },
+      { name: "Normal Pony", price: 150 },
+    ],
+  },
+  {
+    id: "sew-in",
+    title: "Sew-In",
+    subServices: [
+      { name: "Traditional Sew-In", price: 250 },
+      { name: "Closure Sew-In", price: 250 },
+      { name: "Frontal Sew-In", price: 300 },
+      { name: "Half-Up Half-Down", price: 180 },
+    ],
+  },
+  {
+    id: "installation",
+    title: "Installation",
+    subServices: [
+      { name: "Closure Installation", price: 50 },
+      { name: "Frontal Installation", price: 100 },
+      { name: "180 Frontal Pony", price: 200 },
+      { name: "360 Frontal Pony", price: 350 },
+    ],
+  },
+  {
+    id: "styling",
+    title: "Styling",
+    subServices: [
+      { name: "Straightening", price: "40-100" },
+      { name: "Curling", price: "50-150" },
+      { name: "Pixie Curls", price: 100 },
+      { name: "Bridal Inspo", price: "200-500" },
+    ],
+  },
+  {
+    id: "revamp-colouring",
+    title: "Revamp / Colouring",
+    subServices: [
+      { name: "Revamp Only", price: "60-200" },
+      { name: "Colouring", price: "250-600" },
+      { name: "Natural Hair", price: "100-400" },
+    ],
+  },
+  {
+    id: "custom-wigging",
+    title: "Custom Wigging",
+    subServices: [
+      { name: "Closure (2*6, 4*4)", price: 200 },
+      { name: "Closure (5*5, 6*6)", price: 250 },
+      { name: "180 Frontal", price: 300 },
+      { name: "360 Frontal", price: 350 },
+      { name: "Express services", price: "100-200" },
+      { name: "Pixie wigging", price: 50 },
+      { name: "Corn-rolls", price: 40 },
+    ],
+  },
+  {
+    id: "nail-care",
+    title: "Nail Care & Artistry",
+    subServices: [
+      { name: "Artisan Manicure", price: "150" },
+      { name: "The Splendor Pedicure", price: "200" },
+      { name: "Gel Extensions (Full Set)", price: "250" },
+      { name: "Editorial Nail Art", price: "100+" },
+    ],
+  },
+  {
+    id: "spa-skin",
+    title: "SPA & Skin Rejuvenation",
+    subServices: [
+      { name: "Glow Facial", price: "150" },
+      { name: "Dermaplaning Luxe", price: "220" },
+      { name: "Red Carpet Peel", price: "275" },
+    ],
+  },
+  {
+    id: "professional-makeup",
+    title: "Professional Makeup",
+    subServices: [
+      { name: "Special Occasion Makeup", price: "150" },
+      { name: "Editorial / Photoshoot", price: "250" },
+      { name: "Makeup Consultation & Class", price: "180" },
+    ],
+  },
+];
 
 const navLinks = [
   { label: "Salon Services",   href: "/" },
@@ -42,6 +137,9 @@ export default function Navbar() {
   const [menuOpen, setMenuOpen] = useState(false);
   const [searchOpen, setSearchOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
+  const [bookingOpen, setBookingOpen] = useState(false);
+  const [bookingCategory, setBookingCategory] = useState<ServiceCategory | null>(null);
+  const [showCategoryPicker, setShowCategoryPicker] = useState(false);
   
   const searchInputRef = useRef<HTMLInputElement>(null);
 
@@ -106,8 +204,8 @@ export default function Navbar() {
           ${scrolled ? "h-16 shadow-sm" : "h-20"}
         `}
       >
-        {/* Mobile left: hamburger + logo | Desktop left: logo + links */}
-        <div className="flex items-center gap-4">
+        {/* Mobile left: hamburger + logo | Desktop left: logo */}
+        <div className="flex items-center gap-4 flex-1">
           {/* Hamburger — mobile only */}
           <button
             id="mobile-menu-trigger"
@@ -130,28 +228,28 @@ export default function Navbar() {
               priority
             />
           </Link>
+        </div>
 
-          {/* Desktop nav links */}
-          <div className="hidden md:flex gap-8 items-center ml-4">
-            {navLinks.map((link) => (
-              <Link
-                key={link.label}
-                href={link.href}
-                onClick={() => setMenuOpen(false)}
-                className={`font-[family-name:var(--font-montserrat)] text-[16px] leading-[26px] hover:text-majestic-gold transition-colors duration-300 ${
-                  isActive(link.href)
-                    ? "text-royal-navy border-b-2 border-majestic-gold pb-1"
-                    : "text-on-surface-variant"
-                }`}
-              >
-                {link.label}
-              </Link>
-            ))}
-          </div>
+        {/* Desktop nav links (Center) */}
+        <div className="hidden md:flex gap-8 items-center justify-center flex-none">
+          {navLinks.map((link) => (
+            <Link
+              key={link.label}
+              href={link.href}
+              onClick={() => setMenuOpen(false)}
+              className={`font-[family-name:var(--font-montserrat)] text-[16px] leading-[26px] hover:text-majestic-gold transition-colors duration-300 ${
+                isActive(link.href)
+                  ? "text-royal-navy border-b-2 border-majestic-gold pb-1"
+                  : "text-on-surface-variant"
+              }`}
+            >
+              {link.label}
+            </Link>
+          ))}
         </div>
 
         {/* Right: icons + Book Now */}
-        <div className="flex items-center gap-3 md:gap-4">
+        <div className="flex items-center justify-end gap-3 md:gap-4 flex-1">
           {/* Search Button */}
           <button
             id="nav-search"
@@ -177,13 +275,13 @@ export default function Navbar() {
             )}
           </Link>
 
-          <Link
-            href="/booking"
+          <button
             id="nav-book-now"
+            onClick={() => setShowCategoryPicker(true)}
             className="bg-royal-navy text-on-primary px-4 md:px-8 py-2 md:py-3 font-[family-name:var(--font-montserrat)] text-[11px] md:text-[12px] leading-[16px] tracking-[0.15em] uppercase font-bold border border-majestic-gold hover:bg-primary-container transition-all active:opacity-80 flex items-center justify-center"
           >
             Book Now
-          </Link>
+          </button>
         </div>
       </nav>
 
@@ -335,6 +433,68 @@ export default function Navbar() {
           </div>
         </div>
       )}
+
+      {/* ── Category Picker Modal ── */}
+      {showCategoryPicker && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm">
+          <div className="bg-white w-full max-w-lg rounded-none border border-majestic-gold shadow-2xl overflow-hidden flex flex-col max-h-[90vh]">
+            {/* Header */}
+            <div className="bg-royal-navy p-6 flex justify-between items-center text-white">
+              <div>
+                <h2 className="font-[family-name:var(--font-eb-garamond)] text-2xl font-semibold">
+                  Book Appointment
+                </h2>
+                <p className="font-[family-name:var(--font-montserrat)] text-xs tracking-widest uppercase text-champagne-taupe mt-1">
+                  Select a service category
+                </p>
+              </div>
+              <button
+                onClick={() => setShowCategoryPicker(false)}
+                className="text-white hover:text-majestic-gold transition-colors text-2xl leading-none"
+              >
+                &times;
+              </button>
+            </div>
+
+            {/* Category List */}
+            <div className="p-6 overflow-y-auto">
+              <div className="space-y-3">
+                {allServiceCategories.map((cat) => (
+                  <button
+                    key={cat.id}
+                    onClick={() => {
+                      setBookingCategory(cat);
+                      setShowCategoryPicker(false);
+                      setBookingOpen(true);
+                    }}
+                    className="w-full flex items-center justify-between p-4 border border-outline-variant hover:border-majestic-gold hover:bg-alabaster-white transition-all text-left group"
+                  >
+                    <div>
+                      <span className="font-[family-name:var(--font-eb-garamond)] text-lg font-semibold text-royal-navy group-hover:text-majestic-gold transition-colors">
+                        {cat.title}
+                      </span>
+                      <span className="block font-[family-name:var(--font-montserrat)] text-[11px] text-on-surface-variant mt-0.5">
+                        {cat.subServices.length} services
+                      </span>
+                    </div>
+                    <span className="text-royal-navy group-hover:text-majestic-gold group-hover:translate-x-1 transition-all text-lg">→</span>
+                  </button>
+                ))}
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* ── Booking Modal (sub-service selection → details → payment) ── */}
+      <BookingModal
+        isOpen={bookingOpen}
+        onClose={() => {
+          setBookingOpen(false);
+          setBookingCategory(null);
+        }}
+        category={bookingCategory}
+      />
     </>
   );
 }

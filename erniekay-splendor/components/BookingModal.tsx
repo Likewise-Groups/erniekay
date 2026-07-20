@@ -19,9 +19,15 @@ type BookingModalProps = {
   category: ServiceCategory | null;
 };
 
+const parsePrice = (price: string | number): number => {
+  if (typeof price === "number") return price;
+  const match = price.match(/\d+/);
+  return match ? parseInt(match[0], 10) : 0;
+};
+
 export default function BookingModal({ isOpen, onClose, category }: BookingModalProps) {
   const [step, setStep] = useState<1 | 2 | 3>(1);
-  const [selectedSubService, setSelectedSubService] = useState<SubService | null>(null);
+  const [selectedSubServices, setSelectedSubServices] = useState<SubService[]>([]);
   const [formData, setFormData] = useState({
     name: "",
     phone: "",
@@ -34,7 +40,7 @@ export default function BookingModal({ isOpen, onClose, category }: BookingModal
 
   const handleClose = () => {
     setStep(1);
-    setSelectedSubService(null);
+    setSelectedSubServices([]);
     setFormData({ name: "", phone: "", date: "", time: "" });
     setPaymentMethod(null);
     onClose();
@@ -43,9 +49,20 @@ export default function BookingModal({ isOpen, onClose, category }: BookingModal
   const handleNextStep = () => setStep((s) => (s + 1) as 1 | 2 | 3);
   const handlePrevStep = () => setStep((s) => (s - 1) as 1 | 2 | 3);
 
+  const toggleSubService = (sub: SubService) => {
+    setSelectedSubServices((prev) => {
+      const exists = prev.find((s) => s.name === sub.name);
+      if (exists) return prev.filter((s) => s.name !== sub.name);
+      return [...prev, sub];
+    });
+  };
+
+  const totalPrice = selectedSubServices.reduce((acc, sub) => acc + parsePrice(sub.price), 0);
+
   const handleSubmitBooking = () => {
     // In a real app, this would process payment with Paystack/Hubtel etc.
-    alert(`Booking confirmed for ${selectedSubService?.name}!\nPayment method: ${paymentMethod}`);
+    const serviceNames = selectedSubServices.map(s => s.name).join(", ");
+    alert(`Booking confirmed for ${serviceNames}!\nTotal: ${totalPrice} GH₵\nPayment method: ${paymentMethod}`);
     handleClose();
   };
 
@@ -74,36 +91,43 @@ export default function BookingModal({ isOpen, onClose, category }: BookingModal
           {step === 1 && (
             <div className="animate-in fade-in slide-in-from-bottom-4 duration-300">
               <h3 className="font-[family-name:var(--font-montserrat)] font-bold text-royal-navy mb-4">
-                1. Select a Specific Service
+                1. Select Services
               </h3>
               <div className="space-y-3">
-                {category.subServices.map((sub, idx) => (
-                  <label
-                    key={idx}
-                    className={`flex items-center justify-between p-4 border cursor-pointer transition-all ${
-                      selectedSubService?.name === sub.name
-                        ? "border-majestic-gold bg-alabaster-white"
-                        : "border-outline-variant hover:border-royal-navy"
-                    }`}
-                  >
-                    <div className="flex items-center gap-3">
-                      <input
-                        type="radio"
-                        name="subservice"
-                        className="accent-majestic-gold w-4 h-4"
-                        checked={selectedSubService?.name === sub.name}
-                        onChange={() => setSelectedSubService(sub)}
-                      />
-                      <span className="font-[family-name:var(--font-montserrat)] text-sm font-medium text-royal-navy">
-                        {sub.name}
+                {category.subServices.map((sub, idx) => {
+                  const isSelected = selectedSubServices.some((s) => s.name === sub.name);
+                  return (
+                    <label
+                      key={idx}
+                      className={`flex items-center justify-between p-4 border cursor-pointer transition-all ${
+                        isSelected
+                          ? "border-majestic-gold bg-alabaster-white"
+                          : "border-outline-variant hover:border-royal-navy"
+                      }`}
+                    >
+                      <div className="flex items-center gap-3">
+                        <input
+                          type="checkbox"
+                          className="accent-majestic-gold w-4 h-4"
+                          checked={isSelected}
+                          onChange={() => toggleSubService(sub)}
+                        />
+                        <span className="font-[family-name:var(--font-montserrat)] text-sm font-medium text-royal-navy">
+                          {sub.name}
+                        </span>
+                      </div>
+                      <span className="font-[family-name:var(--font-eb-garamond)] font-semibold text-royal-navy">
+                        {sub.price}GH₵
                       </span>
-                    </div>
-                    <span className="font-[family-name:var(--font-eb-garamond)] font-semibold text-royal-navy">
-                      {sub.price}GH
-                    </span>
-                  </label>
-                ))}
+                    </label>
+                  );
+                })}
               </div>
+              {selectedSubServices.length > 0 && (
+                <div className="mt-4 text-right font-bold text-royal-navy font-[family-name:var(--font-montserrat)]">
+                  Total: {totalPrice} GH₵
+                </div>
+              )}
             </div>
           )}
 
@@ -168,13 +192,20 @@ export default function BookingModal({ isOpen, onClose, category }: BookingModal
               </h3>
               
               <div className="bg-alabaster-white p-4 border border-outline-variant mb-6">
-                <div className="flex justify-between items-center mb-2">
-                  <span className="text-on-surface-variant text-sm">Service:</span>
-                  <span className="font-semibold text-royal-navy">{selectedSubService?.name}</span>
+                <div className="flex flex-col gap-2 mb-4 border-b border-outline-variant pb-4">
+                  <span className="text-on-surface-variant text-sm font-bold">Selected Services:</span>
+                  <ul className="text-sm text-royal-navy list-disc list-inside">
+                    {selectedSubServices.map((sub, i) => (
+                      <li key={i} className="flex justify-between">
+                        <span>{sub.name}</span>
+                        <span>{sub.price}GH₵</span>
+                      </li>
+                    ))}
+                  </ul>
                 </div>
                 <div className="flex justify-between items-center">
-                  <span className="text-on-surface-variant text-sm">Total to Pay:</span>
-                  <span className="font-[family-name:var(--font-eb-garamond)] text-xl font-bold text-royal-navy">{selectedSubService?.price}GH</span>
+                  <span className="text-on-surface-variant text-sm font-bold">Total to Pay:</span>
+                  <span className="font-[family-name:var(--font-eb-garamond)] text-xl font-bold text-royal-navy">{totalPrice} GH₵</span>
                 </div>
               </div>
 
@@ -227,7 +258,7 @@ export default function BookingModal({ isOpen, onClose, category }: BookingModal
           {step < 3 ? (
             <button
               onClick={handleNextStep}
-              disabled={step === 1 && !selectedSubService}
+              disabled={step === 1 && selectedSubServices.length === 0}
               className="px-6 py-3 bg-royal-navy text-white font-[family-name:var(--font-montserrat)] text-[12px] tracking-[0.15em] uppercase font-bold hover:bg-majestic-gold hover:text-royal-navy transition-colors disabled:opacity-50 disabled:cursor-not-allowed ml-auto"
             >
               Next Step

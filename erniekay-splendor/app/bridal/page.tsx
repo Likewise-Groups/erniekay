@@ -6,6 +6,7 @@ import Link from "next/link";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import BridalPackages from "@/components/bridal/BridalPackages";
+import Slideshow from "@/components/bridal/Slideshow";
 import { submitBridalInquiry } from "@/app/actions/bridal";
 
 export default function BridalInquiryPage() {
@@ -103,27 +104,27 @@ export default function BridalInquiryPage() {
       <main className="max-w-[1280px] mx-auto overflow-hidden pt-20">
         
         {/* ── HERO SECTION (modern, video-led) ── */}
-        <section className="relative overflow-hidden bg-midnight-ink text-alabaster-white">
+        <section className="relative overflow-hidden text-alabaster-white" style={{ backgroundColor: "#111845" }}>
           {/* Ambient glows */}
-          <div className="pointer-events-none absolute -top-1/4 -left-1/4 h-[600px] w-[600px] rounded-full bg-majestic-gold/10 blur-[120px]" />
-          <div className="pointer-events-none absolute -bottom-1/3 right-0 h-[500px] w-[500px] rounded-full bg-royal-navy/50 blur-[100px]" />
+          <div className="ek-glow-pulse pointer-events-none absolute -top-1/4 -left-1/4 h-[600px] w-[600px] rounded-full bg-majestic-gold/10 blur-[120px]" />
+          <div className="ek-glow-pulse pointer-events-none absolute -bottom-1/3 right-0 h-[500px] w-[500px] rounded-full bg-royal-navy/50 blur-[100px]" style={{ animationDelay: "2.5s" }} />
 
           <div className="relative z-10 grid grid-cols-1 items-center gap-12 px-6 py-16 md:px-[64px] md:py-24 lg:grid-cols-2 lg:gap-8">
             {/* Left — copy */}
             <div className="max-w-xl space-y-8">
-              <span className="font-label-caps text-label-caps block tracking-[0.3em] text-majestic-gold">
+              <span className="ek-fade-up font-label-caps text-label-caps block tracking-[0.3em] text-majestic-gold" style={{ animationDelay: "0.05s" }}>
                 ERNIEKAY SPLENDOR · BRIDAL 2026
               </span>
-              <h1 className="font-display-lg text-[44px] font-semibold leading-[1.05] md:text-[64px]">
+              <h1 className="ek-fade-up font-display-lg text-[44px] font-semibold leading-[1.05] md:text-[64px]" style={{ animationDelay: "0.2s" }}>
                 Commence Your <br />
                 <span className="italic font-normal text-majestic-gold">Bridal Ritual</span>
               </h1>
-              <p className="font-body-base text-body-base leading-relaxed text-alabaster-white/70">
+              <p className="ek-fade-up font-body-base text-body-base leading-relaxed text-alabaster-white/70" style={{ animationDelay: "0.35s" }}>
                 A celebration of bespoke artistry and refined elegance. Share the canvas
                 of your wedding-day vision, and let our master artisans curate a look as
                 timeless as your commitment.
               </p>
-              <div className="flex flex-col gap-4 sm:flex-row">
+              <div className="ek-fade-up flex flex-col gap-4 sm:flex-row" style={{ animationDelay: "0.5s" }}>
                 <button
                   type="button"
                   onClick={() =>
@@ -147,7 +148,7 @@ export default function BridalInquiryPage() {
                   Make an Enquiry
                 </button>
               </div>
-              <div className="flex items-center gap-4 pt-2">
+              <div className="ek-fade-up flex items-center gap-4 pt-2" style={{ animationDelay: "0.65s" }}>
                 <span className="h-[1px] w-12 bg-majestic-gold" />
                 <span className="font-label-caps text-label-caps font-bold text-alabaster-white/80">
                   PRIVATE CONSULTATIONS
@@ -156,9 +157,9 @@ export default function BridalInquiryPage() {
             </div>
 
             {/* Right — layered videos */}
-            <div className="relative h-[440px] sm:h-[540px] lg:h-[600px]">
+            <div className="ek-fade-in relative h-[440px] sm:h-[540px] lg:h-[600px]" style={{ animationDelay: "0.4s" }}>
               {/* Primary video */}
-              <div className="absolute right-0 top-0 h-[86%] w-[72%] overflow-hidden rounded-[28px] shadow-2xl ring-1 ring-white/15">
+              <div className="ek-float absolute right-0 top-0 h-[86%] w-[72%] overflow-hidden rounded-[28px] shadow-2xl ring-1 ring-white/15">
                 <video
                   className="h-full w-full object-cover"
                   src="/obremsmakeover_19-Jun-2026.mp4"
@@ -172,7 +173,7 @@ export default function BridalInquiryPage() {
               </div>
 
               {/* Secondary video, overlapping */}
-              <div className="absolute bottom-0 left-0 h-[56%] w-[54%] overflow-hidden rounded-[28px] shadow-2xl ring-2 ring-majestic-gold/50">
+              <div className="ek-float-slow absolute bottom-0 left-0 h-[56%] w-[54%] overflow-hidden rounded-[28px] shadow-2xl ring-2 ring-majestic-gold/50">
                 <video
                   className="h-full w-full object-cover"
                   src="/hair.MOV"
@@ -505,17 +506,17 @@ export default function BridalInquiryPage() {
                 </div>
               </div>
 
-              {/* Graphic aspect box */}
+              {/* Graphic aspect box — slideshow */}
               <div className="relative group aspect-[3/4] overflow-hidden">
-                <Image
-                  alt="Makeup Texture"
-                  className="w-full h-full object-cover transition-transform duration-1000 group-hover:scale-110"
-                  src="https://lh3.googleusercontent.com/aida-public/AB6AXuBMpoGVOzfGl6hchnHfCuAfeHiEi2sgGe92KX2oe0y8eOJ4P92Lk5It04GBKRl9twKKgFEtIl0sLCW0H3sk4TeqcE-qdMrjc6TgA9hT2xq8ifivjnx-4UmuNE8cBXMKTnLOzoohXNcVrFDkwv8VPn5dGwnUjwepmSIcZOAgD4tmWqHJbeaf1JiYmaiOmzJ1sa4eXe0Pc0cDGBjRlCOUWku8u2R4rVPMH85330DCF11_kYssfJaCQh5f0yIRTaAQpZeL1aVKlXh2nUM"
-                  fill
-                  sizes="(max-width: 768px) 100vw, 30vw"
-                  unoptimized
+                <Slideshow
+                  slides={[
+                    { src: "/makeup4.jpg", alt: "Bride in beaded gown with full glam" },
+                    { src: "/MAKEUP9.jpg", alt: "Elegant bridal makeup look" },
+                    { src: "/bridal-hair-1.jpg", alt: "Bridal hairstyling" },
+                    { src: "/makeup7.jpg", alt: "Glam bridal makeup with smokey eye" },
+                  ]}
                 />
-                <div className="absolute inset-0 bg-royal-navy/20 flex items-end p-8">
+                <div className="pointer-events-none absolute inset-0 z-10 bg-royal-navy/20 flex items-end p-8">
                   <p className="font-display-lg text-headline-md text-alabaster-white italic">
                     &ldquo;Artistry is the silent language of elegance.&rdquo;
                   </p>

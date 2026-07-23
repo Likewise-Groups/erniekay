@@ -32,7 +32,7 @@ export default function AboutHero() {
             <FadeIn delay={200}>
               <div className="relative w-full aspect-[4/5] max-w-[600px] mx-auto rounded-tl-[80px] rounded-br-[80px] overflow-hidden shadow-[0_20px_50px_-15px_rgba(0,0,0,0.15)] ring-1 ring-white/50">
                 <Image
-                  src="/erniekay3.jpg"
+                  src="/hero-1.jpg"
                   alt="Founder of Erniekay Splendor"
                   fill
                   priority
@@ -44,7 +44,7 @@ export default function AboutHero() {
               
               {/* Floating badge */}
               <div className="absolute bottom-10 -left-6 md:-left-12 bg-white/90 backdrop-blur-md px-8 py-6 rounded-2xl shadow-xl border border-majestic-gold/20 flex flex-col items-center">
-                <span className="font-[family-name:var(--font-eb-garamond)] text-[32px] font-bold text-majestic-gold mb-1">10+</span>
+                <span className="font-[family-name:var(--font-eb-garamond)] text-[32px] font-bold text-majestic-gold mb-1">8+</span>
                 <span className="font-[family-name:var(--font-montserrat)] text-[10px] uppercase tracking-widest font-bold text-royal-navy text-center">Years of<br/>Excellence</span>
               </div>
             </FadeIn>

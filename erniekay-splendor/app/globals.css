@@ -183,3 +183,52 @@ body {
   transform: translateY(0);
   transition: opacity 0.9s ease-out, transform 0.9s ease-out;
 }
+
+/* ─── Hero animations ─────────────────────────────────────── */
+@keyframes ek-fade-up {
+  from { opacity: 0; transform: translateY(28px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+.ek-fade-up {
+  opacity: 0;
+  animation: ek-fade-up 0.9s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+}
+
+@keyframes ek-fade-in {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+.ek-fade-in {
+  opacity: 0;
+  animation: ek-fade-in 1.3s ease-out forwards;
+}
+
+@keyframes ek-float {
+  0%, 100% { transform: translateY(0); }
+  50%      { transform: translateY(-14px); }
+}
+.ek-float { animation: ek-float 7s ease-in-out infinite; }
+
+@keyframes ek-float-slow {
+  0%, 100% { transform: translateY(0); }
+  50%      { transform: translateY(10px); }
+}
+.ek-float-slow { animation: ek-float-slow 9s ease-in-out infinite; }
+
+@keyframes ek-glow-pulse {
+  0%, 100% { opacity: 0.35; transform: scale(1); }
+  50%      { opacity: 0.7; transform: scale(1.08); }
+}
+.ek-glow-pulse { animation: ek-glow-pulse 8s ease-in-out infinite; }
+
+@media (prefers-reduced-motion: reduce) {
+  .ek-fade-up,
+  .ek-fade-in,
+  .ek-float,
+  .ek-float-slow,
+  .ek-glow-pulse {
+    animation: none;
+    opacity: 1;
+    transform: none;
+  }
+}

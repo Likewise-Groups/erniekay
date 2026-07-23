@@ -22,7 +22,7 @@ export default function LeadArtist() {
             {/* Years badge */}
             <div className="absolute -bottom-6 -right-6 bg-majestic-gold p-8 z-20">
               <p className="font-[family-name:var(--font-eb-garamond)] text-[40px] leading-[48px] font-semibold text-royal-navy">
-                15+
+                8+
               </p>
               <p className="font-[family-name:var(--font-montserrat)] text-[11px] leading-[16px] tracking-[0.15em] uppercase font-bold text-royal-navy">
                 Years of Excellence
@@ -39,7 +39,7 @@ export default function LeadArtist() {
               Meet Erniekay Splendor
             </h2>
             <p className="font-[family-name:var(--font-montserrat)] text-[16px] md:text-[18px] leading-[28px] text-on-surface-variant mb-6">
-              With a career spanning over a decade in international fashion and bridal artistry,
+              With a career spanning over 8 years in international fashion and bridal artistry,
               Erniekay brings a unique editorial perspective to every bride she touches. Her
               philosophy is simple: makeup should enhance, never mask.
             </p>

@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import Image from "next/image";
+import FadeIn from "@/components/FadeIn";
 
 type BridalPackage = {
   id: string;
@@ -173,7 +174,7 @@ const hairPackages: BridalPackage[] = [
       "One style each: engagement & wedding/reception",
     ],
     featured: false,
-    imgSrc: "/hair1.jpg",
+    imgSrc: "/bridal-hair-1.jpg",
     imgAlt: "Two-day bridal hairstyling by Erniekay Splendor",
   },
   {
@@ -186,7 +187,7 @@ const hairPackages: BridalPackage[] = [
       "One style each: engagement, wedding & reception",
     ],
     featured: false,
-    imgSrc: "/hair.jpg",
+    imgSrc: "/bridal-hair-2.jpg",
     imgAlt: "Bridal hairstyling across two days by Erniekay Splendor",
   },
   {
@@ -200,7 +201,7 @@ const hairPackages: BridalPackage[] = [
       "One hairstyle for the bride's mum",
     ],
     featured: false,
-    imgSrc: "/hair2.jpg",
+    imgSrc: "/bridal-hair-3.jpg",
     imgAlt: "Premium bridal hairstyling by Erniekay Splendor",
   },
   {
@@ -214,7 +215,7 @@ const hairPackages: BridalPackage[] = [
       "One style each for thanksgiving & bride's mum",
     ],
     featured: false,
-    imgSrc: "/hair3.jpg",
+    imgSrc: "/bridal-hair-4.jpg",
     imgAlt: "Multi-day bridal hairstyling by Erniekay Splendor",
   },
   {
@@ -228,7 +229,7 @@ const hairPackages: BridalPackage[] = [
       "Styles for thanksgiving, bride's mum & sister",
     ],
     featured: false,
-    imgSrc: "/hair4.jpg",
+    imgSrc: "/bridal-hair-5.jpg",
     imgAlt: "Signature multi-day bridal hairstyling by Erniekay Splendor",
   },
 ];
@@ -466,15 +467,15 @@ export default function BridalPackages({
 
         {/* Package Cards — price-forward */}
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-          {packages.map((pkg) => {
+          {packages.map((pkg, index) => {
             const label = `${active.label} · ${pkg.title}`;
             const isSelected = selectedPackage === label;
             const tier = mode === "hair" ? hairTier[pkg.id] : undefined;
             const isSpecial = tier?.startsWith("Special");
             return (
+              <FadeIn key={pkg.id} className="h-full" delay={(index % 3) * 120}>
               <div
-                key={pkg.id}
-                className={`bg-white group hover:editorial-shadow transition-all duration-500 relative flex flex-col p-8 ${
+                className={`bg-white group hover:editorial-shadow transition-all duration-500 relative flex h-full flex-col p-8 hover:-translate-y-1 ${
                   isSelected
                     ? "border-2 border-royal-navy"
                     : pkg.featured
@@ -571,6 +572,7 @@ export default function BridalPackages({
                   {isSelected ? "Selected — Enquire Below" : "Enquire About This Package"}
                 </button>
               </div>
+              </FadeIn>
             );
           })}
         </div>

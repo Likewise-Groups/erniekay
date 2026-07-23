@@ -16,7 +16,7 @@ export default function AcademyHero() {
         />
       </div>
 
-      {/* Content */}
+      {/* Content and CTA */}
       <div className="relative z-10 max-w-[1280px] mx-auto px-6 md:px-[64px] w-full">
         <div className="max-w-2xl">
           <span className="font-[family-name:var(--font-montserrat)] text-[12px] leading-[16px] tracking-[0.3em] uppercase text-majestic-gold mb-6 block">

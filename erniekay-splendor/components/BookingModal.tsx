@@ -43,6 +43,26 @@ const currency = new Intl.NumberFormat("en-GH", {
 
 const today = new Date().toISOString().split("T")[0];
 
+// Bookings are available 9:00 AM – 4:00 PM, in 30-minute slots.
+const OPEN_MINUTES = 9 * 60;
+const CLOSE_MINUTES = 16 * 60;
+const TIME_SLOTS: string[] = (() => {
+  const slots: string[] = [];
+  for (let mins = OPEN_MINUTES; mins <= CLOSE_MINUTES; mins += 30) {
+    const h = Math.floor(mins / 60);
+    const m = mins % 60;
+    slots.push(`${String(h).padStart(2, "0")}:${String(m).padStart(2, "0")}`);
+  }
+  return slots;
+})();
+
+const formatSlot = (value: string): string => {
+  const [h, m] = value.split(":").map(Number);
+  const period = h >= 12 ? "PM" : "AM";
+  const hour12 = h % 12 === 0 ? 12 : h % 12;
+  return `${hour12}:${String(m).padStart(2, "0")} ${period}`;
+};
+
 export default function BookingModal({ isOpen, onClose, category }: BookingModalProps) {
   const [step, setStep] = useState<ModalStep>(1);
   const [selectedSubServices, setSelectedSubServices] = useState<SubService[]>([]);
@@ -248,9 +268,21 @@ export default function BookingModal({ isOpen, onClose, category }: BookingModal
                 <input required value={formData.name} onChange={(e) => setFormData({ ...formData, name: e.target.value })} placeholder="Full name" className="border border-outline-variant px-4 py-3 font-body-base" />
                 <input required value={formData.email} onChange={(e) => setFormData({ ...formData, email: e.target.value })} placeholder="Email address" type="email" className="border border-outline-variant px-4 py-3 font-body-base" />
                 <input required value={formData.phone} onChange={(e) => setFormData({ ...formData, phone: e.target.value })} placeholder="MTN MoMo phone number" type="tel" className="border border-outline-variant px-4 py-3 font-body-base" />
-                <div className="grid grid-cols-2 gap-3">
-                  <input required value={formData.date} onChange={(e) => setFormData({ ...formData, date: e.target.value })} min={today} type="date" className="border border-outline-variant px-4 py-3 font-body-base" />
-                  <input required value={formData.time} onChange={(e) => setFormData({ ...formData, time: e.target.value })} type="time" className="border border-outline-variant px-4 py-3 font-body-base" />
+                <div>
+                  <div className="grid grid-cols-2 gap-3">
+                    <input required value={formData.date} onChange={(e) => setFormData({ ...formData, date: e.target.value })} min={today} type="date" className="border border-outline-variant px-4 py-3 font-body-base" />
+                    <select required value={formData.time} onChange={(e) => setFormData({ ...formData, time: e.target.value })} className="border border-outline-variant px-4 py-3 font-body-base">
+                      <option value="" disabled>
+                        Select time
+                      </option>
+                      {TIME_SLOTS.map((slot) => (
+                        <option key={slot} value={slot}>
+                          {formatSlot(slot)}
+                        </option>
+                      ))}
+                    </select>
+                  </div>
+                  <p className="mt-2 text-xs text-warm-slate">Appointments are available 9:00 AM – 4:00 PM.</p>
                 </div>
                 <textarea value={formData.notes} onChange={(e) => setFormData({ ...formData, notes: e.target.value })} placeholder="Notes or special requests" rows={4} className="border border-outline-variant px-4 py-3 font-body-base md:col-span-2" />
               </div>

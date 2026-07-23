@@ -18,6 +18,10 @@ export async function submitBridalInquiry(formData: any) {
         aesthetic: formData.aesthetic || null,
         selectedServices: formData.selectedServices ? JSON.stringify(formData.selectedServices) : null,
         package: formData.package || null,
+        prepLocation: formData.prepLocation || null,
+        extraMakeupCount: formData.extraMakeupCount || null,
+        groomService:
+          typeof formData.groomService === "boolean" ? formData.groomService : null,
       },
     });
 

@@ -22,6 +22,9 @@ model BridalInquiry {
   aesthetic        String?
   selectedServices String? // Stored as JSON or comma separated string
   package          String?
+  prepLocation     String?
+  extraMakeupCount String?
+  groomService     Boolean?
   createdAt        DateTime @default(now())
 }
 

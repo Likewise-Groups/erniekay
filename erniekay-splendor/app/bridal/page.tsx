@@ -5,6 +5,7 @@ import Image from "next/image";
 import Link from "next/link";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
+import BridalPackages from "@/components/bridal/BridalPackages";
 import { submitBridalInquiry } from "@/app/actions/bridal";
 
 export default function BridalInquiryPage() {
@@ -18,8 +19,19 @@ export default function BridalInquiryPage() {
   const [bridalPartySize, setBridalPartySize] = useState("");
   const [aesthetic, setAesthetic] = useState("");
   const [selectedServices, setSelectedServices] = useState<string[]>([]);
+  const [selectedPackage, setSelectedPackage] = useState<string | null>(null);
+  const [prepLocation, setPrepLocation] = useState("");
+  const [extraMakeupCount, setExtraMakeupCount] = useState("");
+  const [groomService, setGroomService] = useState<"" | "Yes" | "No">("");
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitStatus, setSubmitStatus] = useState<"idle" | "sending" | "sent">("idle");
+
+  const handleSelectPackage = (pkg: string) => {
+    setSelectedPackage(pkg);
+    document
+      .getElementById("bridal-enquiry")
+      ?.scrollIntoView({ behavior: "smooth", block: "start" });
+  };
 
   const services = [
     "Bridal Hair",
@@ -50,7 +62,11 @@ export default function BridalInquiryPage() {
       bridalPartySize,
       aesthetic,
       selectedServices,
-      package: null
+      package: selectedPackage,
+      prepLocation,
+      extraMakeupCount,
+      groomService:
+        groomService === "Yes" ? true : groomService === "No" ? false : null
     });
 
     setIsSubmitting(false);
@@ -69,6 +85,10 @@ export default function BridalInquiryPage() {
         setBridalPartySize("");
         setAesthetic("");
         setSelectedServices([]);
+        setSelectedPackage(null);
+        setPrepLocation("");
+        setExtraMakeupCount("");
+        setGroomService("");
       }, 3000);
     } else {
       setSubmitStatus("idle");
@@ -82,70 +102,133 @@ export default function BridalInquiryPage() {
 
       <main className="max-w-[1280px] mx-auto overflow-hidden pt-20">
         
-        {/* ── HERO SECTION ── */}
-        {/* Desktop Viewport (Double-column layout) */}
-        <section className="hidden md:grid md:grid-cols-12 gap-0 min-h-[614px] items-center">
-          <div className="md:col-span-7 px-6 md:px-[64px] py-12 md:py-24 space-y-8">
-            <div className="space-y-4">
-              <span className="font-label-caps text-label-caps text-champagne-taupe tracking-[0.3em] block">
-                ERNIEKAY SPLENDOR
+        {/* ── HERO SECTION (modern, video-led) ── */}
+        <section className="relative overflow-hidden bg-midnight-ink text-alabaster-white">
+          {/* Ambient glows */}
+          <div className="pointer-events-none absolute -top-1/4 -left-1/4 h-[600px] w-[600px] rounded-full bg-majestic-gold/10 blur-[120px]" />
+          <div className="pointer-events-none absolute -bottom-1/3 right-0 h-[500px] w-[500px] rounded-full bg-royal-navy/50 blur-[100px]" />
+
+          <div className="relative z-10 grid grid-cols-1 items-center gap-12 px-6 py-16 md:px-[64px] md:py-24 lg:grid-cols-2 lg:gap-8">
+            {/* Left — copy */}
+            <div className="max-w-xl space-y-8">
+              <span className="font-label-caps text-label-caps block tracking-[0.3em] text-majestic-gold">
+                ERNIEKAY SPLENDOR · BRIDAL 2026
               </span>
-              <h1 className="font-display-lg text-[36px] md:text-[48px] leading-tight text-royal-navy font-semibold">
+              <h1 className="font-display-lg text-[44px] font-semibold leading-[1.05] md:text-[64px]">
                 Commence Your <br />
-                <span className="italic font-normal">Bridal Ritual</span>
+                <span className="italic font-normal text-majestic-gold">Bridal Ritual</span>
               </h1>
+              <p className="font-body-base text-body-base leading-relaxed text-alabaster-white/70">
+                A celebration of bespoke artistry and refined elegance. Share the canvas
+                of your wedding-day vision, and let our master artisans curate a look as
+                timeless as your commitment.
+              </p>
+              <div className="flex flex-col gap-4 sm:flex-row">
+                <button
+                  type="button"
+                  onClick={() =>
+                    document
+                      .getElementById("bridal-packages")
+                      ?.scrollIntoView({ behavior: "smooth", block: "start" })
+                  }
+                  className="font-label-caps text-label-caps bg-majestic-gold px-8 py-4 font-bold text-royal-navy shadow-[0_10px_30px_rgba(212,175,55,0.25)] transition-all duration-300 hover:-translate-y-1 hover:bg-white"
+                >
+                  View Packages
+                </button>
+                <button
+                  type="button"
+                  onClick={() =>
+                    document
+                      .getElementById("bridal-enquiry")
+                      ?.scrollIntoView({ behavior: "smooth", block: "start" })
+                  }
+                  className="font-label-caps text-label-caps border border-alabaster-white/40 px-8 py-4 font-bold transition-colors hover:border-majestic-gold hover:text-majestic-gold"
+                >
+                  Make an Enquiry
+                </button>
+              </div>
+              <div className="flex items-center gap-4 pt-2">
+                <span className="h-[1px] w-12 bg-majestic-gold" />
+                <span className="font-label-caps text-label-caps font-bold text-alabaster-white/80">
+                  PRIVATE CONSULTATIONS
+                </span>
+              </div>
             </div>
-            <p className="font-body-base text-body-base text-warm-slate max-w-lg leading-relaxed">
-              A celebration of bespoke artistry and refined elegance. We invite you to share the canvas of your wedding day vision, allowing our master artisans to curate a look that is as timeless as your commitment.
-            </p>
-            <div className="flex items-center gap-4 text-royal-navy">
-              <span className="w-12 h-[1px] bg-majestic-gold"></span>
-              <span className="font-label-caps text-label-caps font-bold">PRIVATE CONSULTATIONS</span>
+
+            {/* Right — layered videos */}
+            <div className="relative h-[440px] sm:h-[540px] lg:h-[600px]">
+              {/* Primary video */}
+              <div className="absolute right-0 top-0 h-[86%] w-[72%] overflow-hidden rounded-[28px] shadow-2xl ring-1 ring-white/15">
+                <video
+                  className="h-full w-full object-cover"
+                  src="/obremsmakeover_19-Jun-2026.mp4"
+                  autoPlay
+                  muted
+                  loop
+                  playsInline
+                  poster="/makeup4.jpg"
+                />
+                <div className="absolute inset-0 bg-gradient-to-t from-midnight-ink/40 to-transparent" />
+              </div>
+
+              {/* Secondary video, overlapping */}
+              <div className="absolute bottom-0 left-0 h-[56%] w-[54%] overflow-hidden rounded-[28px] shadow-2xl ring-2 ring-majestic-gold/50">
+                <video
+                  className="h-full w-full object-cover"
+                  src="/hair.MOV"
+                  autoPlay
+                  muted
+                  loop
+                  playsInline
+                  poster="/hair1.jpg"
+                />
+              </div>
+
+              {/* Floating caption chip */}
+              <div className="absolute right-6 bottom-4 z-10 bg-midnight-ink/70 px-4 py-2 backdrop-blur-sm">
+                <span className="font-label-caps text-[10px] font-bold tracking-[0.2em] text-majestic-gold">
+                  LIVE ARTISTRY
+                </span>
+              </div>
             </div>
-          </div>
-          <div className="md:col-span-5 min-h-[614px] relative overflow-hidden">
-            <Image
-              alt="Bridal Elegance"
-              className="absolute inset-0 w-full h-full object-cover"
-              src="https://lh3.googleusercontent.com/aida-public/AB6AXuAu2K-jCwTYPY4OGxpXIydkWvZA1enPk7Y8tQrq8gf0RyVrtS7HZIJiXXDiqTd4FPNX7KANSpsfpq3Bemevz81WDo_LY7bUuNODcdlTL2iaXusEGAXNhyyRyFRhyXM_h2rvFvdd-S6DrpYnGpD7OHZ27_HZ3Vx0nXs9_ZqRlTLIoE7MPTlZNDq0G_62-6tjld9TRtqIpGCS-KwV5zeGrWY3ID60TQ6FGxTePf_V9VyH68IbNgjCOMNf0ei1ATZ_Yy04wmfWjlZ6_Hc"
-              fill
-              priority
-              unoptimized
-            />
           </div>
         </section>
 
-        {/* Mobile Viewport (Background Image with gradient bottom text overlay) */}
-        <section className="relative h-[530px] flex items-end md:hidden">
-          <div className="absolute inset-0 w-full h-full overflow-hidden">
-            <Image
-              alt="Luxury Bridal Styling"
-              className="w-full h-full object-cover"
-              src="https://lh3.googleusercontent.com/aida-public/AB6AXuDLUjDwWZofdBXYM4hbc0Tt7PQfxQG71GjPvbYgNl8DEKXAPCSIi3X9pdkq-MAl1c8lY2yc7zBfJ5_B1kqoHfZA-GVGmHFG3rqej-yVIOh8SHBMkWURwDST_8BZzu60I0y1SMxuMrYC7ZplGpU31twr3VCHmvupCxVK2VuDaHNCxygzL9y-3twYjwUqoT4F-Q69D_2-HQw6Al0nBE3H2_qbh3rC1t-07L_we0ccGJx6KDYp1Ft0NaT4WTecNPWRMfB197ISBDdxncw"
-              fill
-              priority
-              unoptimized
-            />
-          </div>
-          <div className="absolute inset-0 bg-gradient-to-t from-royal-navy/80 via-transparent to-transparent"></div>
-          <div className="relative px-6 pb-12 w-full text-alabaster-white z-10">
-            <h1 className="font-display-lg-mobile text-[32px] font-semibold leading-tight mb-4">
-              Commence Your Bridal Ritual
-            </h1>
-            <p className="font-body-base opacity-90 max-w-sm">
-              Welcome to a sanctuary of bespoke beauty. Entrust your vision to our artistry as we prepare for your most sacred celebration.
-            </p>
-          </div>
-        </section>
+        {/* ── PACKAGES & PRICING ── */}
+        <div id="bridal-packages" className="scroll-mt-24">
+          <BridalPackages
+            onSelectPackage={handleSelectPackage}
+            selectedPackage={selectedPackage}
+          />
+        </div>
 
         {/* ── FORM & TIMELINE SECTION ── */}
-        <section className="px-6 md:px-[64px] py-12 md:py-24">
+        <section id="bridal-enquiry" className="scroll-mt-24 px-6 md:px-[64px] py-12 md:py-24">
           <div className="grid grid-cols-1 md:grid-cols-12 gap-gutter-desktop">
             
             {/* Left: Main Form */}
             <div className="md:col-span-8 bg-surface-container-lowest border border-champagne-taupe/10 p-8 md:p-12">
               <form onSubmit={handleSubmit} className="space-y-16">
-                
+
+                {/* Package of interest (set from the collections above) */}
+                {selectedPackage && (
+                  <div className="flex items-center justify-between gap-4 border-l-4 border-majestic-gold bg-alabaster-white/60 px-5 py-4">
+                    <div>
+                      <p className="font-label-caps text-[11px] font-bold text-champagne-taupe tracking-[0.15em] uppercase">
+                        Package of Interest
+                      </p>
+                      <p className="font-headline-md text-royal-navy mt-1">{selectedPackage}</p>
+                    </div>
+                    <button
+                      type="button"
+                      onClick={() => setSelectedPackage(null)}
+                      className="font-label-caps text-[11px] font-bold text-warm-slate hover:text-royal-navy transition-colors uppercase tracking-[0.15em]"
+                    >
+                      Clear
+                    </button>
+                  </div>
+                )}
+
                 {/* 01: The Individual */}
                 <div className="space-y-8">
                   <div className="flex items-baseline gap-4">
@@ -257,6 +340,48 @@ export default function BridalInquiryPage() {
                           placeholder="6"
                           type="number"
                         />
+                      </div>
+                    </div>
+                    <div className="relative">
+                      <label className="font-label-caps text-[11px] font-bold text-royal-navy block mb-1">Bridal Prep Location</label>
+                      <input
+                        value={prepLocation}
+                        onChange={(e) => setPrepLocation(e.target.value)}
+                        className="w-full bg-transparent border-t-0 border-x-0 border-b border-champagne-taupe/40 py-3 focus:ring-0 focus:outline-none focus:border-b-royal-navy px-0 placeholder-warm-slate/30"
+                        placeholder="Hotel, home or studio where you'll get ready"
+                        type="text"
+                      />
+                    </div>
+                    <div className="grid grid-cols-2 gap-6">
+                      <div className="relative">
+                        <label className="font-label-caps text-[11px] font-bold text-royal-navy block mb-1">Bridesmaids / Mothers Needing Makeup</label>
+                        <input
+                          value={extraMakeupCount}
+                          onChange={(e) => setExtraMakeupCount(e.target.value)}
+                          className="w-full bg-transparent border-t-0 border-x-0 border-b border-champagne-taupe/40 py-3 focus:ring-0 focus:outline-none focus:border-b-royal-navy px-0 placeholder-warm-slate/30"
+                          placeholder="0"
+                          type="number"
+                          min="0"
+                        />
+                      </div>
+                      <div className="relative">
+                        <label className="font-label-caps text-[11px] font-bold text-royal-navy block mb-2">Groom Service</label>
+                        <div className="flex gap-3 pt-1">
+                          {(["Yes", "No"] as const).map((option) => (
+                            <button
+                              key={option}
+                              type="button"
+                              onClick={() => setGroomService(option)}
+                              className={`px-6 py-2 font-label-caps text-[11px] font-bold uppercase tracking-[0.15em] transition-all active:scale-95 ${
+                                groomService === option
+                                  ? "border border-majestic-gold text-majestic-gold"
+                                  : "border border-outline-variant text-warm-slate hover:border-royal-navy"
+                              }`}
+                            >
+                              {option}
+                            </button>
+                          ))}
+                        </div>
                       </div>
                     </div>
                   </div>

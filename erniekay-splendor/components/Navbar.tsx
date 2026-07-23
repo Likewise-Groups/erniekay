@@ -199,9 +199,11 @@ export default function Navbar() {
     <>
       {/* ── Top Bar ── */}
       <nav
-        className={`fixed top-0 w-full z-50 flex justify-between items-center bg-surface border-b border-outline-variant transition-all duration-300
+        className={`fixed top-0 w-full z-50 flex justify-between items-center transition-all duration-500 ease-out
           px-6 md:px-[64px]
-          ${scrolled ? "h-16 shadow-sm" : "h-20"}
+          ${scrolled
+            ? "h-16 bg-surface/85 backdrop-blur-xl border-b border-outline-variant/50 shadow-[0_8px_30px_rgba(17,24,68,0.08)]"
+            : "h-20 bg-surface/60 backdrop-blur-md border-b border-transparent"}
         `}
       >
         {/* Mobile left: hamburger + logo | Desktop left: logo */}
@@ -219,12 +221,11 @@ export default function Navbar() {
           {/* Logo */}
           <Link href="/" className="flex items-center">
             <Image
-              src="https://lh3.googleusercontent.com/aida-public/AB6AXuCZw_y4dATKYatHzjv9PQwRw5kZSaShal4-I6iB9txmC9LQYUYBj7VrT_3j3OtdJ9JrErYTGMJho74Lax8wPmxRIVjTzYcPRMEtnu5fPHYWn0QSOMiEG5mJK9VenmIf8_9ZOis_ekZkCKCxZ2FCzDw9NbLuNC_DEWxTtX5hp1Qv0aI-BD-OAxlz2rNkoDy-WepFomvUd1Q-i7GBxbIQ_UB_mxEpknsylxpyBrhLp3mKDth_MCurW7YwyW7Ipp5KM52hqGJFwYcHgT4"
+              src="/erniekayLogoW.jpeg"
               alt="Erniekay Splendor Logo"
-              width={160}
-              height={40}
-              className="h-8 md:h-10 w-auto object-contain"
-              unoptimized
+              width={200}
+              height={72}
+              className="h-9 md:h-11 w-auto object-contain"
               priority
             />
           </Link>
@@ -237,25 +238,30 @@ export default function Navbar() {
               key={link.label}
               href={link.href}
               onClick={() => setMenuOpen(false)}
-              className={`font-[family-name:var(--font-montserrat)] text-[16px] leading-[26px] hover:text-majestic-gold transition-colors duration-300 ${
+              className={`group relative font-[family-name:var(--font-montserrat)] text-[15px] leading-[26px] transition-colors duration-300 ${
                 isActive(link.href)
-                  ? "text-royal-navy border-b-2 border-majestic-gold pb-1"
-                  : "text-on-surface-variant"
+                  ? "text-royal-navy font-semibold"
+                  : "text-on-surface-variant hover:text-royal-navy"
               }`}
             >
               {link.label}
+              <span
+                className={`absolute -bottom-1 left-0 h-[2px] rounded-full bg-majestic-gold transition-all duration-300 ease-out ${
+                  isActive(link.href) ? "w-full" : "w-0 group-hover:w-full"
+                }`}
+              />
             </Link>
           ))}
         </div>
 
         {/* Right: icons + Book Now */}
-        <div className="flex items-center justify-end gap-3 md:gap-4 flex-1">
+        <div className="flex items-center justify-end gap-1 md:gap-2 flex-1">
           {/* Search Button */}
           <button
             id="nav-search"
             aria-label="Search"
             onClick={() => setSearchOpen(true)}
-            className="text-royal-navy hover:text-majestic-gold transition-colors"
+            className="w-10 h-10 rounded-full flex items-center justify-center text-royal-navy hover:bg-royal-navy/5 hover:text-majestic-gold transition-all duration-300 active:scale-90"
           >
             <span className="material-symbols-outlined">search</span>
           </button>
@@ -265,11 +271,11 @@ export default function Navbar() {
             href="/shop"
             id="nav-cart"
             aria-label="Shopping bag"
-            className="relative text-royal-navy hover:text-majestic-gold transition-colors"
+            className="relative w-10 h-10 rounded-full flex items-center justify-center text-royal-navy hover:bg-royal-navy/5 hover:text-majestic-gold transition-all duration-300 active:scale-90"
           >
             <span className="material-symbols-outlined">shopping_bag</span>
             {cartCount > 0 && (
-              <span className="absolute -top-1.5 -right-1.5 bg-majestic-gold text-royal-navy text-[9px] font-bold w-4 h-4 rounded-full flex items-center justify-center leading-none">
+              <span className="absolute top-1 right-1 bg-majestic-gold text-royal-navy text-[9px] font-bold w-4 h-4 rounded-full flex items-center justify-center leading-none">
                 {cartCount > 9 ? "9+" : cartCount}
               </span>
             )}
@@ -278,7 +284,7 @@ export default function Navbar() {
           <button
             id="nav-book-now"
             onClick={() => setShowCategoryPicker(true)}
-            className="bg-royal-navy text-on-primary px-4 md:px-8 py-2 md:py-3 font-[family-name:var(--font-montserrat)] text-[11px] md:text-[12px] leading-[16px] tracking-[0.15em] uppercase font-bold border border-majestic-gold hover:bg-primary-container transition-all active:opacity-80 flex items-center justify-center"
+            className="ml-1 md:ml-2 bg-royal-navy text-white px-5 md:px-8 py-2.5 md:py-3 rounded-full font-[family-name:var(--font-montserrat)] text-[11px] md:text-[12px] leading-[16px] tracking-[0.15em] uppercase font-bold border border-majestic-gold/60 shadow-[0_6px_20px_rgba(17,24,68,0.15)] hover:bg-majestic-gold hover:text-royal-navy hover:border-majestic-gold hover:-translate-y-0.5 hover:shadow-[0_10px_25px_rgba(212,175,55,0.3)] transition-all duration-300 active:translate-y-0 active:scale-95 flex items-center justify-center"
           >
             Book Now
           </button>
@@ -325,12 +331,11 @@ export default function Navbar() {
         {/* Footer of the menu */}
         <div className="mt-auto pt-8 border-t border-on-surface-variant/30">
           <Image
-            src="https://lh3.googleusercontent.com/aida-public/AB6AXuDfny7Zx2dAFLTCnd5i1xkg1Rrkj6Dc_zoKmkSdfrW5ENcHTrZD1eFWqBRy1pW-Gg-0NeLjsEOdq752EDnfxgRt9ehJ7qw8c0FWjI0EOnGp0Ja3uNGim4d6mRuNFFC9T78EYgIunoiepLAoGg6EeDtEGleMh4GWum6ta4_5mMMsgAzglzVilzcdfPUPok4viD5UDCyHw8t0XZsBLfAcLX-RN5aYkLB8wQrO0Pp3gaehU0Opx5QDVijpVSb9tTXmDEaN56COSZlepOQ"
+            src="/ernieKayLogo.jpeg"
             alt="Erniekay Splendor Logo Light"
-            width={120}
-            height={40}
-            className="h-10 w-auto object-contain mb-4"
-            unoptimized
+            width={200}
+            height={72}
+            className="h-12 w-auto object-contain mb-4 rounded"
           />
           <p className="text-surface-variant font-[family-name:var(--font-montserrat)] text-[12px] leading-[16px] tracking-[0.15em] uppercase">
             Timeless Editorial Elegance

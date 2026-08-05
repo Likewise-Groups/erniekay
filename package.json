@@ -1,13 +1,11 @@
 {
   "name": "erniekay-monorepo",
   "private": true,
-  "workspaces": [
-    "erniekay-splendor"
-  ],
   "scripts": {
-    "dev": "npm run dev --workspace=erniekay-splendor",
-    "build": "npm run build --workspace=erniekay-splendor",
-    "start": "npm run start --workspace=erniekay-splendor",
-    "lint": "npm run lint --workspace=erniekay-splendor"
+    "dev": "npm run dev --prefix erniekay-splendor",
+    "build": "npm run build --prefix erniekay-splendor",
+    "start": "npm run start --prefix erniekay-splendor",
+    "lint": "npm run lint --prefix erniekay-splendor"
   }
 }
+

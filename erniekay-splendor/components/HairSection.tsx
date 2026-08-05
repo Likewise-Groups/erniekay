@@ -83,70 +83,70 @@ const hairServices = [
   {
     id: "hair-services",
     tag: "Essentials",
-    price: "From 100GH",
+    price: "From 200GH",
     title: "Hair Services",
     description:
       "A comprehensive overview of our essential hair care rituals including shampooing, relaxing, cutting, and styling.",
     subServices: [
-      { name: "Shampooing", price: 120 },
-      { name: "Relaxing", price: 200 },
-      { name: "Perm Cut Only", price: 100 },
-      { name: "Normal Pony", price: 150 },
+      { name: "Shampooing", price: 200 },
+      { name: "Relaxing", price: 350 },
+      { name: "Perm Cut Only", price: 350 },
+      { name: "Normal Pony", price: 250 },
     ],
   },
   {
     id: "sew-in",
     tag: "Extensions",
-    price: "From 180GH",
+    price: "From 300GH",
     title: "Sew-In",
     description:
       "Explore our premium sew-in extension services tailored for a flawless and natural finish.",
     subServices: [
-      { name: "Traditional Sew-In", price: 250 },
-      { name: "Closure Sew-In", price: 250 },
-      { name: "Frontal Sew-In", price: 300 },
-      { name: "Half-Up Half-Down", price: 180 },
+      { name: "Traditional Sew-In", price: 300 },
+      { name: "Closure Sew-In", price: 400 },
+      { name: "Frontal Sew-In", price: 500 },
+      { name: "Half-Up Half-Down", price: 400 },
     ],
   },
   {
     id: "installation",
     tag: "Finishing",
-    price: "From 50GH",
+    price: "From 200GH",
     title: "Installation",
     description:
       "Professional installation services to perfectly secure and blend your closures and frontals.",
     subServices: [
-      { name: "Closure Installation", price: 50 },
-      { name: "Frontal Installation", price: 100 },
-      { name: "180 Frontal Pony", price: 200 },
-      { name: "360 Frontal Pony", price: 350 },
+      { name: "Closure Installation", price: 200 },
+      { name: "Frontal Installation", price: 300 },
+      { name: "180 Frontal Pony", price: 400 },
+      { name: "360 Frontal Pony", price: 600 },
     ],
   },
   {
     id: "styling",
     tag: "Artistry",
-    price: "From 40GH",
+    price: "From 70GH",
     title: "Styling",
     description:
       "Elevate your look with expert straightening, curling, and customized styling for any occasion.",
     subServices: [
-      { name: "Straightening", price: "40-100" },
-      { name: "Curling", price: "50-150" },
-      { name: "Pixie Curls", price: 100 },
-      { name: "Bridal Inspo", price: "200-500" },
+      { name: "Straightening", price: "70-150" },
+      { name: "Curling", price: "80-200" },
+      { name: "Pixie Curls", price: 150 },
+      { name: "Bridal Inspo", price: "300-1000" },
     ],
   },
   {
     id: "revamp-colouring",
     tag: "Transformation",
-    price: "From 60GH",
+    price: "From 100GH",
     title: "Revamp / Colouring",
     description:
       "Transform your hair with our signature coloring techniques and comprehensive revamping treatments.",
     subServices: [
-      { name: "Revamp Only", price: "60-200" },
-      { name: "Colouring", price: "250-600" },
-      { name: "Natural Hair", price: "100-400" },
+      { name: "Revamp Only", price: "100-200" },
+      { name: "Colouring", price: "400-1000" },
+      { name: "Natural Hair", price: "300-500" },
     ],
   },
 ];
@@ -155,13 +155,13 @@ const customWiggingCategory: ServiceCategory = {
   id: "custom-wigging",
   title: "Custom Wigging",
   subServices: [
-    { name: "Closure (2*6, 4*4)", price: 200 },
-    { name: "Closure (5*5, 6*6)", price: 250 },
-    { name: "180 Frontal", price: 300 },
-    { name: "360 Frontal", price: 350 },
-    { name: "Express services", price: "100-200" },
-    { name: "Pixie wigging", price: 50 },
-    { name: "Corn-rolls", price: 40 },
+    { name: "Closure (2*6, 4*4)", price: 300 },
+    { name: "Closure (5*5, 6*6)", price: 400 },
+    { name: "180 Frontal", price: 500 },
+    { name: "360 Frontal", price: 700 },
+    { name: "Express services (+extra)", price: "200-400" },
+    { name: "Pixie wigging (+extra)", price: 150 },
+    { name: "Corn-rolls for wigging", price: 80 },
   ],
 };
 
@@ -317,7 +317,7 @@ export default function HairSection() {
                     Investment
                   </span>
                   <span className="inline-block bg-white/10 backdrop-blur-md px-5 py-2 rounded-full border border-white/20 text-white font-[family-name:var(--font-montserrat)] text-[16px] font-semibold">
-                    From 200 GH₵
+                    From 300 GH₵
                   </span>
                 </div>
                 <button

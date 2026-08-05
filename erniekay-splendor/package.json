@@ -7,8 +7,10 @@
     "build": "prisma generate && next build",
     "start": "next start",
     "lint": "eslint",
-    "postinstall": "prisma generate"
+    "postinstall": "prisma generate",
+    "test:mtn": "node scripts/test-mtn-momo.mjs"
   },
+
   "dependencies": {
     "@prisma/client": "^5.22.0",
     "next": "16.2.7",

@@ -9,6 +9,8 @@ type RequestToPayInput = {
 
 type MtnTokenResponse = {
   access_token: string;
+  token_type?: string;
+  expires_in?: number;
 };
 
 export type MtnPaymentResult = {
@@ -18,35 +20,68 @@ export type MtnPaymentResult = {
   message: string;
 };
 
-const baseUrl = process.env.MTN_MOMO_BASE_URL || "https://sandbox.momodeveloper.mtn.com";
-const subscriptionKey = process.env.MTN_MOMO_COLLECTION_SUBSCRIPTION_KEY;
-const apiUser = process.env.MTN_MOMO_API_USER;
-const apiKey = process.env.MTN_MOMO_API_KEY;
-const targetEnvironment = process.env.MTN_MOMO_TARGET_ENVIRONMENT || "sandbox";
+// MTN MADAPI – Production: https://api.mtn.com/v1
+// Token URL (per portal): POST /oauth/access_token  (Client Credentials flow)
+const baseUrl = process.env.MTN_MOMO_BASE_URL || "https://api.mtn.com/v1";
 
-const hasLiveConfig = Boolean(subscriptionKey && apiUser && apiKey);
+// Consumer Key  → used as OAuth2 client_id  (was incorrectly called "API User")
+const consumerKey = process.env.MTN_MOMO_API_USER;
+// Consumer Secret → used as OAuth2 client_secret  (was incorrectly called "API Key")
+const consumerSecret = process.env.MTN_MOMO_API_KEY;
+
+// Optional – only required if your subscription enforces the Ocp-Apim-Subscription-Key header
+const subscriptionKey = process.env.MTN_MOMO_COLLECTION_SUBSCRIPTION_KEY;
+
+// Company MoMo number — all payments are directed to this account
+const merchantNumber = process.env.MTN_MOMO_MERCHANT_NUMBER;
+
+const targetEnvironment = process.env.MTN_MOMO_TARGET_ENVIRONMENT || "production";
+
+// Live mode requires consumer key + secret + company MoMo number
+const hasLiveConfig = Boolean(consumerKey && consumerSecret && merchantNumber);
 
 const sanitizePhone = (phone: string) => phone.replace(/[^\d]/g, "");
 
-const getToken = async () => {
-  if (!subscriptionKey || !apiUser || !apiKey) {
-    throw new Error("MTN MoMo credentials are not configured.");
+/**
+ * Fetches an OAuth2 Bearer token using Client Credentials grant.
+ * Token URL: POST {baseUrl}/oauth/access_token
+ * Auth: Basic base64(consumerKey:consumerSecret)
+ * Body: grant_type=client_credentials  (application/x-www-form-urlencoded)
+ */
+const getToken = async (): Promise<string> => {
+  if (!consumerKey || !consumerSecret) {
+    throw new Error("MTN MoMo credentials are not configured (MTN_MOMO_API_USER / MTN_MOMO_API_KEY).");
   }
 
-  const credentials = Buffer.from(`${apiUser}:${apiKey}`).toString("base64");
-  const response = await fetch(`${baseUrl}/collection/token/`, {
+  const credentials = Buffer.from(`${consumerKey}:${consumerSecret}`).toString("base64");
+
+  const headers: Record<string, string> = {
+    Authorization: `Basic ${credentials}`,
+    "Content-Type": "application/x-www-form-urlencoded",
+  };
+
+  // Include subscription key header only when provided
+  if (subscriptionKey) {
+    headers["Ocp-Apim-Subscription-Key"] = subscriptionKey;
+  }
+
+  const response = await fetch(`${baseUrl}/oauth/access_token`, {
     method: "POST",
-    headers: {
-      Authorization: `Basic ${credentials}`,
-      "Ocp-Apim-Subscription-Key": subscriptionKey,
-    },
+    headers,
+    body: "grant_type=client_credentials",
   });
 
   if (!response.ok) {
-    throw new Error("MTN MoMo token request failed.");
+    const errorText = await response.text().catch(() => "");
+    throw new Error(`MTN token request failed (${response.status}): ${errorText}`);
   }
 
   const data = (await response.json()) as MtnTokenResponse;
+
+  if (!data.access_token) {
+    throw new Error("MTN token response did not include an access_token.");
+  }
+
   return data.access_token;
 };
 
@@ -63,22 +98,31 @@ export async function requestMtnPayment(input: RequestToPayInput): Promise<MtnPa
   const referenceId = crypto.randomUUID();
   const token = await getToken();
 
+  const headers: Record<string, string> = {
+    Authorization: `Bearer ${token}`,
+    "Content-Type": "application/json",
+    "X-Reference-Id": referenceId,
+    "X-Target-Environment": targetEnvironment,
+  };
+
+  if (subscriptionKey) {
+    headers["Ocp-Apim-Subscription-Key"] = subscriptionKey;
+  }
+
   const response = await fetch(`${baseUrl}/collection/v1_0/requesttopay`, {
     method: "POST",
-    headers: {
-      Authorization: `Bearer ${token}`,
-      "Content-Type": "application/json",
-      "X-Reference-Id": referenceId,
-      "X-Target-Environment": targetEnvironment,
-      "Ocp-Apim-Subscription-Key": subscriptionKey as string,
-    },
+    headers,
     body: JSON.stringify({
       amount: input.amount.toFixed(2),
       currency: process.env.MTN_MOMO_CURRENCY || "GHS",
       externalId: referenceId,
       payer: {
         partyIdType: "MSISDN",
-        partyId: sanitizePhone(input.phone),
+        partyId: sanitizePhone(input.phone),       // customer paying
+      },
+      payee: {
+        partyIdType: "MSISDN",
+        partyId: sanitizePhone(merchantNumber!),   // company MoMo account receives
       },
       payerMessage: `Erniekay booking: ${input.serviceName}`,
       payeeNote: `Booking payment for ${input.customerName}`,
@@ -86,7 +130,8 @@ export async function requestMtnPayment(input: RequestToPayInput): Promise<MtnPa
   });
 
   if (!response.ok && response.status !== 202) {
-    throw new Error("MTN MoMo request-to-pay failed.");
+    const errorText = await response.text().catch(() => "");
+    throw new Error(`MTN MoMo request-to-pay failed (${response.status}): ${errorText}`);
   }
 
   return {
@@ -108,16 +153,23 @@ export async function getMtnPaymentStatus(referenceId: string): Promise<MtnPayme
   }
 
   const token = await getToken();
+
+  const headers: Record<string, string> = {
+    Authorization: `Bearer ${token}`,
+    "X-Target-Environment": targetEnvironment,
+  };
+
+  if (subscriptionKey) {
+    headers["Ocp-Apim-Subscription-Key"] = subscriptionKey;
+  }
+
   const response = await fetch(`${baseUrl}/collection/v1_0/requesttopay/${referenceId}`, {
-    headers: {
-      Authorization: `Bearer ${token}`,
-      "X-Target-Environment": targetEnvironment,
-      "Ocp-Apim-Subscription-Key": subscriptionKey as string,
-    },
+    headers,
   });
 
   if (!response.ok) {
-    throw new Error("MTN MoMo payment status check failed.");
+    const errorText = await response.text().catch(() => "");
+    throw new Error(`MTN MoMo status check failed (${response.status}): ${errorText}`);
   }
 
   const data = (await response.json()) as { status?: MtnPaymentResult["status"] };

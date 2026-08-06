@@ -104,7 +104,7 @@ const allServiceCategories: ServiceCategory[] = [
 const navLinks = [
   { label: "Salon Services",   href: "/" },
   { label: "Bridal Artistry",  href: "/bridal" },
-  { label: "Beauty Academy",   href: "/academy" },
+  // { label: "Beauty Academy",   href: "/academy" },
   { label: "Gallery",          href: "/gallery" },
   { label: "About",            href: "/about" },
   { label: "Shop",             href: "/shop" },

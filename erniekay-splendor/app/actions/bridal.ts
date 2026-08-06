@@ -1,12 +1,14 @@
 "use server";
 
-import { prisma } from "@/lib/prisma";
+import { db } from "@/lib/db";
+import { bridalInquiries } from "@/lib/schema";
 import { revalidatePath } from "next/cache";
 
 export async function submitBridalInquiry(formData: any) {
   try {
-    const inquiry = await prisma.bridalInquiry.create({
-      data: {
+    const [inquiry] = await db
+      .insert(bridalInquiries)
+      .values({
         fullName: formData.fullName,
         email: formData.email,
         phone: formData.phone,
@@ -16,14 +18,16 @@ export async function submitBridalInquiry(formData: any) {
         totalGuests: formData.totalGuests || null,
         bridalPartySize: formData.bridalPartySize || null,
         aesthetic: formData.aesthetic || null,
-        selectedServices: formData.selectedServices ? JSON.stringify(formData.selectedServices) : null,
+        selectedServices: formData.selectedServices
+          ? JSON.stringify(formData.selectedServices)
+          : null,
         package: formData.package || null,
         prepLocation: formData.prepLocation || null,
         extraMakeupCount: formData.extraMakeupCount || null,
         groomService:
           typeof formData.groomService === "boolean" ? formData.groomService : null,
-      },
-    });
+      })
+      .returning();
 
     revalidatePath("/bridal");
     return { success: true, inquiry };

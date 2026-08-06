@@ -1,7 +1,10 @@
 "use server";
 
+import { eq } from "drizzle-orm";
 import { revalidatePath } from "next/cache";
-import { prisma } from "@/lib/prisma";
+
+import { db } from "@/lib/db";
+import { appointments, receipts, services } from "@/lib/schema";
 
 const toNumber = (value: FormDataEntryValue | null, fallback = 0) => {
   const parsed = Number(value);
@@ -30,16 +33,14 @@ export async function createService(formData: FormData) {
 
   if (!name || !category) return;
 
-  await prisma.service.create({
-    data: {
-      name,
-      category,
-      description: String(formData.get("description") || "").trim() || null,
-      imageUrl: String(formData.get("imageUrl") || "").trim() || null,
-      features: normalizeFeatures(formData.get("features")),
-      durationMinutes: toNumber(formData.get("durationMinutes"), 60),
-      price: toNumber(formData.get("price"), 0),
-    },
+  await db.insert(services).values({
+    name,
+    category,
+    description: String(formData.get("description") || "").trim() || null,
+    imageUrl: String(formData.get("imageUrl") || "").trim() || null,
+    features: normalizeFeatures(formData.get("features")),
+    durationMinutes: toNumber(formData.get("durationMinutes"), 60),
+    price: toNumber(formData.get("price"), 0),
   });
 
   revalidatePath("/admin");
@@ -51,10 +52,7 @@ export async function updateAppointmentStatus(formData: FormData) {
 
   if (!appointmentId) return;
 
-  await prisma.appointment.update({
-    where: { id: appointmentId },
-    data: { status },
-  });
+  await db.update(appointments).set({ status }).where(eq(appointments.id, appointmentId));
 
   revalidatePath("/admin");
 }
@@ -64,21 +62,26 @@ export async function issueReceipt(formData: FormData) {
 
   if (!appointmentId) return;
 
-  const appointment = await prisma.appointment.findUnique({
-    where: { id: appointmentId },
-    include: { service: true, receipt: true },
-  });
+  const [appointment] = await db
+    .select({
+      serviceName: services.name,
+      servicePrice: services.price,
+      existingReceiptId: receipts.id,
+    })
+    .from(appointments)
+    .innerJoin(services, eq(appointments.serviceId, services.id))
+    .leftJoin(receipts, eq(receipts.appointmentId, appointments.id))
+    .where(eq(appointments.id, appointmentId))
+    .limit(1);
 
-  if (!appointment || appointment.receipt) return;
+  if (!appointment || appointment.existingReceiptId) return;
 
-  await prisma.receipt.create({
-    data: {
-      receiptNumber: receiptNumber(),
-      appointmentId,
-      amount: appointment.service.price,
-      currency: "USD",
-      notes: `Receipt for ${appointment.service.name}`,
-    },
+  await db.insert(receipts).values({
+    receiptNumber: receiptNumber(),
+    appointmentId,
+    amount: appointment.servicePrice,
+    currency: "USD",
+    notes: `Receipt for ${appointment.serviceName}`,
   });
 
   revalidatePath("/admin");

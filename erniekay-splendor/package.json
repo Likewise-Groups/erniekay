@@ -4,16 +4,18 @@
   "private": true,
   "scripts": {
     "dev": "next dev",
-    "build": "prisma generate && next build",
+    "build": "next build",
     "start": "next start",
     "lint": "eslint",
-    "postinstall": "prisma generate",
+    "db:check": "node --env-file=.env node_modules/tsx/dist/cli.mjs scripts/db-check.mts",
+    "db:pull": "drizzle-kit pull",
+    "db:studio": "drizzle-kit studio",
     "test:mtn": "node scripts/test-mtn-momo.mjs"
   },
-
   "dependencies": {
-    "@prisma/client": "^5.22.0",
+    "drizzle-orm": "^0.45.2",
     "next": "16.2.7",
+    "postgres": "^3.4.9",
     "react": "19.2.4",
     "react-dom": "19.2.4"
   },
@@ -22,9 +24,9 @@
     "@types/node": "^20",
     "@types/react": "^19",
     "@types/react-dom": "^19",
+    "drizzle-kit": "^0.31.10",
     "eslint": "^9",
     "eslint-config-next": "16.2.7",
-    "prisma": "^5.22.0",
     "tailwindcss": "^4",
     "typescript": "^5"
   }

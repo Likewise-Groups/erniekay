@@ -1,5 +1,8 @@
+import { eq } from "drizzle-orm";
 import { NextResponse } from "next/server";
-import { prisma } from "@/lib/prisma";
+
+import { db } from "@/lib/db";
+import { appointments, services, users } from "@/lib/schema";
 
 export async function POST(req: Request) {
   try {
@@ -37,7 +40,7 @@ export async function POST(req: Request) {
       .filter(Boolean)
       .join("\n\n");
 
-    // For the appointment date, create a basic Date object. 
+    // For the appointment date, create a basic Date object.
     // In a real app, you would parse the specific timezone, but this works for local demo.
     const appointmentDate = new Date(`${date}T${time}`);
     const fallbackAppointmentDate = new Date(`${date} ${time}`);
@@ -48,41 +51,59 @@ export async function POST(req: Request) {
         : new Date();
     const normalizedServiceId = serviceId || "custom-service";
     const normalizedPrice = Number.isFinite(Number(totalPrice)) ? Number(totalPrice) : 0;
+    const normalizedServiceName = serviceName || selectedServices || normalizedServiceId;
+    const normalizedCategory = category || "Booking Flow";
 
-    await prisma.service.upsert({
-      where: { id: normalizedServiceId },
-      update: {
-        name: serviceName || selectedServices || normalizedServiceId,
-        category: category || "Booking Flow",
-        price: normalizedPrice,
-      },
-      create: {
+    await db
+      .insert(services)
+      .values({
         id: normalizedServiceId,
-        name: serviceName || selectedServices || normalizedServiceId,
-        category: category || "Booking Flow",
+        name: normalizedServiceName,
+        category: normalizedCategory,
         durationMinutes: 60,
         price: normalizedPrice,
-      },
-    });
+      })
+      .onConflictDoUpdate({
+        target: services.id,
+        set: {
+          name: normalizedServiceName,
+          category: normalizedCategory,
+          price: normalizedPrice,
+          updatedAt: new Date(),
+        },
+      });
 
-    const booking = await prisma.appointment.create({
-      data: {
+    // Equivalent of Prisma's connectOrCreate: reuse the existing client if the
+    // email is already known, otherwise create them.
+    const [createdUser] = await db
+      .insert(users)
+      .values({ email, firstName, lastName, phone })
+      .onConflictDoNothing({ target: users.email })
+      .returning({ id: users.id });
+
+    const userId =
+      createdUser?.id ??
+      (
+        await db
+          .select({ id: users.id })
+          .from(users)
+          .where(eq(users.email, email))
+          .limit(1)
+      )[0]?.id;
+
+    if (!userId) {
+      return NextResponse.json({ error: "Failed to resolve client" }, { status: 500 });
+    }
+
+    const [booking] = await db
+      .insert(appointments)
+      .values({
         appointmentDate: normalizedDate,
         notes: finalNotes,
-        user: {
-          connectOrCreate: {
-            where: { email },
-            create: {
-              email,
-              firstName,
-              lastName,
-              phone,
-            },
-          },
-        },
-        service: { connect: { id: normalizedServiceId } },
-      },
-    });
+        userId,
+        serviceId: normalizedServiceId,
+      })
+      .returning();
 
     return NextResponse.json({ success: true, booking }, { status: 201 });
   } catch (error) {

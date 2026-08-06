@@ -1,12 +1,14 @@
 "use server";
 
-import { prisma } from "@/lib/prisma";
+import { db } from "@/lib/db";
+import { admissionsApplications } from "@/lib/schema";
 import { revalidatePath } from "next/cache";
 
 export async function submitAdmission(formData: any) {
   try {
-    const application = await prisma.admissionsApplication.create({
-      data: {
+    const [application] = await db
+      .insert(admissionsApplications)
+      .values({
         programId: formData.programId,
         firstName: formData.firstName,
         lastName: formData.lastName,
@@ -15,8 +17,8 @@ export async function submitAdmission(formData: any) {
         status: formData.status || "Submitted",
         experience: formData.experience || null,
         portfolioUrl: formData.portfolioUrl || null,
-      },
-    });
+      })
+      .returning();
 
     revalidatePath("/academy/admissions");
     return { success: true, application };

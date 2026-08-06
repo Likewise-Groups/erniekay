@@ -1,0 +1,33 @@
+{
+  "$schema": "node_modules/wrangler/config-schema.json",
+  "name": "erniekay",
+  "main": ".open-next/worker.js",
+  "compatibility_date": "2026-08-06",
+  // postgres.js needs node:net / node:tls.
+  "compatibility_flags": ["nodejs_compat"],
+  "assets": {
+    "directory": ".open-next/assets",
+    "binding": "ASSETS"
+  },
+  "observability": {
+    "enabled": true
+  },
+  // Builds the Worker bundle before deploying. Without this, `wrangler deploy`
+  // would upload a stale (or missing) .open-next directory.
+  "build": {
+    "command": "npx opennextjs-cloudflare build"
+  },
+  // A Worker cannot open a direct TCP connection to Supabase, so Postgres goes
+  // through Hyperdrive, which also pools connections on Cloudflare's side.
+  //
+  // This file must stay committed: `wrangler deploy` replaces the Worker's
+  // bindings and plain vars with whatever is here, so anything added only in
+  // the dashboard is wiped on the next deploy. Secrets are the exception —
+  // DATABASE_URL is a secret and is managed with `wrangler secret put`.
+  "hyperdrive": [
+    {
+      "binding": "HYPERDRIVE",
+      "id": "8acf0c6c83eb4b05857611c7de97fc53"
+    }
+  ]
+}

@@ -4,33 +4,6 @@ import { NextResponse } from "next/server";
 import { getDb } from "@/lib/db";
 import { appointments, services, users } from "@/lib/schema";
 
-// TEMPORARY: `?debug=<DEBUG_TOKEN>` echoes the failure cause so the Worker's
-// error can be read without dashboard access. Remove once the cause is known.
-const DEBUG_TOKEN = "dz-9f3a7c";
-
-/** Error summary with any connection-string credentials stripped out. */
-function describeError(error: unknown) {
-  const redact = (text: string) => text.replace(/postgres(ql)?:\/\/[^\s"']*/gi, "postgres://[redacted]");
-  if (!(error instanceof Error)) return { value: redact(String(error)) };
-  return {
-    name: error.name,
-    message: redact(error.message),
-    cause: error.cause instanceof Error ? redact(error.cause.message) : undefined,
-    stack: redact(error.stack ?? "").split("\n").slice(0, 6).join("\n"),
-    hasDatabaseUrl: Boolean(process.env.DATABASE_URL),
-    databaseUrlHost: process.env.DATABASE_URL
-      ? (() => {
-          try {
-            const u = new URL(process.env.DATABASE_URL!);
-            return `${u.hostname}:${u.port}`;
-          } catch {
-            return "unparseable";
-          }
-        })()
-      : null,
-  };
-}
-
 export async function POST(req: Request) {
   try {
     const body = await req.json();
@@ -144,14 +117,6 @@ export async function POST(req: Request) {
       error instanceof Error ? `${error.name}: ${error.message}\n${error.stack}` : error,
     );
 
-    const debugRequested =
-      new URL(req.url).searchParams.get("debug") === DEBUG_TOKEN;
-
-    return NextResponse.json(
-      debugRequested
-        ? { error: "Failed to create booking", debug: describeError(error) }
-        : { error: "Failed to create booking" },
-      { status: 500 },
-    );
+    return NextResponse.json({ error: "Failed to create booking" }, { status: 500 });
   }
 }

@@ -20,11 +20,11 @@ function DesktopServiceCard({ id, tag, price, title, description, onBook }: Serv
     <div className="group relative bg-white/70 backdrop-blur-xl border border-white/60 rounded-[32px] p-8 shadow-[0_10px_40px_-15px_rgba(0,0,0,0.05)] hover:shadow-[0_20px_50px_-15px_rgba(212,175,55,0.2)] hover:border-majestic-gold/40 hover:-translate-y-2 transition-all duration-500 overflow-hidden flex flex-col h-full cursor-pointer" onClick={onBook}>
       <div className="absolute top-0 right-0 w-48 h-48 bg-majestic-gold/10 rounded-full blur-[40px] -mr-20 -mt-20 transition-all duration-700 group-hover:scale-150 opacity-0 group-hover:opacity-100" />
       
-      <div className="relative z-10 flex justify-between items-start mb-6">
-        <span className="font-[family-name:var(--font-montserrat)] text-[10px] leading-[16px] tracking-[0.2em] font-bold uppercase text-royal-navy bg-majestic-gold/10 px-4 py-1.5 rounded-full border border-majestic-gold/20">
+      <div className="relative z-10 flex flex-wrap justify-between items-center gap-x-3 gap-y-2 mb-6">
+        <span className="font-[family-name:var(--font-montserrat)] text-[10px] leading-[16px] tracking-[0.2em] font-bold uppercase text-royal-navy bg-majestic-gold/10 px-4 py-1.5 rounded-full border border-majestic-gold/20 whitespace-nowrap">
           {tag}
         </span>
-        <span className="font-[family-name:var(--font-montserrat)] text-[14px] font-bold text-royal-navy bg-white px-4 py-1.5 rounded-full border border-outline-variant/30 shadow-sm flex items-center gap-1 transition-colors duration-300 group-hover:bg-majestic-gold/10 group-hover:border-majestic-gold/30">
+        <span className="font-[family-name:var(--font-montserrat)] text-[14px] leading-[16px] font-bold text-royal-navy bg-white px-4 py-1.5 rounded-full border border-outline-variant/30 shadow-sm whitespace-nowrap shrink-0 transition-colors duration-300 group-hover:bg-majestic-gold/10 group-hover:border-majestic-gold/30">
           {price.replace('GH', ' GH₵')}
         </span>
       </div>
@@ -53,11 +53,11 @@ function MobileServiceCard({ id, tag, title, price, description, onBook }: Servi
       <div className="absolute top-0 right-0 w-32 h-32 bg-majestic-gold/10 rounded-full blur-2xl -mr-16 -mt-16 opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
       
       <div className="relative z-10 flex flex-col mb-4">
-        <div className="flex justify-between items-center mb-3">
-          <span className="font-[family-name:var(--font-montserrat)] text-[9px] tracking-[0.2em] font-bold uppercase text-royal-navy bg-majestic-gold/10 px-3 py-1 rounded-full">
+        <div className="flex flex-wrap justify-between items-center gap-x-3 gap-y-2 mb-3">
+          <span className="font-[family-name:var(--font-montserrat)] text-[9px] tracking-[0.2em] font-bold uppercase text-royal-navy bg-majestic-gold/10 px-3 py-1 rounded-full whitespace-nowrap">
             {tag}
           </span>
-          <span className="font-[family-name:var(--font-montserrat)] text-[12px] font-bold text-royal-navy bg-white px-3 py-1 rounded-full border border-outline-variant/30 shadow-sm">
+          <span className="font-[family-name:var(--font-montserrat)] text-[12px] font-bold text-royal-navy bg-white px-3 py-1 rounded-full border border-outline-variant/30 shadow-sm whitespace-nowrap shrink-0">
             {price.replace('GH', ' GH₵')}
           </span>
         </div>

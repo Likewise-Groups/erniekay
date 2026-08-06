@@ -22,23 +22,30 @@ export type MtnPaymentResult = {
 
 // MTN MADAPI – Production: https://api.mtn.com/v1
 // Token URL (per portal): POST /oauth/access_token  (Client Credentials flow)
-const baseUrl = process.env.MTN_MOMO_BASE_URL || "https://api.mtn.com/v1";
+//
+// Read per call, never at module scope: on Cloudflare Workers process.env is
+// populated per request, so module-level reads run before the secrets exist and
+// would pin hasLiveConfig to false no matter what is configured.
+function getConfig() {
+  const config = {
+    baseUrl: process.env.MTN_MOMO_BASE_URL || "https://api.mtn.com/v1",
+    // Consumer Key → OAuth2 client_id (confusingly named "API User")
+    consumerKey: process.env.MTN_MOMO_API_USER,
+    // Consumer Secret → OAuth2 client_secret (confusingly named "API Key")
+    consumerSecret: process.env.MTN_MOMO_API_KEY,
+    // Only required if the subscription enforces Ocp-Apim-Subscription-Key
+    subscriptionKey: process.env.MTN_MOMO_COLLECTION_SUBSCRIPTION_KEY,
+    // Company MoMo number — every payment is collected into this account
+    merchantNumber: process.env.MTN_MOMO_MERCHANT_NUMBER,
+    targetEnvironment: process.env.MTN_MOMO_TARGET_ENVIRONMENT || "production",
+  };
 
-// Consumer Key  → used as OAuth2 client_id  (was incorrectly called "API User")
-const consumerKey = process.env.MTN_MOMO_API_USER;
-// Consumer Secret → used as OAuth2 client_secret  (was incorrectly called "API Key")
-const consumerSecret = process.env.MTN_MOMO_API_KEY;
-
-// Optional – only required if your subscription enforces the Ocp-Apim-Subscription-Key header
-const subscriptionKey = process.env.MTN_MOMO_COLLECTION_SUBSCRIPTION_KEY;
-
-// Company MoMo number — all payments are directed to this account
-const merchantNumber = process.env.MTN_MOMO_MERCHANT_NUMBER;
-
-const targetEnvironment = process.env.MTN_MOMO_TARGET_ENVIRONMENT || "production";
-
-// Live mode requires consumer key + secret + company MoMo number
-const hasLiveConfig = Boolean(consumerKey && consumerSecret && merchantNumber);
+  return {
+    ...config,
+    // Live mode requires consumer key + secret + company MoMo number
+    hasLiveConfig: Boolean(config.consumerKey && config.consumerSecret && config.merchantNumber),
+  };
+}
 
 const sanitizePhone = (phone: string) => phone.replace(/[^\d]/g, "");
 
@@ -49,8 +56,10 @@ const sanitizePhone = (phone: string) => phone.replace(/[^\d]/g, "");
  * Body: grant_type=client_credentials  (application/x-www-form-urlencoded)
  */
 const getToken = async (): Promise<string> => {
+  const { baseUrl, consumerKey, consumerSecret, subscriptionKey } = getConfig();
+
   if (!consumerKey || !consumerSecret) {
-    throw new Error("MTN MoMo credentials are not configured (MTN_MOMO_API_USER / MTN_MOMO_API_KEY).");
+    throw new MtnNotConfiguredError();
   }
 
   const credentials = Buffer.from(`${consumerKey}:${consumerSecret}`).toString("base64");
@@ -73,7 +82,10 @@ const getToken = async (): Promise<string> => {
 
   if (!response.ok) {
     const errorText = await response.text().catch(() => "");
-    throw new Error(`MTN token request failed (${response.status}): ${errorText}`);
+    // Credentials rejected or the API is down. Treated as unavailable rather
+    // than a crash, so the customer is told to use another method instead of
+    // seeing a generic failure.
+    throw new MtnUnavailableError(`MTN token request failed (${response.status}): ${errorText}`);
   }
 
   const data = (await response.json()) as MtnTokenResponse;
@@ -85,8 +97,20 @@ const getToken = async (): Promise<string> => {
   return data.access_token;
 };
 
-/** Thrown when MoMo credentials are missing, so callers can say so specifically. */
-export class MtnNotConfiguredError extends Error {
+/**
+ * MoMo cannot currently take a payment — missing configuration, rejected
+ * credentials, or MTN being unreachable. Callers turn this into a 503 telling
+ * the customer to use another method, rather than a generic failure.
+ */
+export class MtnUnavailableError extends Error {
+  constructor(message: string) {
+    super(message);
+    this.name = "MtnUnavailableError";
+  }
+}
+
+/** Thrown when MoMo credentials are missing entirely. */
+export class MtnNotConfiguredError extends MtnUnavailableError {
   constructor() {
     super(
       "MTN Mobile Money is not configured. Set MTN_MOMO_API_USER, MTN_MOMO_API_KEY and MTN_MOMO_MERCHANT_NUMBER.",
@@ -107,6 +131,9 @@ export class MtnNotConfiguredError extends Error {
 // });
 
 export async function requestMtnPayment(input: RequestToPayInput): Promise<MtnPaymentResult> {
+  const { baseUrl, subscriptionKey, merchantNumber, targetEnvironment, hasLiveConfig } =
+    getConfig();
+
   if (!hasLiveConfig) throw new MtnNotConfiguredError();
 
   const referenceId = crypto.randomUUID();
@@ -145,7 +172,9 @@ export async function requestMtnPayment(input: RequestToPayInput): Promise<MtnPa
 
   if (!response.ok && response.status !== 202) {
     const errorText = await response.text().catch(() => "");
-    throw new Error(`MTN MoMo request-to-pay failed (${response.status}): ${errorText}`);
+    throw new MtnUnavailableError(
+      `MTN MoMo request-to-pay failed (${response.status}): ${errorText}`,
+    );
   }
 
   return {
@@ -157,6 +186,8 @@ export async function requestMtnPayment(input: RequestToPayInput): Promise<MtnPa
 }
 
 export async function getMtnPaymentStatus(referenceId: string): Promise<MtnPaymentResult> {
+  const { baseUrl, subscriptionKey, targetEnvironment, hasLiveConfig } = getConfig();
+
   // Mock mode disabled — see requestMtnPayment. Previously returned SUCCESSFUL
   // for any reference id, which would confirm a payment that never happened.
   if (!hasLiveConfig) throw new MtnNotConfiguredError();
@@ -178,7 +209,9 @@ export async function getMtnPaymentStatus(referenceId: string): Promise<MtnPayme
 
   if (!response.ok) {
     const errorText = await response.text().catch(() => "");
-    throw new Error(`MTN MoMo status check failed (${response.status}): ${errorText}`);
+    throw new MtnUnavailableError(
+      `MTN MoMo status check failed (${response.status}): ${errorText}`,
+    );
   }
 
   const data = (await response.json()) as { status?: MtnPaymentResult["status"] };

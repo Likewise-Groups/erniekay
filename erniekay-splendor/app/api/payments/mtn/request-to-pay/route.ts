@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import { MtnNotConfiguredError, requestMtnPayment } from "@/lib/mtnMomo";
+import { MtnUnavailableError, requestMtnPayment } from "@/lib/mtnMomo";
 
 export async function POST(req: Request) {
   try {
@@ -24,7 +24,7 @@ export async function POST(req: Request) {
   } catch (error) {
     console.error("MTN MoMo request error:", error);
 
-    if (error instanceof MtnNotConfiguredError) {
+    if (error instanceof MtnUnavailableError) {
       return NextResponse.json(
         {
           error:

@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import { getMtnPaymentStatus, MtnNotConfiguredError } from "@/lib/mtnMomo";
+import { getMtnPaymentStatus, MtnUnavailableError } from "@/lib/mtnMomo";
 
 export async function GET(_req: Request, { params }: { params: Promise<{ referenceId: string }> }) {
   try {
@@ -14,7 +14,7 @@ export async function GET(_req: Request, { params }: { params: Promise<{ referen
   } catch (error) {
     console.error("MTN MoMo status error:", error);
 
-    if (error instanceof MtnNotConfiguredError) {
+    if (error instanceof MtnUnavailableError) {
       return NextResponse.json(
         { error: "Mobile Money is not available right now." },
         { status: 503 },

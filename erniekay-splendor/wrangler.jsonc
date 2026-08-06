@@ -12,6 +12,15 @@
   "observability": {
     "enabled": true
   },
+  // Non-sensitive MoMo configuration. Credentials and the merchant number are
+  // secrets (`wrangler secret put`), not vars — vars in this file are public,
+  // and anything set only in the dashboard is wiped on the next deploy.
+  "vars": {
+    "MTN_MOMO_BASE_URL": "https://api.mtn.com/v1",
+    "MTN_MOMO_TARGET_ENVIRONMENT": "production",
+    "MTN_MOMO_CURRENCY": "GHS",
+    "MTN_MOMO_CALLBACK_URL": "https://erniekaysplendor.org/api/payments/mtn/callback"
+  },
   // Builds the Worker bundle before deploying. Without this, `wrangler deploy`
   // would upload a stale (or missing) .open-next directory.
   "build": {

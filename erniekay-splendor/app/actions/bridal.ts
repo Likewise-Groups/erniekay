@@ -1,12 +1,12 @@
 "use server";
 
-import { db } from "@/lib/db";
+import { getDb } from "@/lib/db";
 import { bridalInquiries } from "@/lib/schema";
 import { revalidatePath } from "next/cache";
 
 export async function submitBridalInquiry(formData: any) {
   try {
-    const [inquiry] = await db
+    const [inquiry] = await getDb()
       .insert(bridalInquiries)
       .values({
         fullName: formData.fullName,

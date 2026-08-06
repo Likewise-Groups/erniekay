@@ -1,12 +1,12 @@
 "use server";
 
-import { db } from "@/lib/db";
+import { getDb } from "@/lib/db";
 import { admissionsApplications } from "@/lib/schema";
 import { revalidatePath } from "next/cache";
 
 export async function submitAdmission(formData: any) {
   try {
-    const [application] = await db
+    const [application] = await getDb()
       .insert(admissionsApplications)
       .values({
         programId: formData.programId,

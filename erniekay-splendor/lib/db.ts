@@ -3,27 +3,12 @@ import postgres from "postgres";
 
 import * as schema from "./schema";
 
-type Db = PostgresJsDatabase<typeof schema>;
-
-// Module-level cache: one client per isolate.
-let cached: Db | undefined;
+export type Db = PostgresJsDatabase<typeof schema>;
 
 // Dev only — survives HMR module reloads so we don't leak connections.
-const globalForDb = global as unknown as { pgClient?: postgres.Sql; db?: Db };
+const globalForDb = global as unknown as { db?: Db };
 
-/**
- * Connects lazily, on first query. Nothing here may run at module load: `next
- * build` imports every route to collect page data, and the build environment
- * has no DATABASE_URL. Cloudflare Workers also disallow I/O at global scope.
- */
-function getDb(): Db {
-  if (cached) return cached;
-
-  if (globalForDb.db) {
-    cached = globalForDb.db;
-    return cached;
-  }
-
+function createDb(): Db {
   const connectionString = process.env.DATABASE_URL;
 
   if (!connectionString) {
@@ -40,26 +25,35 @@ function getDb(): Db {
     ssl: "require",
     // Supabase's transaction-mode pooler (6543) cannot use prepared statements.
     prepare: false,
-    // One connection per isolate — serverless/edge invocations are short-lived.
+    // One connection per request — Workers invocations are short-lived.
     max: 1,
   });
 
-  cached = drizzle(client, { schema });
-
-  if (process.env.NODE_ENV !== "production") {
-    globalForDb.pgClient = client;
-    globalForDb.db = cached;
-  }
-
-  return cached;
+  return drizzle(client, { schema });
 }
 
-export const db = new Proxy({} as Db, {
-  get(_target, prop) {
-    const instance = getDb();
-    const value = Reflect.get(instance, prop);
-    return typeof value === "function" ? value.bind(instance) : value;
-  },
-});
+/**
+ * Returns a database client scoped to the current request.
+ *
+ * Call this once per request handler and reuse the result for every query in
+ * that handler. Do NOT hoist the result to module scope: Cloudflare Workers
+ * forbid using an I/O object (the TCP socket) across request contexts, so a
+ * cached client throws "Cannot perform I/O on behalf of a different request"
+ * on the second and later requests served by the same isolate.
+ *
+ * Connecting here rather than at module load also matters for builds: `next
+ * build` imports every route to collect page data, and the build environment
+ * has no DATABASE_URL. Workers likewise disallow I/O at global scope.
+ */
+export function getDb(): Db {
+  // In dev the server is a single long-lived Node process with no such
+  // restriction, so reuse one client instead of churning connections.
+  if (process.env.NODE_ENV !== "production") {
+    globalForDb.db ??= createDb();
+    return globalForDb.db;
+  }
+
+  return createDb();
+}
 
 export * from "./schema";

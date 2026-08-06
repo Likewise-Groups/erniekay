@@ -3,7 +3,7 @@
 import { eq } from "drizzle-orm";
 import { revalidatePath } from "next/cache";
 
-import { db } from "@/lib/db";
+import { getDb } from "@/lib/db";
 import { appointments, receipts, services } from "@/lib/schema";
 
 const toNumber = (value: FormDataEntryValue | null, fallback = 0) => {
@@ -33,7 +33,7 @@ export async function createService(formData: FormData) {
 
   if (!name || !category) return;
 
-  await db.insert(services).values({
+  await getDb().insert(services).values({
     name,
     category,
     description: String(formData.get("description") || "").trim() || null,
@@ -52,7 +52,7 @@ export async function updateAppointmentStatus(formData: FormData) {
 
   if (!appointmentId) return;
 
-  await db.update(appointments).set({ status }).where(eq(appointments.id, appointmentId));
+  await getDb().update(appointments).set({ status }).where(eq(appointments.id, appointmentId));
 
   revalidatePath("/admin");
 }
@@ -61,6 +61,8 @@ export async function issueReceipt(formData: FormData) {
   const appointmentId = String(formData.get("appointmentId") || "");
 
   if (!appointmentId) return;
+
+  const db = getDb();
 
   const [appointment] = await db
     .select({

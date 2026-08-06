@@ -3,7 +3,7 @@
 //   node --env-file=.env node_modules/tsx/dist/cli.mjs scripts/db-check.mts
 import { eq, sql } from "drizzle-orm";
 
-import { db } from "../lib/db";
+import { getDb } from "../lib/db";
 import {
   admissionsApplications,
   appointments,
@@ -15,6 +15,8 @@ import {
 } from "../lib/schema";
 
 const ok = (label: string, value: unknown) => console.log(`  OK ${label}:`, value);
+
+const db = getDb();
 
 console.log("Row counts (read-only):");
 for (const [name, table] of [

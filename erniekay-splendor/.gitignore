@@ -48,3 +48,7 @@ next-env.d.ts
 # AI / local tooling files
 .agents/
 .claude/
+# Cloudflare / Wrangler
+.open-next/
+.wrangler/
+.dev.vars

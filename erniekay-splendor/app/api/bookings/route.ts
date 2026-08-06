@@ -1,7 +1,7 @@
 import { eq } from "drizzle-orm";
 import { NextResponse } from "next/server";
 
-import { db } from "@/lib/db";
+import { getDb } from "@/lib/db";
 import { appointments, services, users } from "@/lib/schema";
 
 export async function POST(req: Request) {
@@ -53,6 +53,9 @@ export async function POST(req: Request) {
     const normalizedPrice = Number.isFinite(Number(totalPrice)) ? Number(totalPrice) : 0;
     const normalizedServiceName = serviceName || selectedServices || normalizedServiceId;
     const normalizedCategory = category || "Booking Flow";
+
+    // One connection for this request; see getDb().
+    const db = getDb();
 
     await db
       .insert(services)
@@ -107,7 +110,12 @@ export async function POST(req: Request) {
 
     return NextResponse.json({ success: true, booking }, { status: 201 });
   } catch (error) {
-    console.error("Booking Error:", error);
+    // Logged in full so Worker observability shows the real cause; the client
+    // only ever sees the generic message.
+    console.error(
+      "Booking Error:",
+      error instanceof Error ? `${error.name}: ${error.message}\n${error.stack}` : error,
+    );
     return NextResponse.json({ error: "Failed to create booking" }, { status: 500 });
   }
 }

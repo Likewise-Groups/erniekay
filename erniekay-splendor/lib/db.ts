@@ -8,6 +8,36 @@ export type Db = PostgresJsDatabase<typeof schema>;
 // Dev only — survives HMR module reloads so we don't leak connections.
 const globalForDb = global as unknown as { db?: Db };
 
+/**
+ * Splits a Postgres connection string into explicit fields.
+ *
+ * Deliberately avoids `new URL()`: workerd's URL implementation rejects
+ * `postgresql://` connection strings that Node's WHATWG parser accepts,
+ * throwing "Invalid URL string." Passing explicit options to postgres.js also
+ * keeps it from parsing the string itself, and drops the query component —
+ * `?pgbouncer=true` is a Prisma-only flag that postgres.js would otherwise
+ * forward to the server as a startup parameter.
+ */
+export function parseConnectionString(raw: string) {
+  const value = raw.trim().replace(/^\uFEFF/, "").trim();
+  const match =
+    /^postgres(?:ql)?:\/\/(?:([^:@/]+)(?::([^@]*))?@)?([^:/?]+)(?::(\d+))?(?:\/([^?]*))?/.exec(value);
+
+  if (!match) {
+    throw new Error("DATABASE_URL is not a valid Postgres connection string");
+  }
+
+  const [, username, password, host, port, database] = match;
+
+  return {
+    host,
+    port: port ? Number(port) : 5432,
+    database: database ? decodeURIComponent(database) : "postgres",
+    username: username ? decodeURIComponent(username) : undefined,
+    password: password ? decodeURIComponent(password) : undefined,
+  };
+}
+
 function createDb(): Db {
   const connectionString = process.env.DATABASE_URL;
 
@@ -15,12 +45,8 @@ function createDb(): Db {
     throw new Error("DATABASE_URL is not set");
   }
 
-  // Strip query params (`?pgbouncer=true` is a Prisma-only flag; postgres.js
-  // would forward unknown params to the server as startup options).
-  const url = new URL(connectionString);
-  url.search = "";
-
-  const client = postgres(url.toString(), {
+  const client = postgres({
+    ...parseConnectionString(connectionString),
     // Supabase terminates TLS at the pooler; the connection string omits sslmode.
     ssl: "require",
     // Supabase's transaction-mode pooler (6543) cannot use prepared statements.

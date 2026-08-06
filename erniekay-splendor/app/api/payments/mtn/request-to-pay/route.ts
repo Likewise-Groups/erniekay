@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import { requestMtnPayment } from "@/lib/mtnMomo";
+import { MtnNotConfiguredError, requestMtnPayment } from "@/lib/mtnMomo";
 
 export async function POST(req: Request) {
   try {
@@ -23,6 +23,17 @@ export async function POST(req: Request) {
     return NextResponse.json(payment, { status: 202 });
   } catch (error) {
     console.error("MTN MoMo request error:", error);
+
+    if (error instanceof MtnNotConfiguredError) {
+      return NextResponse.json(
+        {
+          error:
+            "Mobile Money is not available right now. Please choose another payment method or contact us to complete your booking.",
+        },
+        { status: 503 },
+      );
+    }
+
     return NextResponse.json({ error: "Unable to start MTN Mobile Money payment." }, { status: 500 });
   }
 }

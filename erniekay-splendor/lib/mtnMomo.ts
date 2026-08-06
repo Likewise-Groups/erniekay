@@ -85,15 +85,29 @@ const getToken = async (): Promise<string> => {
   return data.access_token;
 };
 
-const createMockPayment = (input: RequestToPayInput): MtnPaymentResult => ({
-  referenceId: `MOCK-MTN-${Date.now()}`,
-  status: "SUCCESSFUL",
-  mode: "sandbox",
-  message: `Sandbox MoMo payment recorded for ${input.customerName}. Add MTN credentials to send a real phone approval prompt.`,
-});
+/** Thrown when MoMo credentials are missing, so callers can say so specifically. */
+export class MtnNotConfiguredError extends Error {
+  constructor() {
+    super(
+      "MTN Mobile Money is not configured. Set MTN_MOMO_API_USER, MTN_MOMO_API_KEY and MTN_MOMO_MERCHANT_NUMBER.",
+    );
+    this.name = "MtnNotConfiguredError";
+  }
+}
+
+// Mock mode is disabled on purpose. It reported every payment as SUCCESSFUL
+// without contacting MTN, so a customer saw a confirmation and no money moved
+// and no prompt reached their phone. Missing credentials must fail loudly.
+//
+// const createMockPayment = (input: RequestToPayInput): MtnPaymentResult => ({
+//   referenceId: `MOCK-MTN-${Date.now()}`,
+//   status: "SUCCESSFUL",
+//   mode: "sandbox",
+//   message: `Sandbox MoMo payment recorded for ${input.customerName}. Add MTN credentials to send a real phone approval prompt.`,
+// });
 
 export async function requestMtnPayment(input: RequestToPayInput): Promise<MtnPaymentResult> {
-  if (!hasLiveConfig) return createMockPayment(input);
+  if (!hasLiveConfig) throw new MtnNotConfiguredError();
 
   const referenceId = crypto.randomUUID();
   const token = await getToken();
@@ -143,14 +157,9 @@ export async function requestMtnPayment(input: RequestToPayInput): Promise<MtnPa
 }
 
 export async function getMtnPaymentStatus(referenceId: string): Promise<MtnPaymentResult> {
-  if (!hasLiveConfig) {
-    return {
-      referenceId,
-      status: "SUCCESSFUL",
-      mode: "sandbox",
-      message: "Sandbox payment marked successful.",
-    };
-  }
+  // Mock mode disabled — see requestMtnPayment. Previously returned SUCCESSFUL
+  // for any reference id, which would confirm a payment that never happened.
+  if (!hasLiveConfig) throw new MtnNotConfiguredError();
 
   const token = await getToken();
 

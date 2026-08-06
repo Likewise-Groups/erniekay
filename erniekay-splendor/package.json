@@ -5,8 +5,11 @@
   "scripts": {
     "dev": "next dev",
     "build": "next build",
+    "build:cf": "opennextjs-cloudflare build",
+    "preview": "opennextjs-cloudflare preview",
     "start": "next start",
     "lint": "eslint",
+    "postinstall": "node scripts/postinstall.mjs",
     "db:check": "node --env-file=.env node_modules/tsx/dist/cli.mjs scripts/db-check.mts",
     "db:pull": "drizzle-kit pull",
     "db:studio": "drizzle-kit studio",

@@ -27,7 +27,15 @@
   "hyperdrive": [
     {
       "binding": "HYPERDRIVE",
-      "id": "8acf0c6c83eb4b05857611c7de97fc53"
+      "id": "8acf0c6c83eb4b05857611c7de97fc53",
+      // Placeholder only. Wrangler refuses to load a Hyperdrive binding without
+      // one — including during `opennextjs-cloudflare deploy`, which starts a
+      // local platform proxy to read bindings. Nothing connects to it while
+      // deploying, and production uses the Hyperdrive config above. To actually
+      // run the Worker locally against a database, override it with
+      // CLOUDFLARE_HYPERDRIVE_LOCAL_CONNECTION_STRING_HYPERDRIVE rather than
+      // putting real credentials in this file.
+      "localConnectionString": "postgresql://postgres:postgres@localhost:5432/postgres"
     }
   ]
 }

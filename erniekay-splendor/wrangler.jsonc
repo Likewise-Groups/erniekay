@@ -16,7 +16,8 @@
   // secrets (`wrangler secret put`), not vars — vars in this file are public,
   // and anything set only in the dashboard is wiped on the next deploy.
   "vars": {
-    "MTN_MOMO_BASE_URL": "https://api.mtn.com/v1",
+    // MoMo Developer API. Sandbox is https://sandbox.momodeveloper.mtn.com
+    "MTN_MOMO_BASE_URL": "https://proxy.momoapi.mtn.com",
     "MTN_MOMO_TARGET_ENVIRONMENT": "production",
     "MTN_MOMO_CURRENCY": "GHS",
     "MTN_MOMO_CALLBACK_URL": "https://erniekaysplendor.org/api/payments/mtn/callback"

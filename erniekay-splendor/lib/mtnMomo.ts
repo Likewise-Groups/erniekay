@@ -20,18 +20,22 @@ export type MtnPaymentResult = {
   message: string;
 };
 
-// MTN MADAPI – Production: https://api.mtn.com/v1
-// Token URL (per portal): POST /oauth/access_token  (Client Credentials flow)
+// MTN MoMo Developer API (Collections product).
+//   Production: https://proxy.momoapi.mtn.com
+//   Sandbox:    https://sandbox.momodeveloper.mtn.com
+//
+// consumerKey/consumerSecret are the MoMo "API user" and "API key" — NOT the
+// portal login, and not MADAPI consumer credentials.
 //
 // Read per call, never at module scope: on Cloudflare Workers process.env is
 // populated per request, so module-level reads run before the secrets exist and
 // would pin hasLiveConfig to false no matter what is configured.
 function getConfig() {
   const config = {
-    baseUrl: process.env.MTN_MOMO_BASE_URL || "https://api.mtn.com/v1",
-    // Consumer Key → OAuth2 client_id (confusingly named "API User")
+    baseUrl: process.env.MTN_MOMO_BASE_URL || "https://proxy.momoapi.mtn.com",
+    // MoMo "API user" — the Basic auth username for the token call
     consumerKey: process.env.MTN_MOMO_API_USER,
-    // Consumer Secret → OAuth2 client_secret (confusingly named "API Key")
+    // MoMo "API key" — the Basic auth password for the token call
     consumerSecret: process.env.MTN_MOMO_API_KEY,
     // Only required if the subscription enforces Ocp-Apim-Subscription-Key
     subscriptionKey: process.env.MTN_MOMO_COLLECTION_SUBSCRIPTION_KEY,
@@ -50,10 +54,16 @@ function getConfig() {
 const sanitizePhone = (phone: string) => phone.replace(/[^\d]/g, "");
 
 /**
- * Fetches an OAuth2 Bearer token using Client Credentials grant.
- * Token URL: POST {baseUrl}/oauth/access_token
- * Auth: Basic base64(consumerKey:consumerSecret)
- * Body: grant_type=client_credentials  (application/x-www-form-urlencoded)
+ * Fetches a Bearer token from the MoMo Collections API.
+ *
+ * Token URL: POST {baseUrl}/collection/token/
+ * Auth: Basic base64(apiUser:apiKey)
+ * Header: Ocp-Apim-Subscription-Key (the Collections subscription's primary key)
+ *
+ * This deliberately matches the MoMo Developer API, the same family as the
+ * /collection/v1_0/ payment calls below. It previously posted an OAuth2
+ * client_credentials grant to /oauth/access_token, which belongs to MTN's
+ * separate MADAPI product and returned 400 against a MoMo subscription.
  */
 const getToken = async (): Promise<string> => {
   const { baseUrl, consumerKey, consumerSecret, subscriptionKey } = getConfig();
@@ -66,7 +76,6 @@ const getToken = async (): Promise<string> => {
 
   const headers: Record<string, string> = {
     Authorization: `Basic ${credentials}`,
-    "Content-Type": "application/x-www-form-urlencoded",
   };
 
   // Include subscription key header only when provided
@@ -74,10 +83,9 @@ const getToken = async (): Promise<string> => {
     headers["Ocp-Apim-Subscription-Key"] = subscriptionKey;
   }
 
-  const response = await fetch(`${baseUrl}/oauth/access_token`, {
+  const response = await fetch(`${baseUrl}/collection/token/`, {
     method: "POST",
     headers,
-    body: "grant_type=client_credentials",
   });
 
   if (!response.ok) {

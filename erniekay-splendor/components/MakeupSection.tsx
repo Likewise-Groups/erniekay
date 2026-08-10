@@ -3,6 +3,8 @@
 import Image from "next/image";
 import { useState } from "react";
 import BookingModal from "./BookingModal";
+// Prices come from the catalogue the server charges against.
+import { subServicesOf } from "@/lib/serviceCatalog";
 
 const makeupServices = [
   { id: "special-occasion", icon: "star", label: "Special Occasion Makeup", price: "150", desc: "Flawless glam tailored for your most important events." },
@@ -24,7 +26,7 @@ export default function MakeupSection() {
   const categoryData = {
     id: "professional-makeup",
     title: "Professional Makeup",
-    subServices: makeupServices.map(s => ({ name: s.label, price: s.price }))
+    subServices: subServicesOf("professional-makeup")
   };
 
   return (

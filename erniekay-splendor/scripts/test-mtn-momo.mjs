@@ -2,30 +2,42 @@
  * MTN MoMo Integration Test Script
  * ──────────────────────────────────
  * Tests all three MTN MoMo endpoints:
- *   1. OAuth2 token fetch  (/oauth/access_token)
+ *   1. Collections token   (POST {base}/collection/token/)
  *   2. Request-to-Pay      (POST /api/payments/mtn/request-to-pay)
  *   3. Payment Status      (GET  /api/payments/mtn/status/:referenceId)
  *
  * Usage:
- *   node scripts/test-mtn-momo.mjs
+ *   node --env-file=.env.local scripts/test-mtn-momo.mjs
  *
  * Requires the Next.js dev server to be running on localhost:3000
  *   npm run dev
  */
 
 // ─── Config ────────────────────────────────────────────────────────────────
-const BASE_URL        = "http://localhost:3000";
-const MTN_BASE        = process.env.MTN_MOMO_BASE_URL  || "https://api.mtn.com/v1";
-const CONSUMER_KEY    = process.env.MTN_MOMO_API_USER  || "fModCxOSRqCBAmGF6cCEJWQdzfb1ItXq";
-const CONSUMER_SECRET = process.env.MTN_MOMO_API_KEY   || "YPHdhG1vWGMnzAZI";
+const BASE_URL         = "http://localhost:3000";
+const TARGET_ENV       = process.env.MTN_MOMO_TARGET_ENVIRONMENT || "production";
+// Mirrors the derivation in lib/mtnMomo.ts — keep the two in step.
+const MTN_BASE         = process.env.MTN_MOMO_BASE_URL
+  || (TARGET_ENV === "sandbox"
+    ? "https://sandbox.momodeveloper.mtn.com"
+    : "https://proxy.momoapi.mtn.com");
+const CONSUMER_KEY     = process.env.MTN_MOMO_API_USER  || "";
+const CONSUMER_SECRET  = process.env.MTN_MOMO_API_KEY   || "";
 const SUBSCRIPTION_KEY = process.env.MTN_MOMO_COLLECTION_SUBSCRIPTION_KEY || "";
 
+if (!CONSUMER_KEY || !CONSUMER_SECRET) {
+  console.error("Missing MTN_MOMO_API_USER / MTN_MOMO_API_KEY. Run with --env-file=.env.local");
+  process.exit(1);
+}
+
 // ─── Test Payload ──────────────────────────────────────────────────────────
+// No amount: the server prices this from lib/serviceCatalog. "Corn-rolls for
+// wigging" is the cheapest catalogue entry (80), which keeps a live test small.
 const TEST_PAYMENT = {
-  amount: 1,                     // GHS 1 — keep small for live testing
   phone: "233598592252",         // ← Change to a real MTN Ghana number for live test
   customerName: "Test Customer",
-  serviceName:  "Test Booking",
+  serviceId: "custom-wigging",
+  selectedServices: ["Corn-rolls for wigging"],
 };
 
 // ─── Helpers ───────────────────────────────────────────────────────────────
@@ -61,20 +73,19 @@ function section(title) {
 
 // ─── Test 1: Fetch OAuth2 Token Directly from MTN ──────────────────────────
 async function testTokenFetch() {
-  section("Test 1 — OAuth2 Token Fetch (MTN API direct)");
+  section("Test 1 — Collections Token Fetch (MoMo API direct)");
 
   const credentials = Buffer.from(`${CONSUMER_KEY}:${CONSUMER_SECRET}`).toString("base64");
-  const headers = {
-    Authorization: `Basic ${credentials}`,
-    "Content-Type": "application/x-www-form-urlencoded",
-  };
+  const headers = { Authorization: `Basic ${credentials}` };
   if (SUBSCRIPTION_KEY) headers["Ocp-Apim-Subscription-Key"] = SUBSCRIPTION_KEY;
 
   try {
-    const res = await fetch(`${MTN_BASE}/oauth/access_token`, {
+    // Basic-auth token call, not an OAuth2 client_credentials grant. The
+    // /oauth/access_token form belongs to MTN's separate MADAPI product and
+    // 400s against a MoMo Collections subscription.
+    const res = await fetch(`${MTN_BASE}/collection/token/`, {
       method: "POST",
       headers,
-      body: "grant_type=client_credentials",
     });
 
     info(`Status: ${res.status} ${res.statusText}`);
@@ -125,7 +136,7 @@ async function testRequestToPay() {
       if (data.mode === "live") {
         info("✅ LIVE MODE — a real MoMo prompt was sent to the phone!");
       } else {
-        info("⚠️  SANDBOX/MOCK MODE — no real prompt sent. Add credentials + merchant number to .env.local");
+        info("⚠️  SANDBOX MODE — no prompt sent, no money moved. Swap in production credentials to go live.");
       }
 
       return data.referenceId;
@@ -197,11 +208,14 @@ async function testCallbackEndpoint() {
 async function testValidation() {
   section("Test 5 — Input Validation (missing / bad fields)");
 
+  const valid = { phone: "233551234567", customerName: "Test", serviceId: "nail-care", selectedServices: ["Artisan Manicure"] };
+
   const cases = [
-    { label: "missing amount",       body: { phone: "233551234567", customerName: "Test" } },
-    { label: "missing phone",        body: { amount: 10, customerName: "Test" } },
-    { label: "missing customerName", body: { amount: 10, phone: "233551234567" } },
-    { label: "amount = 0",           body: { amount: 0, phone: "233551234567", customerName: "Test" } },
+    { label: "missing phone",        body: { ...valid, phone: undefined } },
+    { label: "missing customerName", body: { ...valid, customerName: undefined } },
+    { label: "unknown serviceId",    body: { ...valid, serviceId: "not-a-category" } },
+    { label: "empty selection",      body: { ...valid, selectedServices: [] } },
+    { label: "service not in category", body: { ...valid, selectedServices: ["Frontal Sew-In"] } },
   ];
 
   for (const tc of cases) {
@@ -225,6 +239,34 @@ async function testValidation() {
   }
 }
 
+// ─── Cleanup ───────────────────────────────────────────────────────────────
+// request-to-pay now persists a Payment row, so this suite would otherwise
+// leave a sandbox transaction in the real database on every run. Only removes
+// the unlinked sandbox row it created itself.
+async function cleanupTestPayment(referenceId) {
+  const dbUrl = process.env.DIRECT_URL || process.env.DATABASE_URL;
+  if (!referenceId || !dbUrl) return;
+
+  try {
+    const { default: postgres } = await import("postgres");
+    const sql = postgres(dbUrl, { ssl: "require", prepare: false, max: 1 });
+    try {
+      const deleted = await sql`
+        DELETE FROM "Payment"
+        WHERE "referenceId" = ${referenceId}
+          AND mode = 'sandbox'
+          AND "appointmentId" IS NULL
+        RETURNING "referenceId"
+      `;
+      if (deleted.length) info(`Cleaned up sandbox Payment row ${referenceId}`);
+    } finally {
+      await sql.end();
+    }
+  } catch (err) {
+    info(`Could not clean up Payment row ${referenceId}: ${err.message}`);
+  }
+}
+
 // ─── Runner ────────────────────────────────────────────────────────────────
 async function run() {
   console.log(`\n${BOLD}${CYAN}MTN MoMo Integration Tests${RESET}`);
@@ -237,6 +279,7 @@ async function run() {
   await testStatusCheck(referenceId);
   await testCallbackEndpoint();
   await testValidation();
+  await cleanupTestPayment(referenceId);
 
   section("Results");
   console.log(`${GREEN}${BOLD}  PASSED: ${passed}${RESET}`);

@@ -90,6 +90,45 @@ export const receipts = pgTable(
   ],
 );
 
+/**
+ * MTN MoMo collection attempts, keyed by the X-Reference-Id we generate.
+ *
+ * A row is written when the request-to-pay is accepted, before any appointment
+ * exists — the customer approves on their phone and MTN calls back
+ * independently of whether the booking write succeeded. `appointmentId` is
+ * therefore nullable and filled in afterwards, and is what makes "was this
+ * booking paid for?" answerable. Previously the reference was only ever
+ * concatenated into Appointment.notes, where nothing could query it.
+ */
+export const payments = pgTable(
+  "Payment",
+  {
+    id: id(),
+    // MoMo X-Reference-Id. Unique so the callback can upsert idempotently —
+    // MTN retries a callback until it gets a 200.
+    referenceId: text("referenceId").notNull(),
+    appointmentId: text("appointmentId").references(() => appointments.id, {
+      onDelete: "set null",
+    }),
+    provider: text("provider").notNull().default("MTN_MOMO"),
+    amount: doublePrecision("amount").notNull(),
+    currency: text("currency").notNull().default("GHS"),
+    // PENDING | SUCCESSFUL | FAILED — mirrors MtnPaymentResult["status"].
+    status: text("status").notNull().default("PENDING"),
+    // "live" | "sandbox". Recorded per row so a sandbox transaction can never
+    // be mistaken for a real one when reconciling later.
+    mode: text("mode").notNull().default("live"),
+    payerPhone: text("payerPhone"),
+    customerName: text("customerName"),
+    serviceName: text("serviceName"),
+    // Last raw payload MTN sent, kept verbatim for dispute resolution.
+    rawCallback: text("rawCallback"),
+    createdAt: createdAt(),
+    updatedAt: updatedAt(),
+  },
+  (table) => [uniqueIndex("Payment_referenceId_key").on(table.referenceId)],
+);
+
 export const courses = pgTable(
   "Course",
   {

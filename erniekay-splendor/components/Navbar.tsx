@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import { useEffect, useState, useRef } from "react";
 import { usePathname } from "next/navigation";
@@ -6,100 +6,12 @@ import Image from "next/image";
 import Link from "next/link";
 import { useCart } from "@/context/CartContext";
 import BookingModal, { ServiceCategory } from "./BookingModal";
+import { SERVICE_CATEGORIES } from "@/lib/serviceCatalog";
 
-/* ─── All Service Categories (mirroring section data) ─── */
-const allServiceCategories: ServiceCategory[] = [
-  {
-    id: "hair-services",
-    title: "Hair Services",
-    subServices: [
-      { name: "Shampooing", price: 120 },
-      { name: "Relaxing", price: 200 },
-      { name: "Perm Cut Only", price: 100 },
-      { name: "Normal Pony", price: 150 },
-    ],
-  },
-  {
-    id: "sew-in",
-    title: "Sew-In",
-    subServices: [
-      { name: "Traditional Sew-In", price: 250 },
-      { name: "Closure Sew-In", price: 250 },
-      { name: "Frontal Sew-In", price: 300 },
-      { name: "Half-Up Half-Down", price: 180 },
-    ],
-  },
-  {
-    id: "installation",
-    title: "Installation",
-    subServices: [
-      { name: "Closure Installation", price: 50 },
-      { name: "Frontal Installation", price: 100 },
-      { name: "180 Frontal Pony", price: 200 },
-      { name: "360 Frontal Pony", price: 350 },
-    ],
-  },
-  {
-    id: "styling",
-    title: "Styling",
-    subServices: [
-      { name: "Straightening", price: "40-100" },
-      { name: "Curling", price: "50-150" },
-      { name: "Pixie Curls", price: 100 },
-      { name: "Bridal Inspo", price: "200-500" },
-    ],
-  },
-  {
-    id: "revamp-colouring",
-    title: "Revamp / Colouring",
-    subServices: [
-      { name: "Revamp Only", price: "60-200" },
-      { name: "Colouring", price: "250-600" },
-      { name: "Natural Hair", price: "100-400" },
-    ],
-  },
-  {
-    id: "custom-wigging",
-    title: "Custom Wigging",
-    subServices: [
-      { name: "Closure (2*6, 4*4)", price: 200 },
-      { name: "Closure (5*5, 6*6)", price: 250 },
-      { name: "180 Frontal", price: 300 },
-      { name: "360 Frontal", price: 350 },
-      { name: "Express services", price: "100-200" },
-      { name: "Pixie wigging", price: 50 },
-      { name: "Corn-rolls", price: 40 },
-    ],
-  },
-  {
-    id: "nail-care",
-    title: "Nail Care & Artistry",
-    subServices: [
-      { name: "Artisan Manicure", price: "150" },
-      { name: "The Splendor Pedicure", price: "200" },
-      { name: "Gel Extensions (Full Set)", price: "250" },
-      { name: "Editorial Nail Art", price: "100+" },
-    ],
-  },
-  {
-    id: "spa-skin",
-    title: "SPA & Skin Rejuvenation",
-    subServices: [
-      { name: "Glow Facial", price: "150" },
-      { name: "Dermaplaning Luxe", price: "220" },
-      { name: "Red Carpet Peel", price: "275" },
-    ],
-  },
-  {
-    id: "professional-makeup",
-    title: "Professional Makeup",
-    subServices: [
-      { name: "Special Occasion Makeup", price: "150" },
-      { name: "Editorial / Photoshoot", price: "250" },
-      { name: "Makeup Consultation & Class", price: "180" },
-    ],
-  },
-];
+/* Service categories for the booking modal. Sourced from lib/serviceCatalog
+   so the nav cannot drift from the section pages — it previously carried its
+   own copy that priced Shampooing at 120 against the section page's 200. */
+const allServiceCategories: ServiceCategory[] = SERVICE_CATEGORIES;
 
 const navLinks = [
   { label: "Salon Services",   href: "/" },
@@ -197,7 +109,7 @@ export default function Navbar() {
 
   return (
     <>
-      {/* ── Top Bar ── */}
+      {/* â”€â”€ Top Bar â”€â”€ */}
       <nav
         className={`fixed top-0 w-full z-50 flex justify-between items-center transition-all duration-500 ease-out
           px-6 md:px-[64px]
@@ -208,7 +120,7 @@ export default function Navbar() {
       >
         {/* Mobile left: hamburger + logo | Desktop left: logo */}
         <div className="flex items-center gap-4 flex-1">
-          {/* Hamburger — mobile only */}
+          {/* Hamburger â€” mobile only */}
           <button
             id="mobile-menu-trigger"
             className="md:hidden text-royal-navy"
@@ -291,7 +203,7 @@ export default function Navbar() {
         </div>
       </nav>
 
-      {/* ── Mobile Fullscreen Overlay Menu ── */}
+      {/* â”€â”€ Mobile Fullscreen Overlay Menu â”€â”€ */}
       <div
         id="mobile-menu"
         className={`fixed inset-0 bg-midnight-ink z-[60] flex flex-col p-6 transition-transform duration-500 ease-in-out ${
@@ -343,7 +255,7 @@ export default function Navbar() {
         </div>
       </div>
 
-      {/* ── Glassmorphic Fullscreen Search Overlay ── */}
+      {/* â”€â”€ Glassmorphic Fullscreen Search Overlay â”€â”€ */}
       {searchOpen && (
         <div className="fixed inset-0 bg-midnight-ink/95 backdrop-blur-md z-[100] flex flex-col p-6 md:p-24 transition-opacity duration-300">
           {/* Top header: Close and title */}
@@ -439,7 +351,7 @@ export default function Navbar() {
         </div>
       )}
 
-      {/* ── Category Picker Modal ── */}
+      {/* â”€â”€ Category Picker Modal â”€â”€ */}
       {showCategoryPicker && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm">
           <div className="bg-white w-full max-w-lg rounded-none border border-majestic-gold shadow-2xl overflow-hidden flex flex-col max-h-[90vh]">
@@ -482,7 +394,7 @@ export default function Navbar() {
                         {cat.subServices.length} services
                       </span>
                     </div>
-                    <span className="text-royal-navy group-hover:text-majestic-gold group-hover:translate-x-1 transition-all text-lg">→</span>
+                    <span className="text-royal-navy group-hover:text-majestic-gold group-hover:translate-x-1 transition-all text-lg">â†’</span>
                   </button>
                 ))}
               </div>
@@ -491,7 +403,7 @@ export default function Navbar() {
         </div>
       )}
 
-      {/* ── Booking Modal (sub-service selection → details → payment) ── */}
+      {/* â”€â”€ Booking Modal (sub-service selection â†’ details â†’ payment) â”€â”€ */}
       <BookingModal
         isOpen={bookingOpen}
         onClose={() => {

@@ -2,7 +2,8 @@ import { eq } from "drizzle-orm";
 import { NextResponse } from "next/server";
 
 import { getDb } from "@/lib/db";
-import { appointments, services, users } from "@/lib/schema";
+import { appointments, payments, services, users } from "@/lib/schema";
+import { getCategory, priceSelection } from "@/lib/serviceCatalog";
 
 export async function POST(req: Request) {
   try {
@@ -17,10 +18,12 @@ export async function POST(req: Request) {
       serviceName,
       category,
       selectedServices,
-      totalPrice,
       date,
       time,
+      paymentReferenceId,
     } = body;
+    // `totalPrice` is deliberately not destructured — the catalogue prices this
+    // booking. See the Service insert below.
 
     if (!email || !fullName || !date || !time) {
       return NextResponse.json({ error: "Missing required fields" }, { status: 400 });
@@ -50,13 +53,37 @@ export async function POST(req: Request) {
         ? fallbackAppointmentDate
         : new Date();
     const normalizedServiceId = serviceId || "custom-service";
-    const normalizedPrice = Number.isFinite(Number(totalPrice)) ? Number(totalPrice) : 0;
     const normalizedServiceName = serviceName || selectedServices || normalizedServiceId;
     const normalizedCategory = category || "Booking Flow";
+
+    // Price the booking from the catalogue where the service is known there.
+    // `totalPrice` from the request is display-only and is never written: this
+    // endpoint is unauthenticated, and it previously upserted the client's
+    // figure over Service.price, so any POST could permanently rewrite the
+    // catalogue — and /booking, which sends no totalPrice at all, was resetting
+    // prices to 0 on every submission.
+    const catalogueCategory = getCategory(normalizedServiceId);
+    const cataloguePrice = catalogueCategory
+      ? (() => {
+          const names = String(selectedServices || "")
+            .split(",")
+            .map((name) => name.trim())
+            .filter(Boolean);
+          try {
+            return priceSelection(normalizedServiceId, names).total;
+          } catch {
+            // Selection did not match the catalogue; fall through to leaving
+            // the stored price alone rather than guessing.
+            return null;
+          }
+        })()
+      : null;
 
     // One connection for this request; see getDb().
     const db = getDb();
 
+    // Insert only. An existing Service row is left untouched — its price is
+    // catalogue data, not something a booking request gets to modify.
     await db
       .insert(services)
       .values({
@@ -64,17 +91,9 @@ export async function POST(req: Request) {
         name: normalizedServiceName,
         category: normalizedCategory,
         durationMinutes: 60,
-        price: normalizedPrice,
+        price: cataloguePrice ?? 0,
       })
-      .onConflictDoUpdate({
-        target: services.id,
-        set: {
-          name: normalizedServiceName,
-          category: normalizedCategory,
-          price: normalizedPrice,
-          updatedAt: new Date(),
-        },
-      });
+      .onConflictDoNothing({ target: services.id });
 
     // Equivalent of Prisma's connectOrCreate: reuse the existing client if the
     // email is already known, otherwise create them.
@@ -107,6 +126,27 @@ export async function POST(req: Request) {
         serviceId: normalizedServiceId,
       })
       .returning();
+
+    // Close the loop on the payment row created by request-to-pay. Until this
+    // runs the payment exists but points at no booking, which is why the column
+    // is nullable — the customer can approve on their phone before (or without)
+    // the booking write ever landing.
+    if (paymentReferenceId) {
+      try {
+        await db
+          .update(payments)
+          .set({ appointmentId: booking.id, updatedAt: new Date() })
+          .where(eq(payments.referenceId, String(paymentReferenceId)));
+      } catch (linkError) {
+        // The booking is saved and the money is real either way; a missing link
+        // is a reconciliation problem, not a reason to fail the customer.
+        console.error(
+          "Failed to link payment to appointment:",
+          linkError instanceof Error ? `${linkError.name}: ${linkError.message}` : linkError,
+          `referenceId=${paymentReferenceId} appointmentId=${booking.id}`,
+        );
+      }
+    }
 
     return NextResponse.json({ success: true, booking }, { status: 201 });
   } catch (error) {

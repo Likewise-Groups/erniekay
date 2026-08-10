@@ -78,6 +78,7 @@ export default function BookingModal({ isOpen, onClose, category }: BookingModal
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [error, setError] = useState("");
   const [paymentResult, setPaymentResult] = useState<PaymentResult | null>(null);
+  const [isAwaitingPayment, setIsAwaitingPayment] = useState(false);
 
   const totalPrice = useMemo(
     () => selectedSubServices.reduce((acc, sub) => acc + parsePrice(sub.price), 0),
@@ -98,6 +99,7 @@ export default function BookingModal({ isOpen, onClose, category }: BookingModal
     setIsSubmitting(false);
     setError("");
     setPaymentResult(null);
+    setIsAwaitingPayment(false);
   };
 
   const handleClose = () => {
@@ -125,9 +127,12 @@ export default function BookingModal({ isOpen, onClose, category }: BookingModal
         serviceName: category.title,
         category: category.title,
         selectedServices: selectedNames,
-        totalPrice,
         date: formData.date,
         time: formData.time,
+        // Links the booking to the Payment row request-to-pay already created.
+        // Card references are synthetic (CARD-*) and match nothing, which is
+        // correct until a card processor is connected.
+        paymentReferenceId: payment?.referenceId,
         notes: [
           formData.notes,
           `Selected services: ${selectedNames}`,
@@ -148,11 +153,13 @@ export default function BookingModal({ isOpen, onClose, category }: BookingModal
     const response = await fetch("/api/payments/mtn/request-to-pay", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
+      // No amount is sent — the server prices the selection from the catalogue.
+      // totalPrice below is only what the customer sees on screen.
       body: JSON.stringify({
-        amount: totalPrice,
         phone: formData.phone,
         customerName: formData.name,
-        serviceName: category.title,
+        serviceId: category.id,
+        selectedServices: selectedSubServices.map((sub) => sub.name),
       }),
     });
 
@@ -163,6 +170,36 @@ export default function BookingModal({ isOpen, onClose, category }: BookingModal
     }
 
     return data as PaymentResult;
+  };
+
+  /**
+   * Waits for the customer to approve the prompt on their phone.
+   *
+   * Without this nothing ever resolves the payment: MTN's callback only fires
+   * against a registered production URL, so a booking would sit PENDING
+   * forever even after the money arrived. The status endpoint writes through to
+   * both the payment and the appointment, so polling it is what moves the
+   * booking to CONFIRMED.
+   */
+  const waitForPaymentOutcome = async (referenceId: string): Promise<PaymentResult | null> => {
+    // MoMo prompts expire after roughly a minute; poll a little past that.
+    const deadline = Date.now() + 90_000;
+
+    while (Date.now() < deadline) {
+      await new Promise((resolve) => setTimeout(resolve, 3_000));
+
+      try {
+        const response = await fetch(`/api/payments/mtn/status/${referenceId}`);
+        if (!response.ok) continue;
+
+        const data = (await response.json()) as PaymentResult;
+        if (data.status === "SUCCESSFUL" || data.status === "FAILED") return data;
+      } catch {
+        // Transient network error — keep waiting rather than declaring failure.
+      }
+    }
+
+    return null;
   };
 
   const handleSubmitBooking = async () => {
@@ -182,9 +219,21 @@ export default function BookingModal({ isOpen, onClose, category }: BookingModal
               message: "Card checkout is recorded as pending until a card processor is connected.",
             };
 
+      // Booking first, so the Payment row is linked to an appointment before
+      // the status poll below flips either of them to confirmed.
       await submitBooking(payment);
       setPaymentResult(payment);
       setStep(4);
+
+      if (paymentMethod === "momo" && payment.status === "PENDING") {
+        setIsAwaitingPayment(true);
+        try {
+          const settled = await waitForPaymentOutcome(payment.referenceId);
+          if (settled) setPaymentResult(settled);
+        } finally {
+          setIsAwaitingPayment(false);
+        }
+      }
     } catch (err) {
       setError(err instanceof Error ? err.message : "Something went wrong. Please try again.");
     } finally {
@@ -338,12 +387,45 @@ export default function BookingModal({ isOpen, onClose, category }: BookingModal
 
           {step === 4 && paymentResult && (
             <div className="mx-auto max-w-xl text-center">
-              <div className="mx-auto flex h-16 w-16 items-center justify-center rounded-full bg-premium-green/10 text-premium-green">
-                <span className="material-symbols-outlined text-[38px]">check_circle</span>
+              {/* Reflects the real payment state. A green tick regardless of
+                  status would tell a customer their booking is paid while the
+                  prompt is still unanswered — or after they declined it. */}
+              <div
+                className={`mx-auto flex h-16 w-16 items-center justify-center rounded-full ${
+                  paymentResult.status === "SUCCESSFUL"
+                    ? "bg-premium-green/10 text-premium-green"
+                    : paymentResult.status === "FAILED"
+                      ? "bg-red-100 text-red-600"
+                      : "bg-majestic-gold/15 text-majestic-gold"
+                }`}
+              >
+                <span className={`material-symbols-outlined text-[38px] ${isAwaitingPayment ? "animate-pulse" : ""}`}>
+                  {paymentResult.status === "SUCCESSFUL"
+                    ? "check_circle"
+                    : paymentResult.status === "FAILED"
+                      ? "error"
+                      : "hourglass_top"}
+                </span>
               </div>
               <p className="mt-5 text-label-caps font-label-caps text-champagne-taupe">Booking received</p>
-              <h3 className="mt-2 font-headline-md text-4xl text-royal-navy">Receipt issued</h3>
-              <p className="mt-3 font-body-base text-warm-slate">{paymentResult.message}</p>
+              <h3 className="mt-2 font-headline-md text-4xl text-royal-navy">
+                {paymentResult.status === "SUCCESSFUL"
+                  ? "Payment confirmed"
+                  : paymentResult.status === "FAILED"
+                    ? "Payment not completed"
+                    : isAwaitingPayment
+                      ? "Awaiting approval"
+                      : "Booking saved"}
+              </h3>
+              <p className="mt-3 font-body-base text-warm-slate">
+                {isAwaitingPayment
+                  ? "Approve the prompt on your phone. This page updates automatically."
+                  : paymentResult.status === "FAILED"
+                    ? "The Mobile Money payment did not go through. Your booking is saved — contact us to settle payment."
+                    : paymentResult.status === "PENDING" && paymentMethod === "momo"
+                      ? "We did not get confirmation in time. If you approved the prompt, your payment may still be processing — contact us with the reference below."
+                      : paymentResult.message}
+              </p>
               <div className="mt-7 border border-outline-variant bg-surface p-5 text-left">
                 <div className="flex justify-between border-b border-outline-variant pb-3">
                   <span className="text-sm text-warm-slate">Client</span>

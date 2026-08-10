@@ -3,6 +3,8 @@
 import Image from "next/image";
 import { useState } from "react";
 import BookingModal from "./BookingModal";
+// Prices come from the catalogue the server charges against.
+import { subServicesOf } from "@/lib/serviceCatalog";
 
 const nailServices = [
   {
@@ -41,7 +43,7 @@ export default function NailsSection() {
   const categoryData = {
     id: "nail-care",
     title: "Nail Care & Artistry",
-    subServices: nailServices.map(s => ({ name: s.title, price: s.price }))
+    subServices: subServicesOf("nail-care")
   };
 
   return (

@@ -3,6 +3,10 @@
 import Image from "next/image";
 import { useState } from "react";
 import BookingModal, { ServiceCategory } from "./BookingModal";
+// Sub-service names and prices come from the catalogue, which is what the
+// server charges. Keeping a second copy here would let the page quote a price
+// the payment endpoint refuses.
+import { subServicesOf } from "@/lib/serviceCatalog";
 
 /* ─── Types ─────────────────────────────────────────────────── */
 interface ServiceCardProps {
@@ -87,12 +91,7 @@ const hairServices = [
     title: "Hair Services",
     description:
       "A comprehensive overview of our essential hair care rituals including shampooing, relaxing, cutting, and styling.",
-    subServices: [
-      { name: "Shampooing", price: 200 },
-      { name: "Relaxing", price: 350 },
-      { name: "Perm Cut Only", price: 350 },
-      { name: "Normal Pony", price: 250 },
-    ],
+    subServices: subServicesOf("hair-services"),
   },
   {
     id: "sew-in",
@@ -101,12 +100,7 @@ const hairServices = [
     title: "Sew-In",
     description:
       "Explore our premium sew-in extension services tailored for a flawless and natural finish.",
-    subServices: [
-      { name: "Traditional Sew-In", price: 300 },
-      { name: "Closure Sew-In", price: 400 },
-      { name: "Frontal Sew-In", price: 500 },
-      { name: "Half-Up Half-Down", price: 400 },
-    ],
+    subServices: subServicesOf("sew-in"),
   },
   {
     id: "installation",
@@ -115,12 +109,7 @@ const hairServices = [
     title: "Installation",
     description:
       "Professional installation services to perfectly secure and blend your closures and frontals.",
-    subServices: [
-      { name: "Closure Installation", price: 200 },
-      { name: "Frontal Installation", price: 300 },
-      { name: "180 Frontal Pony", price: 400 },
-      { name: "360 Frontal Pony", price: 600 },
-    ],
+    subServices: subServicesOf("installation"),
   },
   {
     id: "styling",
@@ -129,12 +118,7 @@ const hairServices = [
     title: "Styling",
     description:
       "Elevate your look with expert straightening, curling, and customized styling for any occasion.",
-    subServices: [
-      { name: "Straightening", price: "70-150" },
-      { name: "Curling", price: "80-200" },
-      { name: "Pixie Curls", price: 150 },
-      { name: "Bridal Inspo", price: "300-1000" },
-    ],
+    subServices: subServicesOf("styling"),
   },
   {
     id: "revamp-colouring",
@@ -143,26 +127,14 @@ const hairServices = [
     title: "Revamp / Colouring",
     description:
       "Transform your hair with our signature coloring techniques and comprehensive revamping treatments.",
-    subServices: [
-      { name: "Revamp Only", price: "100-200" },
-      { name: "Colouring", price: "400-1000" },
-      { name: "Natural Hair", price: "300-500" },
-    ],
+    subServices: subServicesOf("revamp-colouring"),
   },
 ];
 
 const customWiggingCategory: ServiceCategory = {
   id: "custom-wigging",
   title: "Custom Wigging",
-  subServices: [
-    { name: "Closure (2*6, 4*4)", price: 300 },
-    { name: "Closure (5*5, 6*6)", price: 400 },
-    { name: "180 Frontal", price: 500 },
-    { name: "360 Frontal", price: 700 },
-    { name: "Express services (+extra)", price: "200-400" },
-    { name: "Pixie wigging (+extra)", price: 150 },
-    { name: "Corn-rolls for wigging", price: 80 },
-  ],
+  subServices: subServicesOf("custom-wigging"),
 };
 
 /* ─── Component ──────────────────────────────────────────────── */

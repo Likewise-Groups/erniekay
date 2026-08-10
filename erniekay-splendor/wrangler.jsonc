@@ -15,11 +15,27 @@
   // Non-sensitive MoMo configuration. Credentials and the merchant number are
   // secrets (`wrangler secret put`), not vars — vars in this file are public,
   // and anything set only in the dashboard is wiped on the next deploy.
+  //
+  // Secrets this Worker needs, none of which belong here:
+  //   DATABASE_URL
+  //   MTN_MOMO_API_USER
+  //   MTN_MOMO_API_KEY
+  //   MTN_MOMO_COLLECTION_SUBSCRIPTION_KEY
+  //   MTN_MOMO_MERCHANT_NUMBER
+  //   MTN_MOMO_CALLBACK_TOKEN   <- the callback endpoint 404s until this is set
   "vars": {
-    // MoMo Developer API. Sandbox is https://sandbox.momodeveloper.mtn.com
-    "MTN_MOMO_BASE_URL": "https://proxy.momoapi.mtn.com",
+    // MTN_MOMO_BASE_URL is deliberately NOT set. lib/mtnMomo.ts derives the host
+    // from MTN_MOMO_TARGET_ENVIRONMENT; pinning it here would send a sandbox
+    // environment at the production proxy, which fails as 401 "invalid
+    // subscription key" and reads like bad credentials rather than a wrong host.
+    // Set it only to override the derivation deliberately.
     "MTN_MOMO_TARGET_ENVIRONMENT": "production",
+    // Ignored while TARGET_ENVIRONMENT is "sandbox" — sandbox Collections only
+    // accepts EUR, so the code forces it there and honours this value in production.
     "MTN_MOMO_CURRENCY": "GHS",
+    // Documentation only — nothing reads this. The URL actually registered with
+    // MTN must have "?token=<MTN_MOMO_CALLBACK_TOKEN>" appended. That token is a
+    // secret and must never be written into this file, which is committed.
     "MTN_MOMO_CALLBACK_URL": "https://erniekaysplendor.org/api/payments/mtn/callback"
   },
   // Builds the Worker bundle before deploying. Without this, `wrangler deploy`

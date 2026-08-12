@@ -1,15 +1,17 @@
 /**
- * MTN MoMo persistence + callback auth tests.
+ * Money-integrity and abuse-control tests.
  *
- * Covers what test-mtn-momo.mjs cannot: that a Payment row is actually written,
- * that the callback rejects unauthenticated POSTs, and that an authenticated
- * callback moves both the payment and its linked appointment.
+ * Covers what test-mtn-momo.mjs cannot: that the payment/booking binding cannot
+ * be abused, that confirmation requires a payment which actually covers the
+ * booking, and that the endpoints are rate limited.
  *
- * Usage:
- *   node --env-file=.env --env-file=.env.local scripts/test-mtn-callback.mjs
+ * Every assertion checks the DATABASE, not just the HTTP response — the whole
+ * class of bug being tested here is one where the API answers happily and the
+ * data ends up wrong.
  *
- * Requires `npm run dev` on localhost:3000.
+ * Usage: npm run test:mtn:callback   (requires `npm run dev` on :3000)
  */
+import crypto from "crypto";
 import postgres from "postgres";
 
 const BASE_URL = "http://localhost:3000";
@@ -29,309 +31,381 @@ const pass = (t, d = "") => { passed++; console.log(`\x1b[32m[PASS]\x1b[0m ${t}$
 const fail = (t, d = "") => { failed++; console.log(`\x1b[31m[FAIL]\x1b[0m ${t}${d ? ` — ${d}` : ""}`); };
 const section = (t) => console.log(`\n\x1b[33m\x1b[1m── ${t}\x1b[0m`);
 
-const createdRefs = [];
-const createdEmails = [];
+// A fresh phone per payment, so rate-limit state cannot leak between tests or
+// between runs. 233 + 24 + 7 digits = a valid 12-digit Ghanaian MSISDN.
+const freshPhone = () => `23324${Math.floor(Math.random() * 9000000) + 1000000}`;
 
-try {
-  // ── 1. request-to-pay writes a Payment row ────────────────────────────────
-  section("Payment row is persisted at request time");
+const emails = [];
+const serviceIds = new Set();
 
-  // "Artisan Manicure" is 150 in the catalogue. The forged `amount` below must
-  // be ignored entirely — it used to be charged verbatim.
-  const rtp = await fetch(`${BASE_URL}/api/payments/mtn/request-to-pay`, {
+const book = async (overrides = {}) => {
+  const email = `t-${crypto.randomUUID().slice(0, 8)}@example.test`;
+  emails.push(email);
+  const body = {
+    fullName: "Integrity Test",
+    email,
+    phone: "0241234567",
+    serviceId: "nail-care",
+    serviceName: "Nail Care & Artistry",
+    category: "Test",
+    selectedServices: ["Artisan Manicure"],
+    date: "2026-09-01",
+    time: "10:00",
+    ...overrides,
+  };
+  serviceIds.add(body.serviceId);
+  const res = await fetch(`${BASE_URL}/api/bookings`, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({
-      amount: 0.01,
-      phone: "233598592252",
-      customerName: "Persistence Test",
-      serviceId: "nail-care",
-      selectedServices: ["Artisan Manicure"],
-    }),
+    body: JSON.stringify(body),
   });
-  const payment = await rtp.json();
+  return { res, data: await res.json() };
+};
 
-  if (rtp.status !== 202) {
-    fail("request-to-pay accepted", `HTTP ${rtp.status} ${JSON.stringify(payment)}`);
-    throw new Error("cannot continue without a payment");
-  }
-  pass("request-to-pay accepted", `mode=${payment.mode} currency=${payment.currency}`);
-  createdRefs.push(payment.referenceId);
-
-  const [row] = await sql`SELECT * FROM "Payment" WHERE "referenceId" = ${payment.referenceId}`;
-  if (row) {
-    pass("Payment row written", `status=${row.status} amount=${row.amount} currency=${row.currency}`);
-  } else {
-    fail("Payment row written", "no row found");
-  }
-
-  if (row && Number(row.amount) === 150) {
-    pass("client-supplied amount ignored", "charged catalogue 150, not the forged 0.01");
-  } else {
-    fail("client-supplied amount ignored", `charged ${row?.amount}, expected 150`);
-  }
-
-  if (row && row.mode === "sandbox") pass("mode recorded as sandbox", "sandbox txn cannot be mistaken for real");
-  else fail("mode recorded as sandbox", `got ${row?.mode}`);
-
-  if (row && row.currency === "EUR") pass("currency recorded as actually charged", "EUR, not the configured GHS");
-  else fail("currency recorded as actually charged", `got ${row?.currency}`);
-
-  if (row && row.appointment_id === null && row.appointmentId === null) {
-    pass("appointmentId starts null", "booking does not exist yet");
-  } else if (row && row.appointmentId === null) {
-    pass("appointmentId starts null", "booking does not exist yet");
-  } else {
-    fail("appointmentId starts null", `got ${row?.appointmentId}`);
-  }
-
-  // ── 2. Callback auth ──────────────────────────────────────────────────────
-  section("Callback rejects unauthenticated writes");
-
-  const forgedBody = JSON.stringify({ externalId: payment.referenceId, status: "SUCCESSFUL" });
-
-  const noToken = await fetch(`${BASE_URL}/api/payments/mtn/callback`, {
-    method: "POST", headers: { "Content-Type": "application/json" }, body: forgedBody,
-  });
-  if (noToken.status === 404) pass("no token → 404", "endpoint does not admit it handles payments");
-  else fail("no token → 404", `got ${noToken.status}`);
-
-  const badToken = await fetch(`${BASE_URL}/api/payments/mtn/callback?token=guess`, {
-    method: "POST", headers: { "Content-Type": "application/json" }, body: forgedBody,
-  });
-  if (badToken.status === 404) pass("wrong token → 404");
-  else fail("wrong token → 404", `got ${badToken.status}`);
-
-  const [afterForge] = await sql`SELECT status FROM "Payment" WHERE "referenceId" = ${payment.referenceId}`;
-  if (afterForge.status === "PENDING") pass("forged callbacks did not change status", "still PENDING");
-  else fail("forged callbacks did not change status", `status is now ${afterForge.status}`);
-
-  // ── 3. Booking links the payment ──────────────────────────────────────────
-  section("Booking links the payment to an appointment");
-
-  const email = `mtn-test-${payment.referenceId.slice(0, 8)}@example.test`;
-  createdEmails.push(email);
-
-  const booking = await fetch(`${BASE_URL}/api/bookings`, {
+const pay = async (body) => {
+  const res = await fetch(`${BASE_URL}/api/payments/mtn/request-to-pay`, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({
-      fullName: "Persistence Test",
-      email,
-      phone: "233598592252",
-      serviceId: "nail-care",
-      serviceName: "Nail Care & Artistry",
-      category: "Test",
-      selectedServices: "Artisan Manicure",
-      totalPrice: 999999,
-      date: "2026-09-01",
-      time: "10:00",
-      paymentReferenceId: payment.referenceId,
-    }),
+    body: JSON.stringify(body),
   });
-  const bookingData = await booking.json();
+  return { res, data: await res.json() };
+};
 
-  if (booking.status === 201) pass("booking created", bookingData.booking?.id);
-  else fail("booking created", `HTTP ${booking.status} ${JSON.stringify(bookingData)}`);
-
-  const appointmentId = bookingData.booking?.id;
-  const [linked] = await sql`SELECT "appointmentId" FROM "Payment" WHERE "referenceId" = ${payment.referenceId}`;
-
-  if (linked?.appointmentId === appointmentId) {
-    pass("payment linked to appointment", appointmentId);
-  } else {
-    fail("payment linked to appointment", `expected ${appointmentId}, got ${linked?.appointmentId}`);
-  }
-
-  // ── 3b. The catalogue is not writable through the booking endpoint ────────
-  section("Booking cannot rewrite Service prices");
-
-  const [svc] = await sql`SELECT price, name FROM "Service" WHERE id = 'nail-care'`;
-  if (!svc) {
-    fail("Service row exists after booking", "no nail-care row");
-  } else if (Number(svc.price) === 999999) {
-    fail("catalogue price protected", `client's 999999 was written to Service.price`);
-  } else {
-    pass("catalogue price protected", `Service.price=${svc.price}, client sent 999999`);
-  }
-
-  // Re-POST with a different price to prove an existing row is never updated.
-  const priceBefore = svc ? Number(svc.price) : null;
-  await fetch(`${BASE_URL}/api/bookings`, {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({
-      fullName: "Tamper Test",
-      email: `tamper-${payment.referenceId.slice(0, 8)}@example.test`,
-      phone: "233598592252",
-      serviceId: "nail-care",
-      serviceName: "HACKED",
-      category: "HACKED",
-      selectedServices: "Artisan Manicure",
-      totalPrice: 1,
-      date: "2026-09-02",
-      time: "11:00",
-    }),
-  });
-  createdEmails.push(`tamper-${payment.referenceId.slice(0, 8)}@example.test`);
-
-  const [svcAfter] = await sql`SELECT price, name FROM "Service" WHERE id = 'nail-care'`;
-  if (Number(svcAfter?.price) === priceBefore && svcAfter?.name !== "HACKED") {
-    pass("repeat booking did not mutate Service", `price=${svcAfter.price} name="${svcAfter.name}"`);
-  } else {
-    fail("repeat booking did not mutate Service", `price=${svcAfter?.price} name="${svcAfter?.name}"`);
-  }
-
-  // ── 4. Authenticated callback moves payment + appointment ─────────────────
-  section("Authenticated callback applies the status");
-
-  const good = await fetch(`${BASE_URL}/api/payments/mtn/callback?token=${encodeURIComponent(TOKEN)}`, {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({
-      externalId: payment.referenceId,
-      status: "SUCCESSFUL",
-      amount: "12.50",
-      currency: "EUR",
-      financialTransactionId: "TEST-TXN-1",
-      payer: { partyIdType: "MSISDN", partyId: "233598592252" },
-    }),
-  });
-  if (good.status === 200) pass("valid token → 200");
-  else fail("valid token → 200", `got ${good.status} ${await good.text()}`);
-
-  const [paid] = await sql`SELECT status, "rawCallback" FROM "Payment" WHERE "referenceId" = ${payment.referenceId}`;
-  if (paid?.status === "SUCCESSFUL") pass("payment status updated", "SUCCESSFUL");
-  else fail("payment status updated", `got ${paid?.status}`);
-
-  if (paid?.rawCallback?.includes("TEST-TXN-1")) pass("raw callback stored", "available for disputes");
-  else fail("raw callback stored");
-
-  const [appt] = await sql`SELECT status FROM "Appointment" WHERE id = ${appointmentId}`;
-  if (appt?.status === "CONFIRMED") pass("appointment confirmed by payment", "CONFIRMED");
-  else fail("appointment confirmed by payment", `got ${appt?.status}`);
-
-  // ── 5. Idempotency — MTN retries until it gets a 200 ──────────────────────
-  section("Replayed callback is idempotent");
-
-  const replay = await fetch(`${BASE_URL}/api/payments/mtn/callback?token=${encodeURIComponent(TOKEN)}`, {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ externalId: payment.referenceId, status: "SUCCESSFUL" }),
-  });
-  const [count] = await sql`SELECT count(*)::int AS n FROM "Payment" WHERE "referenceId" = ${payment.referenceId}`;
-
-  if (replay.status === 200 && count.n === 1) pass("replay left exactly one row", "no duplicate on retry");
-  else fail("replay left exactly one row", `HTTP ${replay.status}, ${count.n} rows`);
-
-  // ── 5b. Polling alone confirms a booking, with no callback at all ─────────
-  // This is the path the booking modal uses. MTN's callback only fires against
-  // a registered production URL, so without this a booking would sit PENDING
-  // forever even after the customer paid.
-  section("Status polling reconciles without a callback");
-
-  const poll = await fetch(`${BASE_URL}/api/payments/mtn/request-to-pay`, {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({
-      phone: "233598592252",
-      customerName: "Polling Test",
-      serviceId: "spa-skin",
-      selectedServices: ["Glow Facial"],
-    }),
-  });
-  const pollPayment = await poll.json();
-  createdRefs.push(pollPayment.referenceId);
-
-  const pollEmail = `poll-${pollPayment.referenceId.slice(0, 8)}@example.test`;
-  createdEmails.push(pollEmail);
-
-  const pollBooking = await fetch(`${BASE_URL}/api/bookings`, {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({
-      fullName: "Polling Test",
-      email: pollEmail,
-      phone: "233598592252",
-      serviceId: "spa-skin",
-      serviceName: "SPA & Skin Rejuvenation",
-      category: "Test",
-      selectedServices: "Glow Facial",
-      date: "2026-09-03",
-      time: "12:00",
-      paymentReferenceId: pollPayment.referenceId,
-    }),
-  });
-  const pollApptId = (await pollBooking.json()).booking?.id;
-
-  const [beforePoll] = await sql`SELECT status FROM "Payment" WHERE "referenceId" = ${pollPayment.referenceId}`;
-  if (beforePoll?.status === "PENDING") pass("payment starts PENDING", "nothing has confirmed it yet");
-  else fail("payment starts PENDING", `got ${beforePoll?.status}`);
-
-  // Exactly what the browser does after the prompt is sent: poll until the
-  // payment settles. MTN's sandbox briefly answers 404 RESOURCE_NOT_FOUND for a
-  // reference it has just accepted, which surfaces as a 503 here — the client
-  // loop keeps waiting rather than treating it as failure, so this does too.
-  let statusBody = {};
-  for (let attempt = 0; attempt < 10; attempt++) {
-    const statusRes = await fetch(`${BASE_URL}/api/payments/mtn/status/${pollPayment.referenceId}`);
-    if (statusRes.ok) {
-      statusBody = await statusRes.json();
-      if (statusBody.status === "SUCCESSFUL" || statusBody.status === "FAILED") break;
+const pollUntilSettled = async (referenceId) => {
+  for (let i = 0; i < 12; i++) {
+    const res = await fetch(`${BASE_URL}/api/payments/mtn/status/${referenceId}`);
+    if (res.ok) {
+      const data = await res.json();
+      if (data.status === "SUCCESSFUL" || data.status === "FAILED") return data;
     }
     await new Promise((r) => setTimeout(r, 2000));
   }
+  return null;
+};
 
-  const [afterPoll] = await sql`SELECT status FROM "Payment" WHERE "referenceId" = ${pollPayment.referenceId}`;
-  const [afterAppt] = await sql`SELECT status FROM "Appointment" WHERE id = ${pollApptId}`;
+try {
+  // ── 1. Booking is priced server-side and stored as an intent ──────────────
+  section("Booking is created as a priced, unpaid intent");
 
-  if (afterPoll?.status === statusBody.status && afterPoll?.status === "SUCCESSFUL") {
-    pass("polling wrote status through to Payment", `PENDING -> ${afterPoll.status}`);
+  const { res: bRes, data: bData } = await book({ totalPrice: 999999 });
+  const booking = bData.booking;
+
+  if (bRes.status === 201 && booking?.id) pass("booking created", booking.id);
+  else fail("booking created", `HTTP ${bRes.status} ${JSON.stringify(bData)}`);
+
+  if (booking?.amountDue === 150) pass("priced from catalogue", "150, ignoring the client's 999999");
+  else fail("priced from catalogue", `amountDue=${booking?.amountDue}`);
+
+  if (booking?.status === "PENDING") pass("starts unpaid", "PENDING");
+  else fail("starts unpaid", `status=${booking?.status}`);
+
+  const [svc] = await sql`SELECT price, name FROM "Service" WHERE id = 'nail-care'`;
+  if (Number(svc?.price) !== 999999 && svc?.name !== "HACKED") {
+    pass("catalogue price not writable by a booking", `Service.price=${svc?.price}`);
   } else {
-    fail("polling wrote status through to Payment", `payment=${afterPoll?.status} api=${statusBody.status}`);
+    fail("catalogue price not writable by a booking", `price=${svc?.price}`);
   }
 
-  if (afterAppt?.status === "CONFIRMED") {
-    pass("polling confirmed the appointment", "no callback was involved");
+  // ── 2. Comma-containing service names survive the round trip ──────────────
+  section("Service names containing commas are priced correctly");
+
+  const { data: commaData } = await book({
+    serviceId: "custom-wigging",
+    serviceName: "Custom Wigging",
+    selectedServices: ["Closure (2*6, 4*4)"],
+  });
+  if (commaData.booking?.amountDue === 300) {
+    pass('"Closure (2*6, 4*4)" priced at 300', "join/split no longer shatters it");
   } else {
-    fail("polling confirmed the appointment", `got ${afterAppt?.status}`);
+    fail('"Closure (2*6, 4*4)" priced at 300', `amountDue=${commaData.booking?.amountDue}`);
   }
 
-  // ── 6. Unknown reference is acknowledged, not retried forever ─────────────
-  section("Unknown reference is acknowledged");
+  // ── 3. THE BYPASS: a cheap payment cannot confirm an expensive booking ────
+  section("Cheap payment cannot be attached to an expensive booking");
+
+  // Cheapest catalogue item (80) …
+  const { data: cheapBooking } = await book({
+    serviceId: "custom-wigging",
+    serviceName: "Custom Wigging",
+    selectedServices: ["Corn-rolls for wigging"],
+  });
+  const cheapPhone = freshPhone();
+  const { res: cheapRes, data: cheapPay } = await pay({
+    appointmentId: cheapBooking.booking.id,
+    phone: cheapPhone,
+    customerName: "Integrity Test",
+  });
+
+  if (cheapRes.status === 202 && cheapPay.referenceId) {
+    pass("cheap payment started", `amount charged = ${cheapBooking.booking.amountDue}`);
+  } else {
+    fail("cheap payment started", `HTTP ${cheapRes.status} ${JSON.stringify(cheapPay)}`);
+  }
+
+  const [cheapRow] = await sql`SELECT amount, "appointmentId" FROM "Payment" WHERE "referenceId" = ${cheapPay.referenceId}`;
+  if (Number(cheapRow?.amount) === 80) pass("payment amount comes from the booking", "80");
+  else fail("payment amount comes from the booking", `amount=${cheapRow?.amount}`);
+
+  if (cheapRow?.appointmentId === cheapBooking.booking.id) {
+    pass("payment bound to its booking at creation", "no client-chosen pairing exists");
+  } else {
+    fail("payment bound to its booking at creation", `appointmentId=${cheapRow?.appointmentId}`);
+  }
+
+  // … now try to make that payment confirm a 700 GHS booking.
+  const { data: pricey } = await book({
+    serviceId: "custom-wigging",
+    serviceName: "Custom Wigging",
+    selectedServices: ["360 Frontal"],
+  });
+  const priceyId = pricey.booking.id;
+
+  if (pricey.booking.amountDue === 700) pass("expensive booking priced at 700");
+  else fail("expensive booking priced at 700", `amountDue=${pricey.booking.amountDue}`);
+
+  // The old attack: quote the cheap reference against the expensive booking.
+  // There is no longer any endpoint that accepts such a pairing.
+  const repoint = await fetch(`${BASE_URL}/api/bookings`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({
+      fullName: "Attacker",
+      email: `attack-${crypto.randomUUID().slice(0, 8)}@example.test`,
+      phone: "0241234567",
+      serviceId: "custom-wigging",
+      serviceName: "Custom Wigging",
+      selectedServices: ["360 Frontal"],
+      date: "2026-09-01",
+      time: "11:00",
+      paymentReferenceId: cheapPay.referenceId, // ignored now
+    }),
+  });
+  const repointData = await repoint.json();
+  emails.push(`attack-${repointData.booking?.id ?? ""}`);
+
+  const [stillBound] = await sql`SELECT "appointmentId" FROM "Payment" WHERE "referenceId" = ${cheapPay.referenceId}`;
+  if (stillBound?.appointmentId === cheapBooking.booking.id) {
+    pass("paymentReferenceId in a booking body is inert", "payment stayed on its own booking");
+  } else {
+    fail("paymentReferenceId in a booking body is inert", `moved to ${stillBound?.appointmentId}`);
+  }
+
+  // Settle the cheap payment for real, then check the expensive booking.
+  await pollUntilSettled(cheapPay.referenceId);
+  const [priceyAppt] = await sql`SELECT status FROM "Appointment" WHERE id = ${priceyId}`;
+  if (priceyAppt?.status === "PENDING") {
+    pass("expensive booking never confirmed", "an 80 GHS payment cannot pay for 700");
+  } else {
+    fail("expensive booking never confirmed", `status=${priceyAppt?.status}`);
+  }
+
+  const [cheapAppt] = await sql`SELECT status FROM "Appointment" WHERE id = ${cheapBooking.booking.id}`;
+  if (cheapAppt?.status === "CONFIRMED") pass("the booking that was paid for IS confirmed");
+  else fail("the booking that was paid for IS confirmed", `status=${cheapAppt?.status}`);
+
+  // ── 4. Confirmation cannot be downgraded ──────────────────────────────────
+  section("A later failed payment cannot un-confirm a paid booking");
+
+  const downgrade = await fetch(`${BASE_URL}/api/payments/mtn/callback?token=${encodeURIComponent(TOKEN)}`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ externalId: cheapPay.referenceId, status: "FAILED" }),
+  });
+  const [afterDowngrade] = await sql`SELECT status FROM "Appointment" WHERE id = ${cheapBooking.booking.id}`;
+
+  if (downgrade.status === 200 && afterDowngrade?.status === "CONFIRMED") {
+    pass("CONFIRMED survives a later FAILED", "status is only ever promoted");
+  } else {
+    fail("CONFIRMED survives a later FAILED", `HTTP ${downgrade.status}, status=${afterDowngrade?.status}`);
+  }
+
+  // ── 5. Underpayment cannot confirm ────────────────────────────────────────
+  section("A payment smaller than the amount due cannot confirm");
+
+  const { data: underBooking } = await book({
+    serviceId: "spa-skin",
+    serviceName: "SPA & Skin Rejuvenation",
+    selectedServices: ["Red Carpet Peel"], // 275
+  });
+  const underPhone = freshPhone();
+  const { data: underPay } = await pay({
+    appointmentId: underBooking.booking.id,
+    phone: underPhone,
+    customerName: "Under Payer",
+  });
+
+  // Forge an underpayment directly in the table, then let the callback run.
+  await sql`UPDATE "Payment" SET amount = 1 WHERE "referenceId" = ${underPay.referenceId}`;
+  await fetch(`${BASE_URL}/api/payments/mtn/callback?token=${encodeURIComponent(TOKEN)}`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ externalId: underPay.referenceId, status: "SUCCESSFUL" }),
+  });
+  const [underAppt] = await sql`SELECT status FROM "Appointment" WHERE id = ${underBooking.booking.id}`;
+  if (underAppt?.status === "PENDING") {
+    pass("underpayment refused", "1 does not cover 275");
+  } else {
+    fail("underpayment refused", `status=${underAppt?.status}`);
+  }
+
+  // ── 6. Double payment is refused ──────────────────────────────────────────
+  // Its own booking: the one above was deliberately driven to FAILED by the
+  // downgrade test, so it no longer has a settled payment to guard against.
+  section("A booking cannot be charged twice");
+
+  const { data: paidOnce } = await book({
+    serviceId: "spa-skin",
+    serviceName: "SPA & Skin Rejuvenation",
+    selectedServices: ["Glow Facial"],
+  });
+  const { data: firstCharge } = await pay({
+    appointmentId: paidOnce.booking.id,
+    phone: freshPhone(),
+    customerName: "Single Charge",
+  });
+  await pollUntilSettled(firstCharge.referenceId);
+
+  const { res: dupRes, data: dupData } = await pay({
+    appointmentId: paidOnce.booking.id,
+    phone: freshPhone(),
+    customerName: "Double Charger",
+  });
+  if (dupRes.status === 409) pass("already-paid booking refuses a second charge", dupData.error);
+  else fail("already-paid booking refuses a second charge", `HTTP ${dupRes.status} ${JSON.stringify(dupData)}`);
+
+  // ── 7. Payment requires a real, priced booking ────────────────────────────
+  section("Payment cannot be raised without a priced booking");
+
+  const { res: ghostRes } = await pay({
+    appointmentId: crypto.randomUUID(),
+    phone: freshPhone(),
+    customerName: "Ghost",
+  });
+  if (ghostRes.status === 404) pass("unknown appointment → 404");
+  else fail("unknown appointment → 404", `HTTP ${ghostRes.status}`);
+
+  const { data: unpricedBooking } = await book({
+    serviceId: "not-a-catalogue-category",
+    serviceName: "Mystery",
+    selectedServices: ["Whatever"],
+  });
+  const { res: unpricedRes } = await pay({
+    appointmentId: unpricedBooking.booking.id,
+    phone: freshPhone(),
+    customerName: "Unpriced",
+  });
+  if (unpricedRes.status === 409) pass("unpriced booking cannot be charged", "no arbitrary amount accepted");
+  else fail("unpriced booking cannot be charged", `HTTP ${unpricedRes.status}`);
+
+  // ── 8. Phone validation ───────────────────────────────────────────────────
+  section("Phone numbers are validated before MTN is contacted");
+
+  const { data: freshForPhone } = await book();
+  for (const [label, phone] of [
+    ["non-Ghanaian", "447700900000"],
+    ["too short", "024123"],
+    ["bad prefix", "0991234567"],
+    ["not a number", "hello"],
+  ]) {
+    const { res } = await pay({
+      appointmentId: freshForPhone.booking.id,
+      phone,
+      customerName: "Phone Test",
+    });
+    if (res.status === 400) pass(`rejects ${label}`);
+    else fail(`rejects ${label}`, `HTTP ${res.status}`);
+  }
+
+  // Local format must be accepted and normalised.
+  const { res: localRes, data: localPay } = await pay({
+    appointmentId: freshForPhone.booking.id,
+    phone: "024 123 4567",
+    customerName: "Phone Test",
+  });
+  if (localRes.status === 202) {
+    const [row] = await sql`SELECT "payerPhone" FROM "Payment" WHERE "referenceId" = ${localPay.referenceId}`;
+    if (row?.payerPhone === "233241234567") pass("local format normalised", "024 123 4567 → 233241234567");
+    else fail("local format normalised", `stored ${row?.payerPhone}`);
+  } else {
+    fail("local format accepted", `HTTP ${localRes.status} ${JSON.stringify(localPay)}`);
+  }
+
+  // ── 9. Rate limiting ──────────────────────────────────────────────────────
+  section("Payment attempts are rate limited per phone");
+
+  const spamPhone = freshPhone();
+  let limited = false;
+  let attempts = 0;
+
+  for (let i = 0; i < 8 && !limited; i++) {
+    const { data: b } = await book();
+    const { res } = await pay({
+      appointmentId: b.booking.id,
+      phone: spamPhone,
+      customerName: "Spammer",
+    });
+    attempts++;
+    if (res.status === 429) limited = true;
+  }
+
+  if (limited) pass("phone rate limit fires", `blocked after ${attempts - 1} prompts`);
+  else fail("phone rate limit fires", `${attempts} attempts all allowed`);
+
+  // A different phone is unaffected — the limit is per key, not global.
+  const { data: innocentBooking } = await book();
+  const { res: innocentRes } = await pay({
+    appointmentId: innocentBooking.booking.id,
+    phone: freshPhone(),
+    customerName: "Innocent",
+  });
+  if (innocentRes.status === 202) pass("a different phone is not blocked", "limit is per-key");
+  else fail("a different phone is not blocked", `HTTP ${innocentRes.status}`);
+
+  // ── 10. Callback auth (unchanged behaviour, still guarded) ────────────────
+  section("Callback still rejects unauthenticated writes");
+
+  const forged = JSON.stringify({ externalId: cheapPay.referenceId, status: "SUCCESSFUL" });
+  for (const [label, url] of [
+    ["no token", `${BASE_URL}/api/payments/mtn/callback`],
+    ["wrong token", `${BASE_URL}/api/payments/mtn/callback?token=guess`],
+  ]) {
+    const res = await fetch(url, {
+      method: "POST", headers: { "Content-Type": "application/json" }, body: forged,
+    });
+    if (res.status === 404) pass(`${label} → 404`);
+    else fail(`${label} → 404`, `HTTP ${res.status}`);
+  }
 
   const unknown = await fetch(`${BASE_URL}/api/payments/mtn/callback?token=${encodeURIComponent(TOKEN)}`, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({ externalId: "not-a-real-reference", status: "SUCCESSFUL" }),
   });
-  const unknownBody = await unknown.json();
-  if (unknown.status === 200 && unknownBody.status === "ignored") {
-    pass("unknown reference → 200 ignored", "MTN stops retrying an unusable payload");
+  if (unknown.status === 200 && (await unknown.json()).status === "ignored") {
+    pass("unknown reference acknowledged, not retried forever");
   } else {
-    fail("unknown reference → 200 ignored", `HTTP ${unknown.status} ${JSON.stringify(unknownBody)}`);
+    fail("unknown reference acknowledged");
   }
 } catch (err) {
-  fail("suite aborted", err.message);
+  fail("suite aborted", `${err.message}\n${err.stack}`);
 } finally {
-  // Leave the database as we found it. Order matters: Appointment.userId and
-  // .serviceId are ON DELETE restrict, so children go before parents.
-  for (const ref of createdRefs) {
-    await sql`DELETE FROM "Payment" WHERE "referenceId" = ${ref}`;
-  }
-  for (const email of createdEmails) {
+  // Leave the database as we found it. Children before parents: Appointment
+  // .userId and .serviceId are ON DELETE restrict.
+  for (const email of emails) {
     const [u] = await sql`SELECT id FROM "User" WHERE email = ${email}`;
-    if (u) {
-      await sql`DELETE FROM "Appointment" WHERE "userId" = ${u.id}`;
-      await sql`DELETE FROM "User" WHERE id = ${u.id}`;
+    if (!u) continue;
+    const appts = await sql`SELECT id FROM "Appointment" WHERE "userId" = ${u.id}`;
+    for (const a of appts) {
+      await sql`DELETE FROM "Payment" WHERE "appointmentId" = ${a.id}`;
     }
+    await sql`DELETE FROM "Appointment" WHERE "userId" = ${u.id}`;
+    await sql`DELETE FROM "User" WHERE id = ${u.id}`;
   }
-  // Only removable if no other appointment references it; ignore if in use.
-  for (const serviceId of ["nail-care", "spa-skin"]) {
+  for (const id of serviceIds) {
     try {
-      await sql`DELETE FROM "Service" WHERE id = ${serviceId}`;
+      await sql`DELETE FROM "Service" WHERE id = ${id}`;
     } catch {
-      console.log(`Left Service '${serviceId}' in place — referenced by other rows.`);
+      console.log(`Left Service '${id}' in place — referenced by other rows.`);
     }
   }
   console.log("\nCleaned up test rows.");

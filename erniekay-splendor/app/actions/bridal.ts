@@ -4,26 +4,65 @@ import { getDb } from "@/lib/db";
 import { bridalInquiries } from "@/lib/schema";
 import { revalidatePath } from "next/cache";
 
-export async function submitBridalInquiry(formData: any) {
+export type BridalInquiryInput = Record<string, unknown>;
+
+const text = (value: unknown, max: number): string | null => {
+  const trimmed = String(value ?? "").trim();
+  return trimmed ? trimmed.slice(0, max) : null;
+};
+
+/**
+ * Guest/party counts. Stored as text (the columns are `text` in the schema, from
+ * the Prisma original) but validated as numbers so the column cannot hold
+ * arbitrary strings.
+ */
+const count = (value: unknown): string | null => {
+  if (value === null || value === undefined || String(value).trim() === "") return null;
+  const n = Number(value);
+  return Number.isFinite(n) && n >= 0 && n <= 1000 ? String(Math.floor(n)) : null;
+};
+
+/**
+ * Records a bridal enquiry.
+ *
+ * This is an enquiry, not a booking — nothing here is priced or charged, so the
+ * `package` field is a stated preference rather than a commitment. Inputs are
+ * still bounded and typed: a server action is a public endpoint, and the
+ * previous `formData: any` wrote every column verbatim with only the database's
+ * NOT NULL constraints standing in the way.
+ */
+export async function submitBridalInquiry(formData: BridalInquiryInput) {
   try {
+    const fullName = text(formData.fullName, 150);
+    const email = text(formData.email, 254);
+    const phone = text(formData.phone, 32);
+    const weddingDate = text(formData.weddingDate, 64);
+    const venue = text(formData.venue, 300);
+
+    if (!fullName || !email || !phone || !weddingDate || !venue) {
+      return { success: false, error: "Missing required enquiry details." };
+    }
+
+    const selected = Array.isArray(formData.selectedServices)
+      ? formData.selectedServices.map((item) => String(item).slice(0, 200)).slice(0, 50)
+      : null;
+
     const [inquiry] = await getDb()
       .insert(bridalInquiries)
       .values({
-        fullName: formData.fullName,
-        email: formData.email,
-        phone: formData.phone,
-        socialHandle: formData.socialHandle || null,
-        weddingDate: formData.weddingDate,
-        venue: formData.venue,
-        totalGuests: formData.totalGuests || null,
-        bridalPartySize: formData.bridalPartySize || null,
-        aesthetic: formData.aesthetic || null,
-        selectedServices: formData.selectedServices
-          ? JSON.stringify(formData.selectedServices)
-          : null,
-        package: formData.package || null,
-        prepLocation: formData.prepLocation || null,
-        extraMakeupCount: formData.extraMakeupCount || null,
+        fullName,
+        email,
+        phone,
+        socialHandle: text(formData.socialHandle, 100),
+        weddingDate,
+        venue,
+        totalGuests: count(formData.totalGuests),
+        bridalPartySize: count(formData.bridalPartySize),
+        aesthetic: text(formData.aesthetic, 500),
+        selectedServices: selected ? JSON.stringify(selected) : null,
+        package: text(formData.package, 100),
+        prepLocation: text(formData.prepLocation, 300),
+        extraMakeupCount: count(formData.extraMakeupCount),
         groomService:
           typeof formData.groomService === "boolean" ? formData.groomService : null,
       })
@@ -31,8 +70,8 @@ export async function submitBridalInquiry(formData: any) {
 
     revalidatePath("/bridal");
     return { success: true, inquiry };
-  } catch (error: any) {
+  } catch (error) {
     console.error("Failed to submit bridal inquiry:", error);
-    return { success: false, error: error.message || "Failed to submit inquiry" };
+    return { success: false, error: "Failed to submit inquiry" };
   }
 }

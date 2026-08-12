@@ -1,7 +1,7 @@
-import { eq } from "drizzle-orm";
 import { NextResponse } from "next/server";
 
-import { appointments, getDb, payments } from "@/lib/db";
+import { getDb } from "@/lib/db";
+import { applyPaymentStatus, VALID_PAYMENT_STATUSES, type PaymentStatus } from "@/lib/payments";
 
 /**
  * MTN MoMo webhook callback endpoint.
@@ -20,7 +20,6 @@ function secretsMatch(a: string, b: string): boolean {
   return diff === 0;
 }
 
-const VALID_STATUSES = new Set(["PENDING", "SUCCESSFUL", "FAILED"]);
 
 export async function POST(req: Request) {
   // Read per call, never at module scope — on Cloudflare Workers process.env is
@@ -52,7 +51,7 @@ export async function POST(req: Request) {
     // disagree on the spelling across products.
     const referenceId: string | undefined = body.externalId || body.referenceId;
     const rawStatus: string | undefined = body.status || body.transactionStatus;
-    const status = String(rawStatus || "").toUpperCase();
+    const status = String(rawStatus || "").toUpperCase() as PaymentStatus;
 
     if (!referenceId) {
       console.error("MTN callback missing externalId/referenceId:", JSON.stringify(body));
@@ -61,40 +60,30 @@ export async function POST(req: Request) {
       return NextResponse.json({ status: "ignored", reason: "missing reference" }, { status: 200 });
     }
 
-    if (!VALID_STATUSES.has(status)) {
+    if (!VALID_PAYMENT_STATUSES.has(status)) {
       console.error(`MTN callback unknown status "${rawStatus}" for ${referenceId}`);
       return NextResponse.json({ status: "ignored", reason: "unknown status" }, { status: 200 });
     }
 
-    const db = getDb();
-
     // Idempotent by construction: MTN retries until it gets a 200, and replaying
     // the same terminal status just rewrites the same row.
-    const [updated] = await db
-      .update(payments)
-      .set({ status, rawCallback: JSON.stringify(body), updatedAt: new Date() })
-      .where(eq(payments.referenceId, referenceId))
-      .returning({ id: payments.id, appointmentId: payments.appointmentId });
+    //
+    // Shared with the status-polling route so the confirmation rule has exactly
+    // one implementation. It refuses to confirm unless the payment actually
+    // covers the appointment, and never downgrades an already-confirmed one.
+    const result = await applyPaymentStatus(getDb(), referenceId, status, body);
 
-    if (!updated) {
-      // The row is written when request-to-pay is accepted, so a miss means
-      // either that insert failed or this is a reference we never issued.
+    if (result.outcome === "unknown-reference") {
+      // The row is written before MTN is contacted, so a miss means this is a
+      // reference we never issued.
       console.error(`MTN callback for unknown referenceId ${referenceId}`);
       return NextResponse.json({ status: "ignored", reason: "unknown reference" }, { status: 200 });
     }
 
-    // The booking is only confirmed once the money is actually collected.
-    if (updated.appointmentId) {
-      await db
-        .update(appointments)
-        .set({
-          status: status === "SUCCESSFUL" ? "CONFIRMED" : "PENDING",
-          updatedAt: new Date(),
-        })
-        .where(eq(appointments.id, updated.appointmentId));
-    }
-
-    console.log(`MTN callback applied: ${referenceId} -> ${status}`);
+    console.log(
+      `MTN callback applied: ${referenceId} -> ${status}` +
+        (result.confirmed ? " (appointment CONFIRMED)" : ` (not confirmed: ${result.reason})`),
+    );
 
     // Acknowledge so MTN stops retrying.
     return NextResponse.json({ status: "received", externalId: referenceId }, { status: 200 });

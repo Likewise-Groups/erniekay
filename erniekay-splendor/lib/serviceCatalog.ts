@@ -132,6 +132,33 @@ export const SERVICE_CATEGORIES: ServiceCategory[] = [
   },
 ];
 
+/**
+ * Canonical form of a selection: NFC-normalised, trimmed, deduplicated, sorted.
+ *
+ * Used to STORE a selection, never to compare two independently-produced lists.
+ * Sorting is by codepoint (the default) rather than localeCompare, which varies
+ * by locale and would order the same names differently on different runtimes.
+ */
+export const canonicalSelection = (names: string[]): string[] =>
+  [...new Set(names.map((name) => name.normalize("NFC").trim()).filter(Boolean))].sort();
+
+/**
+ * Accepts a selection as either an array or a legacy comma-joined string.
+ *
+ * Splitting on "," is lossy and must never be used for catalogue lookups: two
+ * real sub-service names contain commas ("Closure (2*6, 4*4)", "Closure (5*5,
+ * 6*6)"), so a round-trip through join(", ")/split(",") shatters them into
+ * fragments that match nothing. The string branch exists only for /booking,
+ * which posts non-catalogue service ids and is never priced from the catalogue.
+ */
+export const asSelectionArray = (value: unknown): string[] => {
+  if (Array.isArray(value)) return canonicalSelection(value.map(String));
+  if (typeof value === "string" && value.trim()) {
+    return canonicalSelection(value.split(",").map((name) => name.trim()));
+  }
+  return [];
+};
+
 const BY_ID = new Map(SERVICE_CATEGORIES.map((category) => [category.id, category]));
 
 export const getCategory = (categoryId: string): ServiceCategory | undefined =>

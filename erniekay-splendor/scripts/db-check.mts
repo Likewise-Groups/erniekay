@@ -93,7 +93,8 @@ try {
       date: booking.appointmentDate.toISOString(),
     });
 
-    // app/admin/actions.ts - updateAppointmentStatus ($onUpdate bumps updatedAt)
+    // Appointment status transition ($onUpdate bumps updatedAt). Formerly exercised
+    // app/admin/actions.ts, which was deleted as an unauthenticated write path.
     const [updated] = await tx
       .update(appointments)
       .set({ status: "CONFIRMED" })
@@ -104,7 +105,7 @@ try {
       bumped: updated.updatedAt > booking.updatedAt,
     });
 
-    // app/admin/actions.ts - issueReceipt join + insert
+    // Receipt join + insert, as the separate admin app performs it.
     const [joined] = await tx
       .select({
         serviceName: services.name,
@@ -180,5 +181,55 @@ try {
 
 const [after] = await db.select({ n: sql<number>`count(*)::int` }).from(users);
 console.log(`\nUser rows after rollback: ${after.n} (expected 0)`);
+
+// ── Reconciliation ─────────────────────────────────────────────────────────
+// Read-only checks over real data. Both are the safety nets for the money paths:
+// nothing else in the system would notice either of these situations.
+console.log("\nReconciliation (real data):");
+
+// Money reached MTN but the booking never got attached. This is the "customer
+// paid and got nothing" case — it should always be zero, and each row is a
+// refund or a booking to create by hand.
+const orphaned = await db.execute(sql`
+  SELECT "referenceId", amount, currency, "payerPhone", "createdAt"
+  FROM "Payment"
+  WHERE status = 'SUCCESSFUL' AND "appointmentId" IS NULL
+  ORDER BY "createdAt" DESC
+  LIMIT 20
+`);
+console.log(`  successful payments with no booking: ${orphaned.length}`);
+for (const row of orphaned) {
+  console.log(`    ${row.referenceId} ${row.amount} ${row.currency} ${row.payerPhone}`);
+}
+
+// Confirmed bookings with no payment that covers them. Catches both a bug in
+// the confirmation rule and a second writer (the separate admin app) marking
+// appointments confirmed directly.
+const unpaidConfirmed = await db.execute(sql`
+  SELECT a.id, a."amountDue", a.currency, a."appointmentDate"
+  FROM "Appointment" a
+  WHERE a.status = 'CONFIRMED'
+    AND NOT EXISTS (
+      SELECT 1 FROM "Payment" p
+      WHERE p."appointmentId" = a.id
+        AND p.status = 'SUCCESSFUL'
+        AND p.amount >= a."amountDue"
+        AND p.currency = a.currency
+    )
+  ORDER BY a."appointmentDate" DESC
+  LIMIT 20
+`);
+console.log(`  confirmed bookings without a covering payment: ${unpaidConfirmed.length}`);
+for (const row of unpaidConfirmed) {
+  console.log(`    ${row.id} due ${row.amountDue} ${row.currency}`);
+}
+
+// Bookings that were never priced. These cannot be paid online at all, so they
+// accumulate silently if the catalogue and the booking form drift apart.
+const [unpriced] = await db.execute(sql`
+  SELECT count(*)::int AS n FROM "Appointment"
+  WHERE "amountDue" = 0 AND "createdAt" > now() - interval '30 days'
+`);
+console.log(`  unpriced bookings in the last 30 days: ${unpriced.n}`);
 
 process.exit(0);

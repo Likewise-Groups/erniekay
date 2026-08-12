@@ -29,6 +29,13 @@ type PaymentResult = {
   message: string;
 };
 
+type BookingResult = {
+  id: string;
+  status: string;
+  amountDue: number;
+  currency: string;
+};
+
 const parsePrice = (price: string | number): number => {
   if (typeof price === "number") return price;
   const match = price.match(/\d+/);
@@ -78,7 +85,10 @@ export default function BookingModal({ isOpen, onClose, category }: BookingModal
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [error, setError] = useState("");
   const [paymentResult, setPaymentResult] = useState<PaymentResult | null>(null);
+  const [bookingResult, setBookingResult] = useState<BookingResult | null>(null);
   const [isAwaitingPayment, setIsAwaitingPayment] = useState(false);
+  // Separate from `error`: the booking succeeded, only the payment did not.
+  const [paymentError, setPaymentError] = useState("");
 
   const totalPrice = useMemo(
     () => selectedSubServices.reduce((acc, sub) => acc + parsePrice(sub.price), 0),
@@ -99,7 +109,9 @@ export default function BookingModal({ isOpen, onClose, category }: BookingModal
     setIsSubmitting(false);
     setError("");
     setPaymentResult(null);
+    setBookingResult(null);
     setIsAwaitingPayment(false);
+    setPaymentError("");
   };
 
   const handleClose = () => {
@@ -115,7 +127,15 @@ export default function BookingModal({ isOpen, onClose, category }: BookingModal
     });
   };
 
-  const submitBooking = async (payment?: PaymentResult) => {
+  /**
+   * Creates the booking as an unpaid intent and returns its id.
+   *
+   * Runs BEFORE any payment. The server prices the appointment from the
+   * catalogue and stores what is owed; the payment is then raised against that
+   * appointment, so the browser never gets to say which payment covers which
+   * booking. It also means a MoMo outage no longer discards the booking.
+   */
+  const submitBooking = async (): Promise<BookingResult> => {
     const response = await fetch("/api/bookings", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
@@ -126,40 +146,40 @@ export default function BookingModal({ isOpen, onClose, category }: BookingModal
         serviceId: category.id,
         serviceName: category.title,
         category: category.title,
-        selectedServices: selectedNames,
+        // Sent as an array: joining and re-splitting on "," shatters the two
+        // catalogue names that contain commas, e.g. "Closure (2*6, 4*4)".
+        selectedServices: selectedSubServices.map((sub) => sub.name),
         date: formData.date,
         time: formData.time,
-        // Links the booking to the Payment row request-to-pay already created.
-        // Card references are synthetic (CARD-*) and match nothing, which is
-        // correct until a card processor is connected.
-        paymentReferenceId: payment?.referenceId,
         notes: [
           formData.notes,
           `Selected services: ${selectedNames}`,
           `Payment method: ${paymentMethod === "momo" ? "MTN Mobile Money" : "Card"}`,
-          payment ? `Payment reference: ${payment.referenceId} (${payment.status})` : "",
         ]
           .filter(Boolean)
           .join("\n"),
       }),
     });
 
+    const data = await response.json();
+
     if (!response.ok) {
-      throw new Error("Booking could not be saved. Please try again.");
+      throw new Error(data.error || "Booking could not be saved. Please try again.");
     }
+
+    return data.booking as BookingResult;
   };
 
-  const requestMomoPayment = async () => {
+  const requestMomoPayment = async (appointmentId: string) => {
     const response = await fetch("/api/payments/mtn/request-to-pay", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      // No amount is sent — the server prices the selection from the catalogue.
-      // totalPrice below is only what the customer sees on screen.
+      // Identifies the booking, nothing more. No amount and no service list —
+      // the server reads both from the appointment it already stored.
       body: JSON.stringify({
+        appointmentId,
         phone: formData.phone,
         customerName: formData.name,
-        serviceId: category.id,
-        selectedServices: selectedSubServices.map((sub) => sub.name),
       }),
     });
 
@@ -202,30 +222,17 @@ export default function BookingModal({ isOpen, onClose, category }: BookingModal
     return null;
   };
 
-  const handleSubmitBooking = async () => {
-    if (!canContinueToPayment) return;
-
+  /** Raises the MoMo prompt for a saved booking and waits for the outcome. */
+  const startMomoPayment = async (appointmentId: string) => {
+    setPaymentError("");
     setIsSubmitting(true);
-    setError("");
 
     try {
-      const payment =
-        paymentMethod === "momo"
-          ? await requestMomoPayment()
-          : {
-              referenceId: `CARD-${Date.now()}`,
-              status: "PENDING",
-              mode: "sandbox" as const,
-              message: "Card checkout is recorded as pending until a card processor is connected.",
-            };
-
-      // Booking first, so the Payment row is linked to an appointment before
-      // the status poll below flips either of them to confirmed.
-      await submitBooking(payment);
+      const payment = await requestMomoPayment(appointmentId);
       setPaymentResult(payment);
       setStep(4);
 
-      if (paymentMethod === "momo" && payment.status === "PENDING") {
+      if (payment.status === "PENDING") {
         setIsAwaitingPayment(true);
         try {
           const settled = await waitForPaymentOutcome(payment.referenceId);
@@ -235,10 +242,46 @@ export default function BookingModal({ isOpen, onClose, category }: BookingModal
         }
       }
     } catch (err) {
-      setError(err instanceof Error ? err.message : "Something went wrong. Please try again.");
+      // The booking is already saved, so this is recoverable — surface it on the
+      // receipt step with a retry rather than discarding everything the
+      // customer entered, which is what the old ordering did.
+      setPaymentError(err instanceof Error ? err.message : "Payment could not be started.");
+      setStep(4);
     } finally {
       setIsSubmitting(false);
     }
+  };
+
+  const handleSubmitBooking = async () => {
+    if (!canContinueToPayment) return;
+
+    setIsSubmitting(true);
+    setError("");
+    setPaymentError("");
+
+    let booking: BookingResult;
+    try {
+      // Booking first. The appointment is what the payment is raised against,
+      // and saving it before taking money means a payment failure never costs
+      // the customer their booking.
+      booking = await submitBooking();
+      setBookingResult(booking);
+    } catch (err) {
+      setError(err instanceof Error ? err.message : "Something went wrong. Please try again.");
+      setIsSubmitting(false);
+      return;
+    }
+
+    if (paymentMethod !== "momo") {
+      // Card has no processor yet. The booking stands as unpaid — deliberately
+      // no synthetic reference, so nothing can mistake it for a real payment.
+      setPaymentResult(null);
+      setStep(4);
+      setIsSubmitting(false);
+      return;
+    }
+
+    await startMomoPayment(booking.id);
   };
 
   return (
@@ -385,47 +428,65 @@ export default function BookingModal({ isOpen, onClose, category }: BookingModal
             </div>
           )}
 
-          {step === 4 && paymentResult && (
+          {step === 4 && bookingResult && (
             <div className="mx-auto max-w-xl text-center">
               {/* Reflects the real payment state. A green tick regardless of
                   status would tell a customer their booking is paid while the
-                  prompt is still unanswered — or after they declined it. */}
+                  prompt is still unanswered — or after they declined it. The
+                  booking itself is always saved by this point. */}
               <div
                 className={`mx-auto flex h-16 w-16 items-center justify-center rounded-full ${
-                  paymentResult.status === "SUCCESSFUL"
+                  paymentResult?.status === "SUCCESSFUL"
                     ? "bg-premium-green/10 text-premium-green"
-                    : paymentResult.status === "FAILED"
+                    : paymentResult?.status === "FAILED" || paymentError
                       ? "bg-red-100 text-red-600"
                       : "bg-majestic-gold/15 text-majestic-gold"
                 }`}
               >
                 <span className={`material-symbols-outlined text-[38px] ${isAwaitingPayment ? "animate-pulse" : ""}`}>
-                  {paymentResult.status === "SUCCESSFUL"
+                  {paymentResult?.status === "SUCCESSFUL"
                     ? "check_circle"
-                    : paymentResult.status === "FAILED"
+                    : paymentResult?.status === "FAILED" || paymentError
                       ? "error"
                       : "hourglass_top"}
                 </span>
               </div>
               <p className="mt-5 text-label-caps font-label-caps text-champagne-taupe">Booking received</p>
               <h3 className="mt-2 font-headline-md text-4xl text-royal-navy">
-                {paymentResult.status === "SUCCESSFUL"
+                {paymentResult?.status === "SUCCESSFUL"
                   ? "Payment confirmed"
-                  : paymentResult.status === "FAILED"
+                  : paymentResult?.status === "FAILED"
                     ? "Payment not completed"
-                    : isAwaitingPayment
-                      ? "Awaiting approval"
-                      : "Booking saved"}
+                    : paymentError
+                      ? "Booking saved, payment not started"
+                      : isAwaitingPayment
+                        ? "Awaiting approval"
+                        : "Booking saved"}
               </h3>
               <p className="mt-3 font-body-base text-warm-slate">
                 {isAwaitingPayment
                   ? "Approve the prompt on your phone. This page updates automatically."
-                  : paymentResult.status === "FAILED"
-                    ? "The Mobile Money payment did not go through. Your booking is saved — contact us to settle payment."
-                    : paymentResult.status === "PENDING" && paymentMethod === "momo"
-                      ? "We did not get confirmation in time. If you approved the prompt, your payment may still be processing — contact us with the reference below."
-                      : paymentResult.message}
+                  : paymentError
+                    ? `${paymentError} Your booking is saved — you can try again below.`
+                    : paymentResult?.status === "FAILED"
+                      ? "The Mobile Money payment did not go through. Your booking is saved — contact us to settle payment."
+                      : paymentResult?.status === "PENDING"
+                        ? "We did not get confirmation in time. If you approved the prompt, your payment may still be processing — contact us with the reference below."
+                        : paymentResult?.message ||
+                          "Your booking is saved. Payment will be settled at the salon."}
               </p>
+
+              {/* The booking survived a failed payment, so offer the retry
+                  rather than making the customer start over. */}
+              {paymentError && !isAwaitingPayment && (
+                <button
+                  onClick={() => startMomoPayment(bookingResult.id)}
+                  disabled={isSubmitting}
+                  className="mt-5 bg-majestic-gold px-6 py-3 text-label-caps font-label-caps text-royal-navy transition-colors hover:bg-royal-navy hover:text-white disabled:cursor-not-allowed disabled:opacity-50"
+                >
+                  {isSubmitting ? "Starting..." : "Try MoMo again"}
+                </button>
+              )}
               <div className="mt-7 border border-outline-variant bg-surface p-5 text-left">
                 <div className="flex justify-between border-b border-outline-variant pb-3">
                   <span className="text-sm text-warm-slate">Client</span>
@@ -437,11 +498,18 @@ export default function BookingModal({ isOpen, onClose, category }: BookingModal
                 </div>
                 <div className="flex justify-between border-b border-outline-variant py-3">
                   <span className="text-sm text-warm-slate">Reference</span>
-                  <span className="font-body-bold text-royal-navy">{paymentResult.referenceId}</span>
+                  <span className="font-body-bold text-royal-navy">
+                    {paymentResult?.referenceId ?? bookingResult.id}
+                  </span>
                 </div>
                 <div className="flex justify-between pt-3">
                   <span className="font-body-bold text-royal-navy">Total</span>
-                  <span className="font-headline-md text-2xl text-royal-navy">{currency.format(totalPrice)}</span>
+                  {/* The server's figure, not the browser's — this is what was
+                      actually charged. They agree today; if they ever diverge,
+                      the customer should see the authoritative one. */}
+                  <span className="font-headline-md text-2xl text-royal-navy">
+                    {currency.format(bookingResult.amountDue || totalPrice)}
+                  </span>
                 </div>
               </div>
             </div>

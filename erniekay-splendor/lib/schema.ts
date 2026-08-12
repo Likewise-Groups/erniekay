@@ -66,6 +66,12 @@ export const appointments = pgTable("Appointment", {
   appointmentDate: timestamp("appointmentDate", { precision: 3, mode: "date" }).notNull(),
   status: text("status").notNull().default("PENDING"),
   notes: text("notes"),
+  // The booking intent. A payment is priced FROM these rather than from a
+  // request body — that is what stops a client pairing a cheap payment with an
+  // expensive booking. Canonical JSON array; see canonicalSelection().
+  selectedServices: text("selectedServices"),
+  amountDue: doublePrecision("amountDue").notNull().default(0),
+  currency: text("currency").notNull().default("GHS"),
   createdAt: createdAt(),
   updatedAt: updatedAt(),
 });
@@ -123,6 +129,11 @@ export const payments = pgTable(
     serviceName: text("serviceName"),
     // Last raw payload MTN sent, kept verbatim for dispute resolution.
     rawCallback: text("rawCallback"),
+    // Request attribution. Without these there is no way to tie an abusive
+    // request to a source, which also makes rate limiting impossible.
+    // clientIp is personal data — agree a retention period before launch.
+    clientIp: text("clientIp"),
+    userAgent: text("userAgent"),
     createdAt: createdAt(),
     updatedAt: updatedAt(),
   },

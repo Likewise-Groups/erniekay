@@ -31,13 +31,20 @@ if (!CONSUMER_KEY || !CONSUMER_SECRET) {
 }
 
 // ─── Test Payload ──────────────────────────────────────────────────────────
-// No amount: the server prices this from lib/serviceCatalog. "Corn-rolls for
-// wigging" is the cheapest catalogue entry (80), which keeps a live test small.
-const TEST_PAYMENT = {
+// Payment now identifies a booking, not a selection: the server reads both the
+// amount and the services from the appointment. So this suite creates a booking
+// first. "Corn-rolls for wigging" is the cheapest catalogue entry (80), which
+// keeps a live test small.
+const TEST_BOOKING = {
+  fullName: "Test Customer",
+  email: `mtn-suite-${Date.now()}@example.test`,
   phone: "233598592252",         // ← Change to a real MTN Ghana number for live test
-  customerName: "Test Customer",
   serviceId: "custom-wigging",
+  serviceName: "Custom Wigging",
+  category: "Test",
   selectedServices: ["Corn-rolls for wigging"],
+  date: "2026-09-01",
+  time: "10:00",
 };
 
 // ─── Helpers ───────────────────────────────────────────────────────────────
@@ -48,6 +55,7 @@ const YELLOW = "\x1b[33m";
 const CYAN   = "\x1b[36m";
 const BOLD   = "\x1b[1m";
 
+let createdEmail = null;
 let passed = 0;
 let failed = 0;
 
@@ -110,13 +118,34 @@ async function testTokenFetch() {
 // ─── Test 2: POST /api/payments/mtn/request-to-pay ─────────────────────────
 async function testRequestToPay() {
   section("Test 2 — Request-to-Pay (Next.js API route)");
-  info(`Payload: ${JSON.stringify(TEST_PAYMENT)}`);
+
+  // The booking must exist first — it is what the payment is priced from.
+  const bookingRes = await fetch(`${BASE_URL}/api/bookings`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(TEST_BOOKING),
+  });
+  const bookingData = await bookingRes.json();
+
+  if (bookingRes.status !== 201 || !bookingData.booking?.id) {
+    fail("Booking created for payment", `HTTP ${bookingRes.status} ${JSON.stringify(bookingData)}`);
+    return null;
+  }
+  pass("Booking created for payment", `${bookingData.booking.id} due ${bookingData.booking.amountDue}`);
+  createdEmail = TEST_BOOKING.email;
+
+  const payload = {
+    appointmentId: bookingData.booking.id,
+    phone: TEST_BOOKING.phone,
+    customerName: TEST_BOOKING.fullName,
+  };
+  info(`Payload: ${JSON.stringify(payload)}`);
 
   try {
     const res = await fetch(`${BASE_URL}/api/payments/mtn/request-to-pay`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(TEST_PAYMENT),
+      body: JSON.stringify(payload),
     });
 
     info(`Status: ${res.status} ${res.statusText}`);
@@ -208,14 +237,16 @@ async function testCallbackEndpoint() {
 async function testValidation() {
   section("Test 5 — Input Validation (missing / bad fields)");
 
-  const valid = { phone: "233551234567", customerName: "Test", serviceId: "nail-care", selectedServices: ["Artisan Manicure"] };
+  const valid = { appointmentId: "00000000-0000-4000-8000-000000000000", phone: "233551234567" };
 
   const cases = [
-    { label: "missing phone",        body: { ...valid, phone: undefined } },
-    { label: "missing customerName", body: { ...valid, customerName: undefined } },
-    { label: "unknown serviceId",    body: { ...valid, serviceId: "not-a-category" } },
-    { label: "empty selection",      body: { ...valid, selectedServices: [] } },
-    { label: "service not in category", body: { ...valid, selectedServices: ["Frontal Sew-In"] } },
+    { label: "missing appointmentId", body: { ...valid, appointmentId: undefined }, expect: 400 },
+    { label: "missing phone",         body: { ...valid, phone: undefined },         expect: 400 },
+    { label: "non-Ghanaian phone",    body: { ...valid, phone: "447700900000" },    expect: 400 },
+    { label: "malformed phone",       body: { ...valid, phone: "024123" },          expect: 400 },
+    // Valid shape, but the booking does not exist — proves the amount can no
+    // longer come from the request at all.
+    { label: "unknown appointment",   body: valid,                                  expect: 404 },
   ];
 
   for (const tc of cases) {
@@ -228,10 +259,10 @@ async function testValidation() {
 
       const data = await res.json();
 
-      if (res.status === 400 && data?.error) {
-        pass(`Validation: ${tc.label}`, `→ 400 "${data.error}"`);
+      if (res.status === tc.expect && data?.error) {
+        pass(`Validation: ${tc.label}`, `→ ${tc.expect} "${data.error}"`);
       } else {
-        fail(`Validation: ${tc.label}`, `Expected 400, got ${res.status}`);
+        fail(`Validation: ${tc.label}`, `Expected ${tc.expect}, got ${res.status}`);
       }
     } catch (err) {
       fail(`Validation: ${tc.label}`, err.message);
@@ -240,30 +271,33 @@ async function testValidation() {
 }
 
 // ─── Cleanup ───────────────────────────────────────────────────────────────
-// request-to-pay now persists a Payment row, so this suite would otherwise
-// leave a sandbox transaction in the real database on every run. Only removes
-// the unlinked sandbox row it created itself.
-async function cleanupTestPayment(referenceId) {
+// This suite now creates a booking as well as a payment, so it would otherwise
+// leave a real appointment and client in the database on every run. Scoped to
+// the single throwaway email it created.
+async function cleanupTestData() {
   const dbUrl = process.env.DIRECT_URL || process.env.DATABASE_URL;
-  if (!referenceId || !dbUrl) return;
+  if (!createdEmail || !dbUrl) return;
 
   try {
     const { default: postgres } = await import("postgres");
     const sql = postgres(dbUrl, { ssl: "require", prepare: false, max: 1 });
     try {
-      const deleted = await sql`
-        DELETE FROM "Payment"
-        WHERE "referenceId" = ${referenceId}
-          AND mode = 'sandbox'
-          AND "appointmentId" IS NULL
-        RETURNING "referenceId"
-      `;
-      if (deleted.length) info(`Cleaned up sandbox Payment row ${referenceId}`);
+      const [user] = await sql`SELECT id FROM "User" WHERE email = ${createdEmail}`;
+      if (!user) return;
+
+      // Children before parents — Appointment.userId is ON DELETE restrict.
+      const appts = await sql`SELECT id FROM "Appointment" WHERE "userId" = ${user.id}`;
+      for (const appt of appts) {
+        await sql`DELETE FROM "Payment" WHERE "appointmentId" = ${appt.id}`;
+      }
+      await sql`DELETE FROM "Appointment" WHERE "userId" = ${user.id}`;
+      await sql`DELETE FROM "User" WHERE id = ${user.id}`;
+      info(`Cleaned up ${appts.length} test booking(s) and their payments`);
     } finally {
       await sql.end();
     }
   } catch (err) {
-    info(`Could not clean up Payment row ${referenceId}: ${err.message}`);
+    info(`Could not clean up test data: ${err.message}`);
   }
 }
 
@@ -279,7 +313,7 @@ async function run() {
   await testStatusCheck(referenceId);
   await testCallbackEndpoint();
   await testValidation();
-  await cleanupTestPayment(referenceId);
+  await cleanupTestData();
 
   section("Results");
   console.log(`${GREEN}${BOLD}  PASSED: ${passed}${RESET}`);

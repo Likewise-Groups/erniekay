@@ -15,7 +15,7 @@
     "db:studio": "drizzle-kit studio",
     "test:mtn": "node --env-file=.env --env-file=.env.local scripts/test-mtn-momo.mjs",
     "test:mtn:callback": "node --env-file=.env --env-file=.env.local scripts/test-mtn-callback.mjs",
-    "db:migrate:payment": "node --env-file=.env scripts/apply-payment-migration.mjs"
+    "db:migrate": "node --env-file=.env scripts/apply-migrations.mjs"
   },
   "dependencies": {
     "@opennextjs/cloudflare": "^1.20.2",

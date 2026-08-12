@@ -5,6 +5,13 @@ type RequestToPayInput = {
   phone: string;
   customerName: string;
   serviceName: string;
+  /**
+   * Caller-supplied X-Reference-Id. Passing one lets the caller record the
+   * payment BEFORE money is requested, so a failed insert can abort the
+   * collection instead of leaving MTN holding a transaction the system has no
+   * row for. Generated here only when omitted.
+   */
+  referenceId?: string;
 };
 
 type MtnTokenResponse = {
@@ -186,7 +193,7 @@ export async function requestMtnPayment(input: RequestToPayInput): Promise<MtnPa
 
   if (!hasLiveConfig) throw new MtnNotConfiguredError();
 
-  const referenceId = crypto.randomUUID();
+  const referenceId = input.referenceId ?? crypto.randomUUID();
   const token = await getToken();
 
   const headers: Record<string, string> = {
@@ -225,7 +232,13 @@ export async function requestMtnPayment(input: RequestToPayInput): Promise<MtnPa
     }),
   });
 
-  if (!response.ok && response.status !== 202) {
+  // Strictly 202. MoMo answers 202 Accepted when it has actually created the
+  // transaction; a 200 means it took the request and discarded it, which is
+  // what a bad character in payerMessage/payeeNote produces. Treating any 2xx
+  // as success returned a referenceId MTN had never heard of, so the customer
+  // got no prompt, no money moved, and the booking waited on a payment that
+  // could never arrive.
+  if (response.status !== 202) {
     const errorText = await response.text().catch(() => "");
     throw new MtnUnavailableError(
       `MTN MoMo request-to-pay failed (${response.status}): ${errorText}`,

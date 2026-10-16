@@ -1,10 +1,11 @@
 "use client";
 
-import Image from "next/image";
 import { useState } from "react";
 import BookingModal from "./BookingModal";
 // Prices come from the catalogue the server charges against.
-import { subServicesOf } from "@/lib/serviceCatalog";
+import { requireCategory } from "@/lib/serviceCatalog";
+import { type MediaOverrides } from "@/lib/mediaSlots";
+import SlotMedia from "./SlotMedia";
 
 const nailServices = [
   {
@@ -37,14 +38,10 @@ const nailServices = [
   },
 ];
 
-export default function NailsSection() {
+export default function NailsSection({ media }: { media?: MediaOverrides }) {
   const [isModalOpen, setIsModalOpen] = useState(false);
 
-  const categoryData = {
-    id: "nail-care",
-    title: "Nail Care & Artistry",
-    subServices: subServicesOf("nail-care")
-  };
+  const categoryData = requireCategory("nail-care");
 
   return (
     <section id="nails" className="py-[80px] md:py-[140px] bg-gradient-to-b from-[#fffcfb] to-[#fdf8f5] relative overflow-hidden">
@@ -120,11 +117,11 @@ export default function NailsSection() {
               {/* Left Column of Videos */}
               <div className="flex flex-col gap-4 md:gap-6 pt-12 md:pt-20">
                 <div className="relative w-full aspect-[4/5] rounded-3xl overflow-hidden shadow-2xl border-4 border-white group">
-                  <video src="/nail service.mp4" autoPlay loop muted playsInline className="absolute inset-0 w-full h-full object-cover group-hover:scale-110 transition-transform duration-[2s]" />
+                  <SlotMedia media={media} slot="salon.nails.1" className="absolute inset-0 w-full h-full object-cover group-hover:scale-110 transition-transform duration-[2s]" />
                   <div className="absolute inset-0 bg-gradient-to-t from-royal-navy/40 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
                 </div>
                 <div className="relative w-full aspect-square rounded-3xl overflow-hidden shadow-2xl border-4 border-white group">
-                  <video src="/nail service 2.mp4" autoPlay loop muted playsInline className="absolute inset-0 w-full h-full object-cover group-hover:scale-110 transition-transform duration-[2s]" />
+                  <SlotMedia media={media} slot="salon.nails.2" className="absolute inset-0 w-full h-full object-cover group-hover:scale-110 transition-transform duration-[2s]" />
                   <div className="absolute inset-0 bg-gradient-to-t from-royal-navy/40 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
                 </div>
               </div>
@@ -132,11 +129,11 @@ export default function NailsSection() {
               {/* Right Column of Videos */}
               <div className="flex flex-col gap-4 md:gap-6 pb-12 md:pb-20">
                 <div className="relative w-full aspect-square rounded-3xl overflow-hidden shadow-2xl border-4 border-white group">
-                  <video src="/nail service 3.mp4" autoPlay loop muted playsInline className="absolute inset-0 w-full h-full object-cover group-hover:scale-110 transition-transform duration-[2s]" />
+                  <SlotMedia media={media} slot="salon.nails.3" className="absolute inset-0 w-full h-full object-cover group-hover:scale-110 transition-transform duration-[2s]" />
                   <div className="absolute inset-0 bg-gradient-to-t from-royal-navy/40 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
                 </div>
                 <div className="relative w-full aspect-[4/5] rounded-3xl overflow-hidden shadow-2xl border-4 border-white group">
-                  <video src="/nail service 5.mp4" autoPlay loop muted playsInline className="absolute inset-0 w-full h-full object-cover group-hover:scale-110 transition-transform duration-[2s]" />
+                  <SlotMedia media={media} slot="salon.nails.4" className="absolute inset-0 w-full h-full object-cover group-hover:scale-110 transition-transform duration-[2s]" />
                   <div className="absolute inset-0 bg-gradient-to-t from-royal-navy/40 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
                 </div>
               </div>

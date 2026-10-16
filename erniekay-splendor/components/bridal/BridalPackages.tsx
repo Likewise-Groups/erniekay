@@ -3,6 +3,7 @@
 import { useState } from "react";
 import Image from "next/image";
 import FadeIn from "@/components/FadeIn";
+import { resolveMedia, type MediaOverrides } from "@/lib/mediaSlots";
 
 type BridalPackage = {
   id: string;
@@ -417,11 +418,14 @@ type BridalPackagesProps = {
   onSelectPackage?: (label: string) => void;
   /** Label of the package currently selected in the enquiry, if any. */
   selectedPackage?: string | null;
+  /** Media overrides, read once by the page. Each card uses `bridal.package.<id>`. */
+  media?: MediaOverrides;
 };
 
 export default function BridalPackages({
   onSelectPackage,
   selectedPackage,
+  media,
 }: BridalPackagesProps) {
   const [mode, setMode] = useState<ServiceMode>("makeup");
 
@@ -502,11 +506,15 @@ export default function BridalPackages({
                 {pkg.imgSrc && (
                   <div className="relative -mx-8 -mt-8 mb-6 aspect-[3/4] overflow-hidden bg-alabaster-white">
                     <Image
-                      src={pkg.imgSrc}
+                      // The slot id carries the package id, so a card keeps its
+                      // picture when the rate card is reordered. Falls back to
+                      // the image this card shipped with.
+                      src={resolveMedia(media, `bridal.package.${pkg.id}`).url || pkg.imgSrc}
                       alt={pkg.imgAlt ?? pkg.title}
                       fill
                       sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
                       className="object-contain"
+                      unoptimized
                     />
                   </div>
                 )}

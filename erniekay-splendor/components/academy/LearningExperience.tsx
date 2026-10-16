@@ -1,5 +1,6 @@
-import Image from "next/image";
 import FadeIn from "@/components/FadeIn";
+import SlotMedia from "@/components/SlotMedia";
+import type { MediaOverrides } from "@/lib/mediaSlots";
 
 const features = [
   {
@@ -19,7 +20,7 @@ const features = [
   },
 ];
 
-export default function LearningExperience() {
+export default function LearningExperience({ media }: { media?: MediaOverrides }) {
   return (
     <section className="py-[112px] bg-white overflow-hidden">
       <div className="max-w-[1280px] mx-auto px-6 md:px-[64px]">
@@ -27,13 +28,12 @@ export default function LearningExperience() {
 
           {/* Image column */}
           <FadeIn className="md:col-span-5 relative">
-            <div className="aspect-[4/5] overflow-hidden">
-              <Image
-                src="https://lh3.googleusercontent.com/aida-public/AB6AXuDRCV5VBo3O1x1cLURQDGo0SqTMJV6AlVeD-Q63XeCOf8f4rXek-T3unTmb-e845XNR87deqJ40aVDGgwyIeWK8idNYCsuXhuOqUQK_RFt9undKcDr7kt42HfqbbLylrych3bFHNzfxpvSFusTkj0_mdX17GtEuqGF_CcvSU3GeXZQuR1rkmSzg9oPVE1p1D2hhAkNuWhrYEnHSk3AW8PzaK8cy03b_nlHyn0-3OaIPqhEK2lCfyldEvlRw-ecwmE3Qbu0puM5wHVA"
-                alt="Erniekay Splendor Beauty Academy training studio — rows of vanities with Hollywood mirrors"
-                fill
+            <div className="relative aspect-[4/5] overflow-hidden">
+              <SlotMedia
+                media={media}
+                slot="academy.learning"
+                sizes="(max-width: 768px) 100vw, 42vw"
                 className="object-cover"
-                unoptimized
               />
             </div>
             {/* Gold badge — desktop only */}

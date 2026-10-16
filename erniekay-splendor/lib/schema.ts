@@ -242,3 +242,55 @@ export const orderItems = pgTable("OrderItem", {
   quantity: integer("quantity").notNull(),
   priceAtPurchase: doublePrecision("priceAtPurchase").notNull(),
 });
+
+/**
+ * Overrides for the pictures on the public site, one row per layout position.
+ *
+ * `slot` is a fixed id from lib/mediaSlots.ts, not free text — every editable
+ * picture already has a place in the markup and a hard-coded default. A missing
+ * row means "still showing the default", so this table starts empty and the site
+ * renders identically until someone changes something. That is what lets the
+ * admin edit media without any restructuring of the section components.
+ *
+ * `Service.imageUrl` is deliberately not reused for this: it is one image per
+ * catalogue service, and the site's layouts want several per section (a hero
+ * video, two collage tiles, a poster frame) plus media on pages that have no
+ * Service row at all.
+ */
+export const siteMedia = pgTable(
+  "SiteMedia",
+  {
+    id: id(),
+    slot: text("slot").notNull(),
+    url: text("url").notNull(),
+    // "image" | "video" — per row, because a slot may switch between them.
+    kind: text("kind").notNull().default("image"),
+    alt: text("alt"),
+    // Supabase Storage object path, kept so a replacement can delete the object
+    // it superseded. Null when the row points at a /public default.
+    storagePath: text("storagePath"),
+    updatedBy: text("updatedBy"),
+    createdAt: createdAt(),
+    updatedAt: updatedAt(),
+  },
+  (table) => [uniqueIndex("SiteMedia_slot_key").on(table.slot)],
+);
+
+/**
+ * Who changed what, from the admin application.
+ *
+ * Staff can confirm bookings and attach payments by hand — both change what the
+ * business believes it was paid, so neither should be anonymous. `actorId` is
+ * not a foreign key on purpose: removing a staff account must not remove the
+ * record of what that account did.
+ */
+export const adminAudit = pgTable("AdminAudit", {
+  id: id(),
+  actorId: text("actorId"),
+  actorEmail: text("actorEmail").notNull(),
+  entity: text("entity").notNull(),
+  entityId: text("entityId"),
+  action: text("action").notNull(),
+  detail: text("detail"),
+  createdAt: createdAt(),
+});

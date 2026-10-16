@@ -1,12 +1,26 @@
 import Image from "next/image";
 import FadeIn from "@/components/FadeIn";
+import { resolveMedia, type MediaOverrides } from "@/lib/mediaSlots";
 
-const team = [
+type TeamMember = {
+  name: string;
+  role: string;
+  bio: string;
+  imgSrc: string;
+  /** Set when this portrait is editable from the admin. */
+  slot?: string;
+};
+
+const team: TeamMember[] = [
   {
     name: "Erniekay",
     role: "Founder & Creative Director",
     bio: "Obsessed with symmetry and editorial polish, Erniekay directs all hair, makeup, and education campaigns.",
     imgSrc: "/erniekay1.jpg",
+    // Only the founder portrait is editable from the admin; the other two are
+    // stock URLs on an external host, and replacing those is a content decision
+    // that comes with the copy beside them.
+    slot: "about.team.founder",
   },
   {
     name: "Beatrice Kay",
@@ -22,7 +36,7 @@ const team = [
   },
 ];
 
-export default function TeamProfiles() {
+export default function TeamProfiles({ media }: { media?: MediaOverrides }) {
   return (
     <section className="py-[112px] md:py-[160px] bg-midnight-ink text-white relative overflow-hidden">
       {/* Background glow */}
@@ -51,11 +65,14 @@ export default function TeamProfiles() {
               <div className="flex flex-col gap-8 group">
                 <div className="relative aspect-[3/4] w-full overflow-hidden rounded-[32px] shadow-2xl ring-1 ring-white/10">
                   <Image
-                    src={t.imgSrc}
+                    src={t.slot ? resolveMedia(media, t.slot).url : t.imgSrc}
                     alt={t.name}
                     fill
                     className="object-cover transition-transform duration-[1.5s] group-hover:scale-110"
                     sizes="(max-w-768px) 100vw, 30vw"
+                    // The founder portrait can be swapped for an upload on a
+                    // host that is not in images.remotePatterns.
+                    unoptimized={Boolean(t.slot)}
                   />
                   <div className="absolute inset-0 bg-gradient-to-t from-midnight-ink/90 via-midnight-ink/20 to-transparent opacity-60 group-hover:opacity-80 transition-all duration-500" />
                   

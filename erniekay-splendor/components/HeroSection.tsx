@@ -2,12 +2,14 @@
 
 import React from 'react';
 import styles from './HeroSection.module.css';
+import { mediaSrc, type MediaOverrides } from '@/lib/mediaSlots';
 
-// Three columns of three — a staggered editorial collage.
+// Three columns of three — a staggered editorial collage. Each position is an
+// editable slot; the pictures themselves come from lib/mediaSlots.ts.
 const columns = [
-  ["/makeup.jpg", "/makeup2.jpg", "/hair3.jpg"],
-  ["/MAKEUP10.jpg", "/facial.jpg", "/hair4.jpg"],
-  ["/makeup6.jpg", "/face-1.jpg", "/hair2.jpg"],
+  ["home.hero.1", "home.hero.2", "home.hero.3"],
+  ["home.hero.4", "home.hero.5", "home.hero.6"],
+  ["home.hero.7", "home.hero.8", "home.hero.9"],
 ];
 
 const stats = [
@@ -16,7 +18,7 @@ const stats = [
   { value: "4.9★", label: "Client\nRating" },
 ];
 
-export default function HeroSection() {
+export default function HeroSection({ media }: { media?: MediaOverrides }) {
   const scrollTo = (id: string) => {
     const el = document.querySelector(id);
     if (el) el.scrollIntoView({ behavior: "smooth" });
@@ -79,11 +81,16 @@ export default function HeroSection() {
               key={ci}
               className={`${styles.col} ${ci === 1 ? styles.colOffset : ""}`}
             >
-              {col.map((url, i) => (
-                <div key={i} className={styles.imageCard}>
+              {col.map((slot) => (
+                <div key={slot} className={styles.imageCard}>
                   <div
                     className={styles.image}
-                    style={{ backgroundImage: `url('${url}')` }}
+                    // Rendered as a CSS background, so the URL is quoted and any
+                    // apostrophe in an uploaded filename is escaped — otherwise
+                    // it would terminate the url('…') literal.
+                    style={{
+                      backgroundImage: `url('${mediaSrc(media, slot).replace(/'/g, "\\'")}')`,
+                    }}
                   />
                 </div>
               ))}

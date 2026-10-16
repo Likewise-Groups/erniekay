@@ -238,7 +238,7 @@ export default function CourseContentPage({ params }: PageProps) {
                     Editorial Skin Prep &amp; Base Artistry
                   </h2>
                   <p className="font-[family-name:var(--font-montserrat)] text-sm text-warm-slate leading-relaxed">
-                    In this session, we dive into the foundational secrets of the &ldquo;Glow-from-within&rdquo; editorial look. Mastering the base is not just about coverage; it's about the architectural manipulation of light and hydration. We will explore how to prep various skin types using elite professional products and how to layer thin, translucent washes of pigment to achieve a flawless yet breathable finish suitable for high-definition bridal photography.
+                    In this session, we dive into the foundational secrets of the &ldquo;Glow-from-within&rdquo; editorial look. Mastering the base is not just about coverage; it&rsquo;s about the architectural manipulation of light and hydration. We will explore how to prep various skin types using elite professional products and how to layer thin, translucent washes of pigment to achieve a flawless yet breathable finish suitable for high-definition bridal photography.
                   </p>
                 </div>
 

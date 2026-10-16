@@ -1,0 +1,155 @@
+@import "tailwindcss";
+
+/**
+ * The admin is deliberately not the public site.
+ *
+ * erniekay-splendor has an editorial theme — EB Garamond, gold on navy,
+ * generous whitespace. That is right for a salon's shopfront and wrong for a
+ * table of 300 bookings. This is an information-dense tool: one sans-serif
+ * face, tight vertical rhythm, and colour reserved for status so a red row
+ * means something. The one thing carried across is the brand navy, so the two
+ * applications still look related.
+ *
+ * The 2025 refresh adds glassmorphism, micro-animations and gradient accents
+ * over the same brand palette: navy #0d1336, gold #ffd500, cream #f7f4e9.
+ */
+@theme inline {
+  --color-brand: #0d1336;
+  --color-brand-soft: #1a2255;
+  --color-brand-ink: #070a1e;
+  --color-gold: #ffd500;
+  --color-gold-soft: #ffe94d;
+  --color-cream: #f7f4e9;
+  --color-cream-dark: #ede8d6;
+
+  --font-sans: var(--font-inter), ui-sans-serif, system-ui, -apple-system, "Segoe UI",
+    sans-serif;
+  --font-heading: var(--font-outfit), var(--font-inter), ui-sans-serif, system-ui, sans-serif;
+}
+
+/* ─── Keyframes ────────────────────────────────────────────────────────────── */
+
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(12px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes shimmer {
+  0% { background-position: -200% 0; }
+  100% { background-position: 200% 0; }
+}
+
+@keyframes pulseGlow {
+  0%, 100% { box-shadow: 0 0 0 0 rgba(255, 213, 0, 0); }
+  50% { box-shadow: 0 0 16px 2px rgba(255, 213, 0, 0.15); }
+}
+
+@keyframes gradientShift {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+
+@keyframes slideInLeft {
+  from { transform: translateX(-100%); }
+  to { transform: translateX(0); }
+}
+
+/* ─── Base ─────────────────────────────────────────────────────────────────── */
+
+html {
+  color-scheme: light;
+}
+
+body {
+  background: var(--color-cream);
+  color: var(--color-brand-ink);
+  font-family: var(--font-sans);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* Tabular figures everywhere money and dates are listed: columns of numbers
+   that do not line up are meaningfully harder to scan. */
+table {
+  font-variant-numeric: tabular-nums;
+}
+
+/* Focus is never removed, only restyled — this whole app is keyboard-driven
+   for anyone entering bookings from a phone call. */
+:focus-visible {
+  outline: 2px solid var(--color-gold);
+  outline-offset: 2px;
+  border-radius: 4px;
+}
+
+/* ─── Scrollbar refinement (Webkit & Firefox) ──────────────────────────────── */
+
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background: rgba(13, 19, 54, 0.15);
+  border-radius: 3px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(13, 19, 54, 0.25);
+}
+
+/* Dark sidebar scrollbar */
+aside ::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.15);
+}
+
+aside ::-webkit-scrollbar-thumb:hover {
+  background: rgba(255, 255, 255, 0.25);
+}
+
+/* ─── Selection ────────────────────────────────────────────────────────────── */
+
+::selection {
+  background: rgba(255, 213, 0, 0.25);
+  color: var(--color-brand-ink);
+}
+
+/* ─── Utility classes ──────────────────────────────────────────────────────── */
+
+/* Glass card effect */
+.glass {
+  background: rgba(255, 255, 255, 0.8);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 255, 255, 0.6);
+}
+
+/* Animate children staggered */
+.stagger-fade > * {
+  animation: fadeInUp 0.4s ease-out both;
+}
+
+.stagger-fade > *:nth-child(1) { animation-delay: 0ms; }
+.stagger-fade > *:nth-child(2) { animation-delay: 60ms; }
+.stagger-fade > *:nth-child(3) { animation-delay: 120ms; }
+.stagger-fade > *:nth-child(4) { animation-delay: 180ms; }
+.stagger-fade > *:nth-child(5) { animation-delay: 240ms; }
+.stagger-fade > *:nth-child(6) { animation-delay: 300ms; }
+.stagger-fade > *:nth-child(7) { animation-delay: 360ms; }
+.stagger-fade > *:nth-child(8) { animation-delay: 420ms; }
+
+/* Page entry animation */
+.page-enter {
+  animation: fadeInUp 0.35s ease-out both;
+}

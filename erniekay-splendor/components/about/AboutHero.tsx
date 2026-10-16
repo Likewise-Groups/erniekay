@@ -1,7 +1,8 @@
-import Image from "next/image";
 import FadeIn from "@/components/FadeIn";
+import SlotMedia from "@/components/SlotMedia";
+import type { MediaOverrides } from "@/lib/mediaSlots";
 
-export default function AboutHero() {
+export default function AboutHero({ media }: { media?: MediaOverrides }) {
   return (
     <section className="relative min-h-[80vh] flex items-center justify-center overflow-hidden bg-gradient-to-br from-[#f8f6f0] to-[#f4eee6] py-[120px]">
       {/* Decorative Orbs */}
@@ -31,12 +32,12 @@ export default function AboutHero() {
           <div className="order-1 lg:order-2 relative">
             <FadeIn delay={200}>
               <div className="relative w-full aspect-[4/5] max-w-[600px] mx-auto rounded-tl-[80px] rounded-br-[80px] overflow-hidden shadow-[0_20px_50px_-15px_rgba(0,0,0,0.15)] ring-1 ring-white/50">
-                <Image
-                  src="/hero-1.jpg"
+                <SlotMedia
+                  media={media}
+                  slot="about.hero"
                   alt="Founder of Erniekay Splendor"
-                  fill
                   priority
-                  className="object-cover scale-105 hover:scale-100 transition-transform duration-[2s]"
+                  className="absolute inset-0 h-full w-full object-cover scale-105 hover:scale-100 transition-transform duration-[2s]"
                   sizes="(max-width: 1024px) 100vw, 50vw"
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-royal-navy/40 to-transparent opacity-60" />

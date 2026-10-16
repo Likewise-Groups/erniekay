@@ -4,7 +4,9 @@ import Image from "next/image";
 import { useState } from "react";
 import BookingModal from "./BookingModal";
 // Prices come from the catalogue the server charges against.
-import { subServicesOf } from "@/lib/serviceCatalog";
+import { requireCategory } from "@/lib/serviceCatalog";
+import { type MediaOverrides } from "@/lib/mediaSlots";
+import SlotMedia from "./SlotMedia";
 
 const makeupServices = [
   { id: "special-occasion", icon: "star", label: "Special Occasion Makeup", price: "150", desc: "Flawless glam tailored for your most important events." },
@@ -20,14 +22,10 @@ const gallery = [
   { src: "/makeup5.jpg", alt: "Traditional bridal makeup and gele" },
 ];
 
-export default function MakeupSection() {
+export default function MakeupSection({ media }: { media?: MediaOverrides }) {
   const [isModalOpen, setIsModalOpen] = useState(false);
 
-  const categoryData = {
-    id: "professional-makeup",
-    title: "Professional Makeup",
-    subServices: subServicesOf("professional-makeup")
-  };
+  const categoryData = requireCategory("professional-makeup");
 
   return (
     <section id="makeup" className="bg-midnight-ink py-[80px] md:py-[140px] text-white relative overflow-hidden">
@@ -107,14 +105,11 @@ export default function MakeupSection() {
           <div className="lg:col-span-7 grid grid-cols-2 gap-4 md:gap-6 h-full">
             {/* Main Video */}
             <div className="col-span-2 relative rounded-3xl overflow-hidden aspect-[16/9] ring-1 ring-white/10 group">
-              <video
+              <SlotMedia
+                media={media}
+                slot="salon.makeup.primary"
+                posterSlot="salon.makeup.primary-poster"
                 className="absolute inset-0 w-full h-full object-cover group-hover:scale-105 transition-transform duration-[2s]"
-                src="/makeupv.mp4"
-                autoPlay
-                loop
-                muted
-                playsInline
-                poster="/makeup.jpg"
               />
               <div className="absolute inset-0 bg-gradient-to-t from-midnight-ink/90 via-transparent to-transparent opacity-80" />
               <div className="absolute bottom-6 left-6 md:bottom-8 md:left-8">
@@ -129,23 +124,19 @@ export default function MakeupSection() {
 
             {/* Secondary Video */}
             <div className="col-span-1 relative rounded-3xl overflow-hidden aspect-square ring-1 ring-white/10 group">
-              <video
+              <SlotMedia
+                media={media}
+                slot="salon.makeup.secondary"
+                posterSlot="salon.makeup.secondary-poster"
                 className="absolute inset-0 w-full h-full object-cover group-hover:scale-105 transition-transform duration-[2s]"
-                src="/makeupv1.mp4"
-                autoPlay
-                loop
-                muted
-                playsInline
-                poster="/makeup2.jpg"
               />
             </div>
 
             {/* Image Tile */}
             <div className="col-span-1 relative rounded-3xl overflow-hidden aspect-square ring-1 ring-white/10 group">
-              <Image
-                src="/makeup5.jpg"
-                alt="Traditional bridal makeup"
-                fill
+              <SlotMedia
+                media={media}
+                slot="salon.makeup.tile"
                 className="object-cover group-hover:scale-110 transition-transform duration-[2s]"
               />
               <div className="absolute inset-0 bg-black/20 group-hover:bg-transparent transition-colors duration-500" />

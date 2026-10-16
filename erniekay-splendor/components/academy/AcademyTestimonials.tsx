@@ -1,8 +1,9 @@
 "use client";
 
 import { useState } from "react";
-import Image from "next/image";
 import FadeIn from "@/components/FadeIn";
+import SlotMedia from "@/components/SlotMedia";
+import type { MediaOverrides } from "@/lib/mediaSlots";
 
 const testimonials = [
   {
@@ -11,9 +12,9 @@ const testimonials = [
       "The Bridal Artistry Masterclass was a turning point for my career. The level of precision and the focus on the business side of beauty gave me the confidence to launch my own studio within months of graduating.",
     name: "Sarah Jenkins",
     meta: "Class of 2022 | Owner, Glow Studio",
-    imgSrc:
-      "https://lh3.googleusercontent.com/aida-public/AB6AXuDwBOnjhUF3mODgSjuTaQzYfb4BjzTu4VBF74NInc3nCun2YuPg8APHNUxHGfNjhyrCAu9sHH_6cfppY5PiEEkgrnnO6MxUtDyYj5LgcbhzkcJQ4bHk1BIwPjfMOkF9KXZPa2D9JeYld23xyfufK6srCCld5N2roWpRF8JMGDnKr9mYQRjXQI2aQ1DESZewHo04gEMADMFQgA35w6nPjI1yhVIys2PfTUs9uA6o5pzuzIne_xktEujleSCXlpzD7pID9gePWd5iVwE",
-    imgAlt: "Professional headshot of Sarah Jenkins",
+    // The portrait is an editable slot; its default and alt text live in
+    // lib/mediaSlots.ts alongside every other picture staff can replace.
+    slot: "academy.testimonial.sarah",
   },
   {
     id: "amina",
@@ -21,13 +22,11 @@ const testimonials = [
       "Editorial Hair Styling transformed the way I see structure and form. The instructors bring real-world fashion experience into every session. I left with a portfolio that opened doors immediately.",
     name: "Amina O.",
     meta: "Class of 2023 | Lead Stylist, Fashion Week Lagos",
-    imgSrc:
-      "https://lh3.googleusercontent.com/aida-public/AB6AXuDwBOnjhUF3mODgSjuTaQzYfb4BjzTu4VBF74NInc3nCun2YuPg8APHNUxHGfNjhyrCAu9sHH_6cfppY5PiEEkgrnnO6MxUtDyYj5LgcbhzkcJQ4bHk1BIwPjfMOkF9KXZPa2D9JeYld23xyfufK6srCCld5N2roWpRF8JMGDnKr9mYQRjXQI2aQ1DESZewHo04gEMADMFQgA35w6nPjI1yhVIys2PfTUs9uA6o5pzuzIne_xktEujleSCXlpzD7pID9gePWd5iVwE",
-    imgAlt: "Professional headshot of Amina O.",
+    slot: "academy.testimonial.amina",
   },
 ];
 
-export default function AcademyTestimonials() {
+export default function AcademyTestimonials({ media }: { media?: MediaOverrides }) {
   const [current, setCurrent] = useState(0);
   const t = testimonials[current];
 
@@ -97,14 +96,12 @@ export default function AcademyTestimonials() {
                 </p>
 
                 <div className="flex items-center gap-4">
-                  <div className="w-12 h-12 rounded-full bg-royal-navy overflow-hidden shrink-0">
-                    <Image
-                      src={t.imgSrc}
-                      alt={t.imgAlt}
-                      width={48}
-                      height={48}
+                  <div className="relative w-12 h-12 rounded-full bg-royal-navy overflow-hidden shrink-0">
+                    <SlotMedia
+                      media={media}
+                      slot={t.slot}
+                      sizes="48px"
                       className="w-full h-full object-cover"
-                      unoptimized
                     />
                   </div>
                   <div>

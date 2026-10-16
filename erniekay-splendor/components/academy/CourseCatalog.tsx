@@ -1,8 +1,14 @@
-import Image from "next/image";
 import Link from "next/link";
 import FadeIn from "@/components/FadeIn";
+import SlotMedia from "@/components/SlotMedia";
+import type { MediaOverrides } from "@/lib/mediaSlots";
 
-export default function CourseCatalog() {
+/**
+ * The card pictures are editable slots. Each wrapper gained `relative` because
+ * SlotMedia lays its media out with `fill` — that is what lets a slot hold
+ * either a still or a video without every call site branching on which.
+ */
+export default function CourseCatalog({ media }: { media?: MediaOverrides }) {
   return (
     <section className="py-[112px] bg-alabaster-white">
       <div className="max-w-[1280px] mx-auto px-6 md:px-[64px]">
@@ -34,14 +40,12 @@ export default function CourseCatalog() {
           <FadeIn className="md:col-span-8" delay={0}>
             <div className="group cursor-pointer overflow-hidden bg-white border border-outline-variant h-full">
               <div className="flex flex-col md:flex-row h-full">
-                <div className="md:w-1/2 h-60 md:h-auto overflow-hidden flex-shrink-0">
-                  <Image
-                    src="https://lh3.googleusercontent.com/aida-public/AB6AXuBiygL4gzPWGhn4pKtNMf4XV8I8cgk8uF9hXZiQACP8BOs9fEpUGazN-Quos2mNo7vzjqLemek3TII3wCMwV1lZ1uyHYQnBB5A2gp2cAOJM0zg_Z8nxJOJneF5vXbMhWQA2WiU1aBeTfyGhEonWk--FvMSDZ-6j9zdIsppduewJa7lUUSNTqhn6Eiwbm_A1ZWxr2RekUBA8y85zcFSo6ZQIUKmo2izolCIvUxeSbIbQLCcQ7x50GffhzRlLBjzMbE-K_Qdd6Y8sRJY"
-                    alt="Bridal makeup application in progress — editorial, gold-toned shimmer"
-                    width={600}
-                    height={500}
+                <div className="relative md:w-1/2 h-60 md:h-auto overflow-hidden flex-shrink-0">
+                  <SlotMedia
+                    media={media}
+                    slot="academy.course.bridal"
+                    sizes="(max-width: 768px) 100vw, 33vw"
                     className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700"
-                    unoptimized
                   />
                 </div>
                 <div className="md:w-1/2 p-8 md:p-10 flex flex-col justify-between">
@@ -76,14 +80,12 @@ export default function CourseCatalog() {
           {/* Card 2 — narrow (4 cols), vertical */}
           <FadeIn className="md:col-span-4" delay={80}>
             <div className="group cursor-pointer bg-white border border-outline-variant flex flex-col h-full">
-              <div className="h-64 overflow-hidden flex-shrink-0">
-                <Image
-                  src="https://lh3.googleusercontent.com/aida-public/AB6AXuDg0WYHqzgcM6lAEAidz7XzIs_rePMeaWrmeb-DpKzAJRvb7cQfQSssXFG-zbnu9NHHuIjzIikw-NdODcxBC-JRB-_0Lk10f1muMiQauxkd9xSTI95sHW8erBHxbg5KdFQz0nbzjO0FU-QImx_L5wTu0UUubZ9HflSgkqWtUTpb2ai-SEQqkXk8E63t5EUkemRiBoDOLYb-wlTM7C2H9TIsIWGnGFrP_oHmamO5Do2-7_geoh1dyr0aftcQaezyb1xf1H8OBdR_3zE"
-                  alt="Architectural editorial hair styling — sleek updo with high-gloss finish"
-                  width={400}
-                  height={256}
+              <div className="relative h-64 overflow-hidden flex-shrink-0">
+                <SlotMedia
+                  media={media}
+                  slot="academy.course.hair"
+                  sizes="(max-width: 768px) 100vw, 33vw"
                   className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700"
-                  unoptimized
                 />
               </div>
               <div className="p-8 flex-grow flex flex-col justify-between">
@@ -116,14 +118,12 @@ export default function CourseCatalog() {
           {/* Card 3 — narrow (4 cols), vertical */}
           <FadeIn className="md:col-span-4" delay={0}>
             <div className="group cursor-pointer bg-white border border-outline-variant flex flex-col h-full">
-              <div className="h-64 overflow-hidden flex-shrink-0">
-                <Image
-                  src="https://lh3.googleusercontent.com/aida-public/AB6AXuDJxbZaGgIXfLcxHIiBZoe8VwMVcbnSnpbKrrWvBojiouN026ahXMW2Z1-_Hbwtglfuqh3Z2rHd8HhvmX9UDFS_leja1Cq9cMiDS1yC2ziiLGY6oqZER_I4ZEbnyLzXJHco6s8nfn2oZ25Y0IdZuD8vW7qmvW_sNPoT1vL715Hz0DsOCS2TnGQLaqOzvKeQKRf3K8tq1dy0zMjpNpKKsnKbjuK-yGgVLOteLkWnnY_YCe1vz2pxRTGojDYIz-F2n4l2CjgnB6QZCsw"
-                  alt="Clinical skin therapy session — soft clinical lighting with professional equipment"
-                  width={400}
-                  height={256}
+              <div className="relative h-64 overflow-hidden flex-shrink-0">
+                <SlotMedia
+                  media={media}
+                  slot="academy.course.skin"
+                  sizes="(max-width: 768px) 100vw, 33vw"
                   className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700"
-                  unoptimized
                 />
               </div>
               <div className="p-8 flex-grow flex flex-col justify-between">
@@ -178,14 +178,12 @@ export default function CourseCatalog() {
                     Request Prospectus
                   </button>
                 </div>
-                <div className="md:w-1/2 h-64 md:h-auto overflow-hidden order-1 md:order-2 flex-shrink-0">
-                  <Image
-                    src="https://lh3.googleusercontent.com/aida-public/AB6AXuA6V1KQD6u0Ea4NiHNBxMtBQN1SUZbh4lVBhb4ABC7b43AILy_fZmjYLP1ot4suWzgxZvMAJrovkpnmQYwU5zeUq6-7df6EjXudKifZBebEC2tOIUuHBt3CJxVun6Ak5WcE4mEUpavtO5YmjLZvjgOErIVSFh_efcMNme2-8NCuYxmr6SqY7E2nUc3lOFICWqFgpjWSdXDaA5BWzUfJ4t0if_6v06odGEiTSNbAHB_DiIBRhcGhOgIsgBc4i2h9SSM16UZ6IAPs6ys"
-                    alt="Modern high-end studio workspace with gold laptop and editorial fashion items"
-                    width={600}
-                    height={500}
+                <div className="relative md:w-1/2 h-64 md:h-auto overflow-hidden order-1 md:order-2 flex-shrink-0">
+                  <SlotMedia
+                    media={media}
+                    slot="academy.course.bespoke"
+                    sizes="(max-width: 768px) 100vw, 33vw"
                     className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700"
-                    unoptimized
                   />
                 </div>
               </div>

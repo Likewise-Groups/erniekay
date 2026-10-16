@@ -1,17 +1,18 @@
-import Image from "next/image";
 import Link from "next/link";
 
-export default function AcademyHero() {
+import SlotMedia from "@/components/SlotMedia";
+import type { MediaOverrides } from "@/lib/mediaSlots";
+
+export default function AcademyHero({ media }: { media?: MediaOverrides }) {
   return (
     <section className="relative h-[80vh] flex items-center overflow-hidden bg-royal-navy">
       {/* Background image */}
       <div className="absolute inset-0 opacity-40">
-        <Image
-          src="https://lh3.googleusercontent.com/aida-public/AB6AXuDC4JazpJCdG1rjirZUUP9lIEbNWP0R2dN9XMVAjXg2aFCmG8US3lA-dKgpPB33DC-w6OJVggHLtQzCj5FO_AzLP0bIFZCwer3Xczt_89VoqNzum9mWKi00safjEmotPOtxSsQUa3hbzHgbGXGTI0lWlzfqpWZ_ekSrT1dsYHarAnfUYI1vd82D3cgwQCmUqJ04CiuWdf9ZFZGyP0BuSnZWnniDvnjxCzucWdLN3QiA-F8wEiCXnNbAtx5E2kDB29kNsQ4ri5xrz54"
-          alt="Professional beauty educator demonstrating makeup technique in a luxury studio"
-          fill
+        <SlotMedia
+          media={media}
+          slot="academy.hero"
           className="object-cover"
-          unoptimized
+          sizes="100vw"
           priority
         />
       </div>

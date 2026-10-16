@@ -2,12 +2,18 @@
 
 import { useRef, useState } from "react";
 import Image from "next/image";
+import { resolveMedia, type MediaOverrides } from "@/lib/mediaSlots";
 
 type Category = "makeup" | "bridal" | "salon";
 
 interface GalleryItem {
   id: string;
   type: "image" | "video";
+  /**
+   * The picture this tile shipped with. It is only a fallback now — the tile
+   * renders `gallery.<id>` from SiteMedia when a row exists. Kept in sync with
+   * the `defaultUrl` of the matching slot in lib/mediaSlots.ts.
+   */
   src: string;
   category: Category;
   displayCategory: string;
@@ -53,11 +59,17 @@ const categories = [
   { id: "salon", label: "Salon & Nails" },
 ];
 
-function MediaCard({ item }: { item: GalleryItem }) {
+function MediaCard({ item, media }: { item: GalleryItem; media?: MediaOverrides }) {
   const videoRef = useRef<HTMLVideoElement>(null);
 
+  // The slot decides both the source and whether this tile is a still or a
+  // clip, so a still can replace a clip from the admin without the hover
+  // play/pause handlers below trying to drive an <img>.
+  const resolved = resolveMedia(media, `gallery.${item.id}`);
+  const isVideo = resolved.kind === "video";
+
   const handleEnter = () => {
-    if (item.type === "video") {
+    if (isVideo) {
       videoRef.current?.play().catch(() => {});
     }
   };
@@ -77,18 +89,19 @@ function MediaCard({ item }: { item: GalleryItem }) {
       className="group relative mb-6 break-inside-avoid overflow-hidden rounded-xl bg-royal-navy cursor-pointer"
     >
       <div className={`relative w-full overflow-hidden ${item.aspectClass}`}>
-        {item.type === "image" ? (
+        {!isVideo ? (
           <Image
-            src={item.src}
+            src={resolved.url}
             alt={item.alt}
             fill
             sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
             className="object-cover transition-transform duration-700 group-hover:scale-105"
+            unoptimized
           />
         ) : (
           <video
             ref={videoRef}
-            src={item.src}
+            src={resolved.url}
             muted
             loop
             playsInline
@@ -98,7 +111,7 @@ function MediaCard({ item }: { item: GalleryItem }) {
         )}
 
         {/* Video badge */}
-        {item.type === "video" && (
+        {isVideo && (
           <div className="absolute top-3 right-3 z-20 flex h-9 w-9 items-center justify-center rounded-full bg-black/40 backdrop-blur-sm transition-opacity duration-300 group-hover:opacity-0">
             <span className="material-symbols-outlined text-[20px] text-white">play_arrow</span>
           </div>
@@ -119,7 +132,7 @@ function MediaCard({ item }: { item: GalleryItem }) {
   );
 }
 
-export default function GalleryGrid() {
+export default function GalleryGrid({ media }: { media?: MediaOverrides }) {
   const [activeTab, setActiveTab] = useState("all");
 
   const filteredItems = galleryItems.filter(
@@ -151,7 +164,7 @@ export default function GalleryGrid() {
       <main className="max-w-[1280px] mx-auto px-6 md:px-[64px] py-[72px] md:py-[112px]">
         <div className="columns-1 sm:columns-2 lg:columns-3 gap-6">
           {filteredItems.map((item) => (
-            <MediaCard key={item.id} item={item} />
+            <MediaCard key={item.id} item={item} media={media} />
           ))}
         </div>
       </main>

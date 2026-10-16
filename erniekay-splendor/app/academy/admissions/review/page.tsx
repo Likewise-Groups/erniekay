@@ -128,7 +128,7 @@ export default function AdmissionsReviewPage() {
                   />
                   <div>
                     <p className="font-body-base text-body-base text-on-surface-variant">
-                      I have reviewed all information and agree to the academy's{" "}
+                      I have reviewed all information and agree to the academy&rsquo;s{" "}
                       <Link
                         href="#"
                         className="text-royal-navy hover:underline"

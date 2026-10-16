@@ -3,6 +3,8 @@
 import { useState } from "react";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
+import BookingCalendar from "@/components/BookingCalendar";
+import { formatLongDate, formatSlot } from "@/lib/availability";
 import Image from "next/image";
 import Link from "next/link";
 
@@ -243,26 +245,18 @@ export default function BookingPage() {
     }
   };
 
-  const timeSlots = ["09:00 AM", "10:30 AM", "12:00 PM", "01:30 PM", "03:00 PM", "04:30 PM", "06:00 PM"];
-  
-  // 10-day date generator
-  const getDates = () => {
-    const dates = [];
-    const options: Intl.DateTimeFormatOptions = { weekday: "long", day: "numeric", month: "long", year: "numeric" };
-    for (let i = 1; i <= 10; i++) {
-      const d = new Date();
-      d.setDate(d.getDate() + i);
-      dates.push({
-        raw: d.toISOString().split("T")[0],
-        formatted: d.toLocaleDateString("en-US", options),
-        short: d.toLocaleDateString("en-US", { weekday: "short", day: "numeric", month: "short" }),
-      });
-    }
-    return dates;
-  };
-
-  const datesList = getDates();
-  const activeDateObj = datesList.find((d) => d.raw === selectedDate);
+  /**
+   * The date and time controls are now BookingCalendar, shared with the
+   * booking modal.
+   *
+   * What was here before: a ten-day horizontal strip starting tomorrow, and
+   * seven time slots running 09:00 AM to 06:00 PM. Both disagreed with the
+   * modal — which offered half-hourly slots from 09:00 to 16:00 — and neither
+   * knew what was already booked. Worse, the times were posted as "09:00 AM",
+   * which the bookings endpoint could not parse and quietly turned into the
+   * moment of submission. Everything is on lib/availability.ts's grid now.
+   */
+  const activeDateLabel = selectedDate ? formatLongDate(selectedDate) : "";
 
   return (
     <>
@@ -619,62 +613,26 @@ export default function BookingPage() {
               Select Appointment Slot
             </h3>
 
-            {/* Date Selection */}
-            <div className="mb-8">
-              <span className="text-[12px] font-bold font-label-caps tracking-[0.15em] text-royal-navy block mb-4 uppercase">
-                1. Choose Date
-              </span>
-              <div className="flex gap-3 overflow-x-auto pb-4 scrollbar-thin scrollbar-thumb-royal-navy scrollbar-track-alabaster-white">
-                {datesList.map((dt) => {
-                  const isDateSelected = selectedDate === dt.raw;
-                  return (
-                    <button
-                      key={dt.raw}
-                      onClick={() => setSelectedDate(dt.raw)}
-                      className={`flex flex-col items-center justify-center p-4 border min-w-[120px] transition-all cursor-pointer ${
-                        isDateSelected
-                          ? "border-majestic-gold bg-royal-navy text-majestic-gold"
-                          : "border-surface-variant hover:border-royal-navy/40 text-royal-navy"
-                      }`}
-                    >
-                      <span className="text-[11px] font-bold tracking-[0.1em] font-label-caps block mb-1 uppercase opacity-80">
-                        {dt.short.split(" ")[0]}
-                      </span>
-                      <span className="text-[20px] font-[family-name:var(--font-eb-garamond)] font-bold block">
-                        {dt.short.split(" ")[1]}
-                      </span>
-                      <span className="text-[10px] uppercase font-bold tracking-wider opacity-70">
-                        {dt.short.split(" ")[2]}
-                      </span>
-                    </button>
-                  );
-                })}
-              </div>
-            </div>
-
-            {/* Time Slots */}
+            {/* Date and time — one control, live availability */}
             <div className="mb-10">
               <span className="text-[12px] font-bold font-label-caps tracking-[0.15em] text-royal-navy block mb-4 uppercase">
-                2. Choose Time
+                Choose a date and time
               </span>
-              <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
-                {timeSlots.map((time) => {
-                  const isTimeSelected = selectedTimeSlot === time;
-                  return (
-                    <button
-                      key={time}
-                      onClick={() => setSelectedTimeSlot(time)}
-                      className={`py-3 px-4 text-center border font-[family-name:var(--font-montserrat)] text-[14px] font-medium transition-all ${
-                        isTimeSelected
-                          ? "bg-royal-navy text-majestic-gold border-majestic-gold font-semibold"
-                          : "border-surface-variant hover:border-royal-navy text-royal-navy"
-                      }`}
-                    >
-                      {time}
-                    </button>
-                  );
-                })}
-              </div>
+
+              <BookingCalendar
+                value={{ date: selectedDate, time: selectedTimeSlot }}
+                onChange={(selection) => {
+                  setSelectedDate(selection.date);
+                  setSelectedTimeSlot(selection.time);
+                }}
+                hint="Choose a date above to see which times are still free."
+              />
+
+              <p className="mt-3 text-[12px] text-warm-slate">
+                {selectedDate && selectedTimeSlot
+                  ? `Selected: ${activeDateLabel} at ${formatSlot(selectedTimeSlot)}.`
+                  : "Open Monday to Saturday, 9:00 AM – 4:00 PM."}
+              </p>
             </div>
 
             {/* Action Buttons */}
@@ -745,10 +703,10 @@ export default function BookingPage() {
                 <div className="group">
                   <p className="text-label-caps font-label-caps text-champagne-taupe mb-2">DATE &amp; TIME</p>
                   <p className="font-body-bold text-body-bold text-royal-navy">
-                    {activeDateObj ? activeDateObj.formatted : selectedDate}
+                    {activeDateLabel || selectedDate}
                   </p>
                   <p className="text-body-base text-warm-slate mt-1">
-                    {selectedTimeSlot}
+                    {selectedTimeSlot ? formatSlot(selectedTimeSlot) : ""}
                   </p>
                   <div className="h-[1px] bg-gradient-to-r from-[#8E7A5A] to-transparent mt-4 w-1/4 group-hover:w-full transition-all duration-500"></div>
                 </div>
@@ -938,7 +896,8 @@ export default function BookingPage() {
                 <div className="flex justify-between">
                   <span>Date &amp; Time</span>
                   <span className="font-semibold text-royal-navy">
-                    {activeDateObj ? activeDateObj.formatted : selectedDate} at {selectedTimeSlot}
+                    {activeDateLabel || selectedDate}
+                    {selectedTimeSlot ? ` at ${formatSlot(selectedTimeSlot)}` : ""}
                   </span>
                 </div>
                 <div className="flex justify-between border-t border-dashed border-champagne-taupe/30 pt-3 text-[16px]">

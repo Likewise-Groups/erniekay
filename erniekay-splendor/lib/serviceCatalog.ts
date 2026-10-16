@@ -14,15 +14,27 @@
  */
 
 export type SubService = {
+  /**
+   * Unique within its category — this is the string stored on the booking and
+   * looked up by priceSelection, so variants must stay qualified ("Shampooing
+   * (Special Product)"). Bare variant names would collide: "Special Product"
+   * belongs to both Shampooing and Relaxing.
+   */
   name: string;
   /** Either a number, or a string like "70-150" / "100+". See parsePrice. */
   price: string | number;
+  /** Sub-category heading. Entries sharing one are rendered under it together. */
+  group?: string;
+  /** Short display text under a group heading. Falls back to `name`. */
+  label?: string;
 };
 
 export type ServiceCategory = {
   id: string;
   title: string;
   subServices: SubService[];
+  /** Customer-facing caveat shown above the sub-service list when booking. */
+  note?: string;
 };
 
 /**
@@ -44,10 +56,14 @@ export const SERVICE_CATEGORIES: ServiceCategory[] = [
     id: "hair-services",
     title: "Hair Services",
     subServices: [
-      { name: "Shampooing", price: 200 },
-      { name: "Relaxing", price: 350 },
-      { name: "Perm Cut Only", price: 350 },
-      { name: "Normal Pony", price: 250 },
+      { group: "Shampooing", label: "Regular", name: "Shampooing (Regular)", price: 50 },
+      { group: "Shampooing", label: "Special Product", name: "Shampooing (Special Product)", price: 180 },
+      { group: "Relaxing", label: "Regular Product", name: "Relaxing (Regular Product)", price: 150 },
+      { group: "Relaxing", label: "Special Product", name: "Relaxing (Special Product)", price: 350 },
+      { group: "Perm Cut Only", label: "Fresh Cut", name: "Perm Cut Only (Fresh Cut)", price: 350 },
+      { group: "Perm Cut Only", label: "Cut Only", name: "Perm Cut Only (Cut Only)", price: 150 },
+      { group: "Perm Cut Only", label: "Cut and Style", name: "Perm Cut Only (Cut and Style)", price: 250 },
+      { group: "Perm Cut Only", label: "Perm and Style", name: "Perm Cut Only (Perm and Style)", price: 350 },
     ],
   },
   {
@@ -63,11 +79,14 @@ export const SERVICE_CATEGORIES: ServiceCategory[] = [
   {
     id: "installation",
     title: "Installation",
+    note:
+      "Styling is not included in the installation price. To complete your look, add your preferred option from the Styling section to your booking.",
     subServices: [
-      { name: "Closure Installation", price: 200 },
-      { name: "Frontal Installation", price: 300 },
-      { name: "180 Frontal Pony", price: 400 },
-      { name: "360 Frontal Pony", price: 600 },
+      { name: "Closure Installation Only", price: 150 },
+      { name: "180 Frontal Installation Only", price: 300 },
+      { name: "360 Frontal Installation Only", price: 500 },
+      { name: "180 Frontal Pony Only", price: 400 },
+      { name: "360 Frontal Pony Only", price: 600 },
     ],
   },
   {
@@ -159,10 +178,48 @@ export const asSelectionArray = (value: unknown): string[] => {
   return [];
 };
 
+export type SubServiceRow =
+  | { kind: "heading"; key: string; title: string }
+  | { kind: "item"; key: string; label: string; sub: SubService };
+
+/**
+ * Flattens a category's sub-services into rows for a list UI, inserting a
+ * heading row wherever `group` changes. Walks the array in order rather than
+ * bucketing by key, so the catalogue's own ordering is what the UI shows.
+ */
+export const subServiceRows = (subServices: SubService[]): SubServiceRow[] => {
+  const rows: SubServiceRow[] = [];
+  let currentGroup: string | undefined;
+
+  for (const sub of subServices) {
+    if (sub.group !== currentGroup) {
+      currentGroup = sub.group;
+      if (sub.group) rows.push({ kind: "heading", key: `group:${sub.group}`, title: sub.group });
+    }
+    rows.push({ kind: "item", key: sub.name, label: sub.label ?? sub.name, sub });
+  }
+
+  return rows;
+};
+
 const BY_ID = new Map(SERVICE_CATEGORIES.map((category) => [category.id, category]));
 
 export const getCategory = (categoryId: string): ServiceCategory | undefined =>
   BY_ID.get(categoryId);
+
+/**
+ * Like getCategory, but throws on an unknown id.
+ *
+ * Section components look categories up by a literal id, and the modal must be
+ * handed the catalogue object itself — rebuilding a `{ id, title, subServices }`
+ * literal at the call site drops every other field (a category's `note`, and
+ * whatever is added next) without a type error to catch it.
+ */
+export const requireCategory = (categoryId: string): ServiceCategory => {
+  const category = BY_ID.get(categoryId);
+  if (!category) throw new Error(`Unknown service category "${categoryId}".`);
+  return category;
+};
 
 /** Convenience for components that only need one category's sub-services. */
 export const subServicesOf = (categoryId: string): SubService[] =>

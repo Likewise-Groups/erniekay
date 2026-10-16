@@ -1,12 +1,13 @@
 "use client";
 
-import Image from "next/image";
 import { useState } from "react";
 import BookingModal, { ServiceCategory } from "./BookingModal";
 // Sub-service names and prices come from the catalogue, which is what the
 // server charges. Keeping a second copy here would let the page quote a price
 // the payment endpoint refuses.
-import { subServicesOf } from "@/lib/serviceCatalog";
+import { requireCategory } from "@/lib/serviceCatalog";
+import { type MediaOverrides } from "@/lib/mediaSlots";
+import SlotMedia from "./SlotMedia";
 
 /* ─── Types ─────────────────────────────────────────────────── */
 interface ServiceCardProps {
@@ -87,11 +88,10 @@ const hairServices = [
   {
     id: "hair-services",
     tag: "Essentials",
-    price: "From 200GH",
+    price: "From 50GH",
     title: "Hair Services",
     description:
       "A comprehensive overview of our essential hair care rituals including shampooing, relaxing, cutting, and styling.",
-    subServices: subServicesOf("hair-services"),
   },
   {
     id: "sew-in",
@@ -100,16 +100,14 @@ const hairServices = [
     title: "Sew-In",
     description:
       "Explore our premium sew-in extension services tailored for a flawless and natural finish.",
-    subServices: subServicesOf("sew-in"),
   },
   {
     id: "installation",
     tag: "Finishing",
-    price: "From 200GH",
+    price: "From 150GH",
     title: "Installation",
     description:
       "Professional installation services to perfectly secure and blend your closures and frontals.",
-    subServices: subServicesOf("installation"),
   },
   {
     id: "styling",
@@ -118,7 +116,6 @@ const hairServices = [
     title: "Styling",
     description:
       "Elevate your look with expert straightening, curling, and customized styling for any occasion.",
-    subServices: subServicesOf("styling"),
   },
   {
     id: "revamp-colouring",
@@ -127,18 +124,13 @@ const hairServices = [
     title: "Revamp / Colouring",
     description:
       "Transform your hair with our signature coloring techniques and comprehensive revamping treatments.",
-    subServices: subServicesOf("revamp-colouring"),
   },
 ];
 
-const customWiggingCategory: ServiceCategory = {
-  id: "custom-wigging",
-  title: "Custom Wigging",
-  subServices: subServicesOf("custom-wigging"),
-};
+const customWiggingCategory: ServiceCategory = requireCategory("custom-wigging");
 
 /* ─── Component ──────────────────────────────────────────────── */
-export default function HairSection() {
+export default function HairSection({ media }: { media?: MediaOverrides }) {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedCategory, setSelectedCategory] = useState<ServiceCategory | null>(null);
 
@@ -175,12 +167,9 @@ export default function HairSection() {
           <div className="bg-white/90 backdrop-blur-md border border-white overflow-hidden rounded-[32px] shadow-[0_20px_40px_-15px_rgba(0,0,0,0.1)] relative group">
             <div className="relative aspect-[4/5] w-full overflow-hidden p-2 pb-0">
               <div className="w-full h-full rounded-[24px] overflow-hidden relative">
-                <video
-                  src="/hair.MOV"
-                  autoPlay
-                  loop
-                  muted
-                  playsInline
+                <SlotMedia
+                  media={media}
+                  slot="salon.hair.featured"
                   className="absolute inset-0 w-full h-full object-cover scale-105 group-hover:scale-110 transition-transform duration-700"
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-midnight-ink/90 via-midnight-ink/20 to-transparent" />
@@ -218,7 +207,7 @@ export default function HairSection() {
               <MobileServiceCard 
                 key={svc.id} 
                 {...svc} 
-                onBook={() => openModal({ id: svc.id, title: svc.title, subServices: svc.subServices })} 
+                onBook={() => openModal(requireCategory(svc.id))} 
               />
             ))}
           </div>
@@ -254,18 +243,15 @@ export default function HairSection() {
           {/* First standard card */}
           <DesktopServiceCard 
             {...hairServices[0]} 
-            onBook={() => openModal({ id: hairServices[0].id, title: hairServices[0].title, subServices: hairServices[0].subServices })} 
+            onBook={() => openModal(requireCategory(hairServices[0].id))} 
           />
 
           {/* Featured Video Card - Spans 2 Rows */}
           <div className="row-span-2 col-span-1 group relative overflow-hidden bg-midnight-ink text-white rounded-[40px] shadow-[0_20px_50px_-12px_rgba(0,0,0,0.4)] hover:shadow-[0_30px_60px_-15px_rgba(212,175,55,0.3)] transition-all duration-500 flex flex-col p-2">
             <div className="absolute inset-0 opacity-40 group-hover:scale-105 transition-transform duration-1000">
-              <video
-                src="/hair.MOV"
-                autoPlay
-                loop
-                muted
-                playsInline
+              <SlotMedia
+                media={media}
+                slot="salon.hair.showcase"
                 className="w-full h-full object-cover"
               />
             </div>
@@ -307,14 +293,14 @@ export default function HairSection() {
             <DesktopServiceCard 
               key={s.id} 
               {...s} 
-              onBook={() => openModal({ id: s.id, title: s.title, subServices: s.subServices })} 
+              onBook={() => openModal(requireCategory(s.id))} 
             />
           ))}
           {hairServices.slice(3).map((s) => (
             <DesktopServiceCard 
               key={s.id} 
               {...s} 
-              onBook={() => openModal({ id: s.id, title: s.title, subServices: s.subServices })} 
+              onBook={() => openModal(requireCategory(s.id))} 
             />
           ))}
         </div>

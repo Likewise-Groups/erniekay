@@ -1,7 +1,8 @@
-import Image from "next/image";
 import FadeIn from "@/components/FadeIn";
+import SlotMedia from "@/components/SlotMedia";
+import type { MediaOverrides } from "@/lib/mediaSlots";
 
-export default function BrandStory() {
+export default function BrandStory({ media }: { media?: MediaOverrides }) {
   return (
     <section className="py-[112px] md:py-[160px] bg-white overflow-hidden relative">
       <div className="max-w-[1280px] mx-auto px-6 md:px-[64px]">
@@ -11,11 +12,11 @@ export default function BrandStory() {
           <div className="lg:col-span-5 relative">
             <FadeIn className="w-full">
               <div className="relative w-full aspect-[3/4] max-w-[500px] mx-auto overflow-hidden group shadow-2xl rounded-2xl">
-                <Image
-                  src="/erniekay.jpg"
+                <SlotMedia
+                  media={media}
+                  slot="about.story"
                   alt="Founder Erniekay at work applying custom editorial detailing"
-                  fill
-                  className="object-cover transition-transform duration-1000 group-hover:scale-110"
+                  className="absolute inset-0 h-full w-full object-cover transition-transform duration-1000 group-hover:scale-110"
                   sizes="(max-width: 1024px) 100vw, 50vw"
                 />
                 <div className="absolute inset-0 bg-black/10 group-hover:bg-transparent transition-colors duration-500" />

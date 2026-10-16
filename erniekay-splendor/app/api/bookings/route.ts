@@ -1,6 +1,7 @@
-import { eq } from "drizzle-orm";
+import { and, count, eq, gte, lt, sql } from "drizzle-orm";
 import { NextResponse } from "next/server";
 
+import { slotProblem, slotStart, SLOT_MINUTES } from "@/lib/availability";
 import { getDb } from "@/lib/db";
 import { appointments, services, users } from "@/lib/schema";
 import { asSelectionArray, getCategory, priceSelection } from "@/lib/serviceCatalog";
@@ -16,6 +17,9 @@ import { asSelectionArray, getCategory, priceSelection } from "@/lib/serviceCata
  * against the appointment recorded here, so there is nothing for a client to
  * pair up.
  */
+/** Thrown inside the booking transaction so the rollback and the 409 agree. */
+class SlotUnavailable extends Error {}
+
 export async function POST(req: Request) {
   try {
     const body = await req.json();
@@ -60,15 +64,34 @@ export async function POST(req: Request) {
       .filter(Boolean)
       .join("\n\n");
 
-    // For the appointment date, create a basic Date object.
-    // In a real app, you would parse the specific timezone, but this works for local demo.
-    const appointmentDate = new Date(`${date}T${time}`);
-    const fallbackAppointmentDate = new Date(`${date} ${time}`);
-    const normalizedDate = !isNaN(appointmentDate.getTime())
-      ? appointmentDate
-      : !isNaN(fallbackAppointmentDate.getTime())
-        ? fallbackAppointmentDate
-        : new Date();
+    /**
+     * The slot, as an exact instant.
+     *
+     * This used to be `new Date(\`${date}T${time}\`)` with a space-separated
+     * fallback and, failing both, *now* — so an unparseable time silently
+     * booked the client in for the moment they pressed the button. The date and
+     * the time are now validated against the published slot grid instead, and
+     * anything that does not land on it is refused rather than guessed at.
+     * See lib/availability.ts for why appending "Z" is exact here.
+     */
+    const requestedDay = String(date);
+    const requestedTime = String(time);
+
+    /**
+     * Everything about the slot except whether it is full, checked before the
+     * database is touched at all.
+     *
+     * The order matters: `slotStart()` on a time that is not "HH:MM" yields an
+     * Invalid Date, and passing that into a query is a 500 rather than the
+     * "appointments start on the half hour" the caller needs to read. Passing
+     * 0 as the taken count skips only the capacity rule, which needs a query.
+     */
+    const shapeProblem = slotProblem(requestedDay, requestedTime, 0);
+    if (shapeProblem) {
+      return NextResponse.json({ error: shapeProblem }, { status: 409 });
+    }
+
+    const normalizedDate = slotStart(requestedDay, requestedTime);
     const normalizedServiceId = serviceId || "custom-service";
     const normalizedServiceName = serviceName || selectionLabel || normalizedServiceId;
     const normalizedCategory = category || "Booking Flow";
@@ -95,6 +118,38 @@ export async function POST(req: Request) {
 
     // One connection for this request; see getDb().
     const db = getDb();
+
+    /**
+     * How many bookings already hold this slot.
+     *
+     * Counted over the half-hour the slot occupies rather than on an exact
+     * timestamp match, so a row written before the two booking flows agreed on
+     * a time format still occupies the slot it was meant to.
+     */
+    const countSlot = async (client: typeof db | Parameters<Parameters<typeof db.transaction>[0]>[0]) => {
+      const [row] = await client
+        .select({ value: count() })
+        .from(appointments)
+        .where(
+          and(
+            gte(appointments.appointmentDate, normalizedDate),
+            lt(
+              appointments.appointmentDate,
+              new Date(normalizedDate.getTime() + SLOT_MINUTES * 60 * 1000),
+            ),
+            sql`${appointments.status} IN ('PENDING', 'CONFIRMED', 'COMPLETED')`,
+          ),
+        );
+      return row?.value ?? 0;
+    };
+
+    // Capacity, before creating a client record for a booking that cannot be
+    // made. Re-checked under a lock at insert time; this is the courteous
+    // early exit, not the guarantee.
+    const capacityProblem = slotProblem(requestedDay, requestedTime, await countSlot(db));
+    if (capacityProblem) {
+      return NextResponse.json({ error: capacityProblem }, { status: 409 });
+    }
 
     // Insert only. An existing Service row is left untouched — its price is
     // catalogue data, not something a booking request gets to modify.
@@ -131,19 +186,42 @@ export async function POST(req: Request) {
       return NextResponse.json({ error: "Failed to resolve client" }, { status: 500 });
     }
 
-    const [booking] = await db
-      .insert(appointments)
-      .values({
-        appointmentDate: normalizedDate,
-        notes: finalNotes,
-        userId,
-        serviceId: normalizedServiceId,
-        selectedServices: JSON.stringify(selection),
-        amountDue,
-        currency: "GHS",
-        status: "PENDING",
-      })
-      .returning();
+    /**
+     * Take the slot.
+     *
+     * The count above is not enough on its own: two requests can both read
+     * "2 of 3 taken" and both insert, putting four bookings on a slot that
+     * holds three. The advisory lock serialises requests for *this* slot only —
+     * keyed on the slot itself, so bookings for other times are unaffected —
+     * and it is released when the transaction ends, however it ends.
+     *
+     * An advisory lock rather than a unique constraint because capacity is 3,
+     * not 1; there is no column combination to make unique.
+     */
+    const booking = await db.transaction(async (tx) => {
+      await tx.execute(
+        sql`SELECT pg_advisory_xact_lock(hashtext(${`slot:${requestedDay} ${requestedTime}`}))`,
+      );
+
+      const problem = slotProblem(requestedDay, requestedTime, await countSlot(tx));
+      if (problem) throw new SlotUnavailable(problem);
+
+      const [row] = await tx
+        .insert(appointments)
+        .values({
+          appointmentDate: normalizedDate,
+          notes: finalNotes,
+          userId,
+          serviceId: normalizedServiceId,
+          selectedServices: JSON.stringify(selection),
+          amountDue,
+          currency: "GHS",
+          status: "PENDING",
+        })
+        .returning();
+
+      return row;
+    });
 
     return NextResponse.json(
       {
@@ -158,6 +236,12 @@ export async function POST(req: Request) {
       { status: 201 },
     );
   } catch (error) {
+    // Losing the race for the last place in a slot is an ordinary outcome, not
+    // a fault: the client is told which and can pick another time.
+    if (error instanceof SlotUnavailable) {
+      return NextResponse.json({ error: error.message }, { status: 409 });
+    }
+
     // Logged in full so Worker observability shows the real cause; the client
     // only ever sees the generic message.
     console.error(

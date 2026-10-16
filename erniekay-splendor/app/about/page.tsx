@@ -6,6 +6,16 @@ import CoreValues from "@/components/about/CoreValues";
 import Milestones from "@/components/about/Milestones";
 import TeamProfiles from "@/components/about/TeamProfiles";
 import Footer from "@/components/Footer";
+import { getMediaOverrides } from "@/lib/media";
+
+/**
+ * Rendered per request so media changes made in the admin appear immediately.
+ * Without this the page is prerendered at build time and would freeze whichever
+ * pictures were live when it was built. The lookup is a single indexed query
+ * over a table with a few dozen rows, through Hyperdrive.
+ */
+export const dynamic = "force-dynamic";
+
 
 export const metadata: Metadata = {
   title: "About | Erniekay Splendor",
@@ -13,16 +23,18 @@ export const metadata: Metadata = {
     "Discover the visionaries and values behind Erniekay Splendor. Blending clinical skin/hair precision with high-fashion artistic soul.",
 };
 
-export default function AboutPage() {
+export default async function AboutPage() {
+  const media = await getMediaOverrides();
+
   return (
     <>
       <Navbar />
       <main className="mt-20">
-        <AboutHero />
-        <BrandStory />
+        <AboutHero media={media} />
+        <BrandStory media={media} />
         <CoreValues />
         <Milestones />
-        <TeamProfiles />
+        <TeamProfiles media={media} />
       </main>
       <Footer />
     </>

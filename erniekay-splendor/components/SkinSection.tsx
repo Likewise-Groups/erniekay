@@ -1,10 +1,11 @@
 "use client";
 
-import Image from "next/image";
 import { useState } from "react";
 import BookingModal from "./BookingModal";
 // Prices come from the catalogue the server charges against.
-import { subServicesOf } from "@/lib/serviceCatalog";
+import { requireCategory } from "@/lib/serviceCatalog";
+import { type MediaOverrides } from "@/lib/mediaSlots";
+import SlotMedia from "./SlotMedia";
 
 const skinServices = [
   {
@@ -30,14 +31,10 @@ const skinServices = [
   },
 ];
 
-export default function SkinSection() {
+export default function SkinSection({ media }: { media?: MediaOverrides }) {
   const [isModalOpen, setIsModalOpen] = useState(false);
 
-  const categoryData = {
-    id: "spa-skin",
-    title: "SPA & Skin Rejuvenation",
-    subServices: subServicesOf("spa-skin")
-  };
+  const categoryData = requireCategory("spa-skin");
 
   return (
     <section id="skin" className="bg-gradient-to-br from-[#fcfbf9] to-[#f5f0eb] py-[80px] md:py-[140px] relative overflow-hidden">
@@ -99,12 +96,10 @@ export default function SkinSection() {
           <div className="lg:col-span-5 relative h-full min-h-[500px]">
             {/* Main large image */}
             <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full h-full max-h-[700px] rounded-[40px] overflow-hidden shadow-2xl border-4 border-white z-10">
-              <Image
-                src="/facial.jpg"
-                alt="A serene spa environment focusing on SPA"
-                fill
-                className="object-cover scale-105 hover:scale-100 transition-transform duration-[2s]"
-                unoptimized
+              <SlotMedia
+                media={media}
+                slot="salon.skin.hero"
+                className="absolute inset-0 h-full w-full object-cover scale-105 hover:scale-100 transition-transform duration-[2s]"
               />
               <div className="absolute inset-0 bg-gradient-to-t from-royal-navy/60 via-transparent to-transparent opacity-80" />
             </div>

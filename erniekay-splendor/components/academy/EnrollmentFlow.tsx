@@ -48,7 +48,7 @@ export default function EnrollmentFlow() {
               {step.style === "filled" ? (
                 <div className="w-16 h-16 bg-majestic-gold border-2 border-majestic-gold rounded-full flex items-center justify-center mx-auto mb-8">
                   <span
-                    className="material-symbols-outlined text-royal-navy"
+                    className="material-symbols-outlined text-ink"
                     style={{ fontVariationSettings: "'FILL' 1" }}
                   >
                     {step.n}

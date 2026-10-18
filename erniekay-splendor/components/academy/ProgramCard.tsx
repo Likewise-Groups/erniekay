@@ -37,7 +37,7 @@ export default function ProgramCard({
     return (
       <div
         onClick={handleCardClick}
-        className="bg-white border-2 border-majestic-gold p-8 group shadow-[0_10px_30px_-15px_rgba(255,212,0,0.15)] relative cursor-pointer hover:shadow-[0_15px_40px_-10px_rgba(255,212,0,0.25)] transition-all duration-300"
+        className="bg-card border-2 border-majestic-gold p-8 group shadow-[0_10px_30px_-15px_rgba(255,212,0,0.15)] relative cursor-pointer hover:shadow-[0_15px_40px_-10px_rgba(255,212,0,0.25)] transition-all duration-300"
       >
         {program.badge && (
           <div className="absolute top-4 right-4 bg-majestic-gold text-royal-navy px-3 py-1 font-label-caps text-[10px] tracking-widest">
@@ -49,7 +49,7 @@ export default function ProgramCard({
           {program.level}
         </span>
 
-        <h3 className="font-headline-md text-headline-md text-royal-navy mb-6">
+        <h3 className="font-headline-md text-headline-md text-ink mb-6">
           {program.title}
         </h3>
 
@@ -75,7 +75,7 @@ export default function ProgramCard({
         </div>
 
         <div className="mb-8">
-          <h4 className="font-body-bold text-body-bold text-royal-navy mb-3">
+          <h4 className="font-body-bold text-body-bold text-ink mb-3">
             Syllabus Highlights
           </h4>
           <ul className="space-y-2 text-sm text-on-surface-variant">
@@ -101,7 +101,7 @@ export default function ProgramCard({
               <p className="text-[10px] font-label-caps text-champagne-taupe">
                 FACULTY LEAD
               </p>
-              <p className="text-sm font-body-bold text-royal-navy">
+              <p className="text-sm font-body-bold text-ink">
                 {program.facultyLead.name}
               </p>
             </div>
@@ -111,7 +111,7 @@ export default function ProgramCard({
             name="program"
             checked={isSelected}
             onChange={handleCardClick}
-            className="w-6 h-6 border-majestic-gold text-royal-navy focus:ring-majestic-gold cursor-pointer"
+            className="w-6 h-6 border-majestic-gold text-ink focus:ring-majestic-gold cursor-pointer"
           />
         </div>
       </div>
@@ -121,7 +121,7 @@ export default function ProgramCard({
   return (
     <div
       onClick={handleCardClick}
-      className={`bg-white border p-8 group relative cursor-pointer transition-all duration-500 overflow-hidden ${
+      className={`bg-card border p-8 group relative cursor-pointer transition-all duration-500 overflow-hidden ${
         isSelected
           ? "border-majestic-gold shadow-[0_10px_30px_-15px_rgba(255,212,0,0.15)]"
           : "border-outline-variant hover:border-majestic-gold"
@@ -137,7 +137,7 @@ export default function ProgramCard({
         {program.level}
       </span>
 
-      <h3 className="font-headline-md text-headline-md text-royal-navy mb-6">
+      <h3 className="font-headline-md text-headline-md text-ink mb-6">
         {program.title}
       </h3>
 
@@ -163,7 +163,7 @@ export default function ProgramCard({
       </div>
 
       <div className="mb-8">
-        <h4 className="font-body-bold text-body-bold text-royal-navy mb-3">
+        <h4 className="font-body-bold text-body-bold text-ink mb-3">
           Syllabus Highlights
         </h4>
         <ul className="space-y-2 text-sm text-on-surface-variant">
@@ -189,7 +189,7 @@ export default function ProgramCard({
             <p className="text-[10px] font-label-caps text-champagne-taupe">
               FACULTY LEAD
             </p>
-            <p className="text-sm font-body-bold text-royal-navy">
+            <p className="text-sm font-body-bold text-ink">
               {program.facultyLead.name}
             </p>
           </div>
@@ -199,7 +199,7 @@ export default function ProgramCard({
           name="program"
           checked={isSelected}
           onChange={handleCardClick}
-          className="w-6 h-6 border-outline-variant text-royal-navy focus:ring-majestic-gold cursor-pointer"
+          className="w-6 h-6 border-outline-variant text-ink focus:ring-majestic-gold cursor-pointer"
         />
       </div>
     </div>

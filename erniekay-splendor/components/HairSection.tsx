@@ -5,129 +5,129 @@ import BookingModal, { ServiceCategory } from "./BookingModal";
 // Sub-service names and prices come from the catalogue, which is what the
 // server charges. Keeping a second copy here would let the page quote a price
 // the payment endpoint refuses.
-import { requireCategory } from "@/lib/serviceCatalog";
+import { requireCategory, type SubService } from "@/lib/serviceCatalog";
 import { type MediaOverrides } from "@/lib/mediaSlots";
 import SlotMedia from "./SlotMedia";
-
-/* ─── Types ─────────────────────────────────────────────────── */
-interface ServiceCardProps {
-  id: string;
-  tag: string;
-  price: string;
-  title: string;
-  description: string;
-  onBook: () => void;
-}
-
-/* ─── Desktop service card ───────────────────────────────────── */
-function DesktopServiceCard({ id, tag, price, title, description, onBook }: ServiceCardProps) {
-  return (
-    <div className="group relative bg-white/70 backdrop-blur-xl border border-white/60 rounded-[32px] p-8 shadow-[0_10px_40px_-15px_rgba(0,0,0,0.05)] hover:shadow-[0_20px_50px_-15px_rgba(212,175,55,0.2)] hover:border-majestic-gold/40 hover:-translate-y-2 transition-all duration-500 overflow-hidden flex flex-col h-full cursor-pointer" onClick={onBook}>
-      <div className="absolute top-0 right-0 w-48 h-48 bg-majestic-gold/10 rounded-full blur-[40px] -mr-20 -mt-20 transition-all duration-700 group-hover:scale-150 opacity-0 group-hover:opacity-100" />
-      
-      <div className="relative z-10 flex flex-wrap justify-between items-center gap-x-3 gap-y-2 mb-6">
-        <span className="font-[family-name:var(--font-montserrat)] text-[10px] leading-[16px] tracking-[0.2em] font-bold uppercase text-royal-navy bg-majestic-gold/10 px-4 py-1.5 rounded-full border border-majestic-gold/20 whitespace-nowrap">
-          {tag}
-        </span>
-        <span className="font-[family-name:var(--font-montserrat)] text-[14px] leading-[16px] font-bold text-royal-navy bg-white px-4 py-1.5 rounded-full border border-outline-variant/30 shadow-sm whitespace-nowrap shrink-0 transition-colors duration-300 group-hover:bg-majestic-gold/10 group-hover:border-majestic-gold/30">
-          {price.replace('GH', ' GH₵')}
-        </span>
-      </div>
-      <h3 className="relative z-10 font-[family-name:var(--font-eb-garamond)] text-[32px] leading-[40px] tracking-[-0.01em] font-semibold text-royal-navy mb-4 group-hover:text-majestic-gold transition-colors duration-300">
-        {title}
-      </h3>
-      <p className="relative z-10 font-[family-name:var(--font-montserrat)] text-[15px] leading-[26px] text-on-surface-variant mb-8 flex-grow">
-        {description}
-      </p>
-      <div className="relative z-10 flex items-center justify-between border-t border-outline-variant/20 pt-6 mt-auto">
-        <span className="font-[family-name:var(--font-montserrat)] text-[12px] tracking-[0.15em] uppercase font-bold text-majestic-gold group-hover:text-royal-navy transition-colors">
-          Explore Service
-        </span>
-        <div className="w-10 h-10 rounded-full bg-alabaster-white border border-outline-variant/30 flex items-center justify-center group-hover:bg-majestic-gold group-hover:border-majestic-gold transition-all duration-300">
-          <span className="text-royal-navy text-lg group-hover:-rotate-45 transition-transform duration-300">→</span>
-        </div>
-      </div>
-    </div>
-  );
-}
-
-/* ─── Mobile simple card ─────────────────────────────────────── */
-function MobileServiceCard({ id, tag, title, price, description, onBook }: ServiceCardProps) {
-  return (
-    <div className="group relative bg-white/80 backdrop-blur-md border border-white/60 rounded-3xl p-6 shadow-[0_4px_20px_-10px_rgba(0,0,0,0.05)] hover:shadow-xl transition-all duration-300 overflow-hidden" onClick={onBook}>
-      <div className="absolute top-0 right-0 w-32 h-32 bg-majestic-gold/10 rounded-full blur-2xl -mr-16 -mt-16 opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
-      
-      <div className="relative z-10 flex flex-col mb-4">
-        <div className="flex flex-wrap justify-between items-center gap-x-3 gap-y-2 mb-3">
-          <span className="font-[family-name:var(--font-montserrat)] text-[9px] tracking-[0.2em] font-bold uppercase text-royal-navy bg-majestic-gold/10 px-3 py-1 rounded-full whitespace-nowrap">
-            {tag}
-          </span>
-          <span className="font-[family-name:var(--font-montserrat)] text-[12px] font-bold text-royal-navy bg-white px-3 py-1 rounded-full border border-outline-variant/30 shadow-sm whitespace-nowrap shrink-0">
-            {price.replace('GH', ' GH₵')}
-          </span>
-        </div>
-        <h4 className="font-[family-name:var(--font-eb-garamond)] text-[26px] leading-[32px] tracking-[-0.005em] font-semibold text-royal-navy leading-tight">
-          {title}
-        </h4>
-      </div>
-      <p className="relative z-10 font-[family-name:var(--font-montserrat)] text-[14px] leading-[22px] text-on-surface-variant mb-6">
-        {description}
-      </p>
-      <div className="relative z-10 flex items-center justify-between border-t border-outline-variant/20 pt-4 mt-auto">
-        <span className="font-[family-name:var(--font-montserrat)] text-[11px] tracking-[0.15em] uppercase font-bold text-majestic-gold">
-          Book Now
-        </span>
-        <span className="text-royal-navy">→</span>
-      </div>
-    </div>
-  );
-}
 
 /* ─── Data ───────────────────────────────────────────────────── */
 const hairServices = [
   {
     id: "hair-services",
     tag: "Essentials",
-    price: "From 50GH",
+    from: 50,
     title: "Hair Services",
-    description:
-      "A comprehensive overview of our essential hair care rituals including shampooing, relaxing, cutting, and styling.",
+    description: "Shampooing, relaxing, cutting and styling: the essential rituals, done properly.",
   },
   {
     id: "sew-in",
     tag: "Extensions",
-    price: "From 300GH",
+    from: 300,
     title: "Sew-In",
-    description:
-      "Explore our premium sew-in extension services tailored for a flawless and natural finish.",
+    description: "Premium sew-in extensions tailored for a flawless, natural finish.",
   },
   {
     id: "installation",
     tag: "Finishing",
-    price: "From 150GH",
+    from: 150,
     title: "Installation",
-    description:
-      "Professional installation services to perfectly secure and blend your closures and frontals.",
+    description: "Closures and frontals secured and blended so they read as your own hairline.",
   },
   {
     id: "styling",
     tag: "Artistry",
-    price: "From 70GH",
+    from: 70,
     title: "Styling",
-    description:
-      "Elevate your look with expert straightening, curling, and customized styling for any occasion.",
+    description: "Straightening, curling and bespoke styling, priced by hair length.",
   },
   {
     id: "revamp-colouring",
     tag: "Transformation",
-    price: "From 100GH",
+    from: 150,
     title: "Revamp / Colouring",
-    description:
-      "Transform your hair with our signature coloring techniques and comprehensive revamping treatments.",
+    description: "Signature colour work, from highlights to full transformations, and complete revamps.",
   },
 ];
 
 const customWiggingCategory: ServiceCategory = requireCategory("custom-wigging");
+
+const formatFrom = (amount: number) => `From GH₵${amount.toLocaleString("en-GH")}`;
+
+/** The treatments a category covers, for the row's preview line: group headings first, else names. */
+const treatmentsOf = (subServices: SubService[]): string[] => {
+  const names = subServices.map((sub) => sub.group ?? sub.name.replace(/\s*\(.*\)$/, ""));
+  return [...new Set(names)];
+};
+
+/* ─── Service card ───────────────────────────────────────────── */
+function ServiceCard({
+  index,
+  service,
+  onBook,
+}: {
+  index: number;
+  service: (typeof hairServices)[number];
+  onBook: () => void;
+}) {
+  const allTreatments = treatmentsOf(requireCategory(service.id).subServices);
+  const treatments = allTreatments.length > 4 ? allTreatments.slice(0, 3) : allTreatments;
+  const moreCount = allTreatments.length - treatments.length;
+
+  return (
+    <li>
+      <button
+        type="button"
+        onClick={onBook}
+        className="group flex h-full w-full flex-col rounded-[28px] border border-ink/10 bg-card/70 p-7 text-left shadow-[0_10px_30px_-18px_rgba(17,24,68,0.25)] backdrop-blur-sm transition-all duration-300 hover:-translate-y-1 hover:border-majestic-gold/60 hover:shadow-[0_20px_40px_-18px_rgba(212,175,55,0.35)]"
+      >
+        <span className="flex items-center justify-between">
+          <span className="font-[family-name:var(--font-montserrat)] text-[10px] font-bold uppercase tracking-[0.2em] text-champagne-taupe">
+            {service.tag}
+          </span>
+          <span className="font-[family-name:var(--font-montserrat)] text-[12px] font-bold tracking-[0.2em] text-ink/30">
+            {String(index + 1).padStart(2, "0")}
+          </span>
+        </span>
+
+        <span className="mt-4 block font-[family-name:var(--font-eb-garamond)] text-[30px] font-semibold leading-[36px] text-ink">
+          {service.title}
+        </span>
+        <span className="mt-2 block font-[family-name:var(--font-montserrat)] text-[14px] leading-[23px] text-on-surface-variant">
+          {service.description}
+        </span>
+
+        <span className="mt-5 mb-6 flex flex-wrap gap-2">
+          {treatments.map((treatment) => (
+            <span
+              key={treatment}
+              className="rounded-[999px] border border-ink/10 px-3 py-1 font-[family-name:var(--font-montserrat)] text-[11px] text-on-surface-variant"
+            >
+              {treatment}
+            </span>
+          ))}
+          {moreCount > 0 && (
+            <span className="px-1 py-1 font-[family-name:var(--font-montserrat)] text-[11px] text-on-surface-variant">
+              +{moreCount} more
+            </span>
+          )}
+        </span>
+
+        <span className="mt-auto flex items-center justify-between border-t border-ink/10 pt-5">
+          <span className="font-[family-name:var(--font-montserrat)] text-[15px] font-bold text-ink">
+            {formatFrom(service.from)}
+          </span>
+          <span
+            aria-hidden
+            className="flex h-11 w-11 items-center justify-center rounded-[999px] border border-ink/15 text-ink transition-all duration-300 group-hover:border-majestic-gold group-hover:bg-majestic-gold group-hover:text-royal-navy"
+          >
+            <span className="material-symbols-outlined text-[20px] transition-transform duration-300 group-hover:translate-x-0.5">
+              arrow_forward
+            </span>
+          </span>
+        </span>
+      </button>
+    </li>
+  );
+}
 
 /* ─── Component ──────────────────────────────────────────────── */
 export default function HairSection({ media }: { media?: MediaOverrides }) {
@@ -140,176 +140,90 @@ export default function HairSection({ media }: { media?: MediaOverrides }) {
   };
 
   return (
-    <section id="hair" className="bg-gradient-to-br from-[#f8f6f0] to-[#f4eee6] py-[80px] md:py-[140px] relative overflow-hidden">
-      {/* Decorative blurred spheres */}
+    <section id="hair" className="bg-gradient-to-br from-[#f8f6f0] to-[#f4eee6] dark:from-surface dark:to-surface-container-low py-[80px] md:py-[140px] relative overflow-hidden">
+      {/* Decorative glow */}
       <div className="absolute top-0 left-0 w-[600px] h-[600px] bg-majestic-gold/5 rounded-full blur-[100px] -translate-x-1/4 -translate-y-1/4 pointer-events-none" />
-      <div className="absolute bottom-0 right-0 w-[800px] h-[800px] bg-white/40 rounded-full blur-[120px] translate-x-1/4 translate-y-1/4 pointer-events-none" />
 
-      {/* ══════════════════════════════════════════════════════════
-          MOBILE LAYOUT
-      ══════════════════════════════════════════════════════════ */}
-      <div className="md:hidden relative z-10 px-6">
+      <div className="relative z-10 mx-auto max-w-[1280px] px-6 md:px-[64px]">
         {/* Section Header */}
-        <div className="mb-12">
-          <span className="font-[family-name:var(--font-montserrat)] text-[12px] leading-[16px] tracking-[0.2em] uppercase font-bold text-majestic-gold mb-4 block text-center">
-            Crown &amp; Glory
-          </span>
-          <h2 className="font-[family-name:var(--font-eb-garamond)] text-[48px] leading-[52px] tracking-[-0.01em] font-semibold text-royal-navy mb-4 text-center">
-            Hair Artistry
-          </h2>
-          <p className="font-[family-name:var(--font-montserrat)] text-[15px] leading-[26px] text-on-surface-variant text-center px-4">
-            Precision cutting and editorial color techniques tailored to your lifestyle.
-          </p>
-        </div>
-
-        {/* Featured Service Card */}
-        <div className="mb-10">
-          <div className="bg-white/90 backdrop-blur-md border border-white overflow-hidden rounded-[32px] shadow-[0_20px_40px_-15px_rgba(0,0,0,0.1)] relative group">
-            <div className="relative aspect-[4/5] w-full overflow-hidden p-2 pb-0">
-              <div className="w-full h-full rounded-[24px] overflow-hidden relative">
-                <SlotMedia
-                  media={media}
-                  slot="salon.hair.featured"
-                  className="absolute inset-0 w-full h-full object-cover scale-105 group-hover:scale-110 transition-transform duration-700"
-                />
-                <div className="absolute inset-0 bg-gradient-to-t from-midnight-ink/90 via-midnight-ink/20 to-transparent" />
-                <div className="absolute bottom-6 left-6">
-                  <span className="bg-white text-royal-navy text-[9px] font-bold px-3 py-1.5 rounded-full uppercase tracking-[0.15em] inline-block mb-3 shadow-md">
-                    Editor&apos;s Choice
-                  </span>
-                  <h2 className="text-white font-[family-name:var(--font-eb-garamond)] text-[36px] leading-[40px] font-semibold">
-                    Custom Wigging
-                  </h2>
-                </div>
-              </div>
-            </div>
-            <div className="p-8 relative z-10">
-              <p className="font-[family-name:var(--font-montserrat)] text-[14px] leading-[24px] text-on-surface-variant mb-6">
-                Experience luxury with our bespoke wig making services, perfectly tailored to your unique style.
-              </p>
-              <button
-                onClick={() => openModal(customWiggingCategory)}
-                className="w-full bg-royal-navy rounded-xl text-white font-[family-name:var(--font-montserrat)] text-[12px] leading-[16px] tracking-[0.15em] uppercase font-bold py-4 hover:bg-majestic-gold hover:text-royal-navy transition-colors shadow-lg"
-              >
-                Explore &amp; Book
-              </button>
-            </div>
-          </div>
-        </div>
-
-        {/* Essential Rituals Grid */}
-        <div className="relative">
-          <h3 className="font-[family-name:var(--font-eb-garamond)] text-[32px] font-semibold text-royal-navy mb-6 text-center">
-            Service Menu
-          </h3>
-          <div className="grid grid-cols-1 gap-6">
-            {hairServices.map((svc) => (
-              <MobileServiceCard 
-                key={svc.id} 
-                {...svc} 
-                onBook={() => openModal(requireCategory(svc.id))} 
-              />
-            ))}
-          </div>
-        </div>
-      </div>
-
-      {/* ══════════════════════════════════════════════════════════
-          DESKTOP LAYOUT
-      ══════════════════════════════════════════════════════════ */}
-      <div className="hidden md:block relative z-10 max-w-[1280px] mx-auto px-[64px]">
-        {/* Section Header */}
-        <div className="flex flex-col md:flex-row md:items-end justify-between gap-8 mb-20">
+        <div className="mb-12 flex flex-col justify-between gap-6 md:mb-20 md:flex-row md:items-end md:gap-8">
           <div className="max-w-2xl">
-            <div className="flex items-center gap-4 mb-6">
-              <div className="h-px w-12 bg-majestic-gold"></div>
-              <span className="font-[family-name:var(--font-montserrat)] text-[12px] leading-[16px] tracking-[0.2em] uppercase font-bold text-majestic-gold">
+            <div className="mb-5 flex items-center gap-4">
+              <div className="h-px w-12 bg-champagne-taupe" />
+              <span className="font-[family-name:var(--font-montserrat)] text-[12px] leading-[16px] tracking-[0.2em] uppercase font-bold text-champagne-taupe">
                 Crown &amp; Glory
               </span>
             </div>
-            <h2 className="font-[family-name:var(--font-eb-garamond)] text-[56px] lg:text-[72px] leading-[60px] lg:leading-[76px] tracking-[-0.01em] font-semibold text-royal-navy">
+            <h2 className="font-[family-name:var(--font-eb-garamond)] text-[48px] leading-[52px] md:text-[56px] md:leading-[60px] lg:text-[72px] lg:leading-[76px] tracking-[-0.01em] font-semibold text-ink">
               Hair Artistry
             </h2>
           </div>
-          <div className="max-w-md pb-2">
-            <p className="font-[family-name:var(--font-montserrat)] text-[16px] leading-[28px] text-on-surface-variant">
-              Precision cutting and editorial color techniques perfectly tailored to your lifestyle, face shape, and hair texture.
-            </p>
-          </div>
+          <p className="max-w-md pb-2 font-[family-name:var(--font-montserrat)] text-[15px] leading-[26px] md:text-[16px] md:leading-[28px] text-on-surface-variant">
+            Precision cutting and editorial colour techniques, tailored to your lifestyle, face shape and hair texture.
+          </p>
         </div>
 
-        {/* Bento Grid */}
-        <div className="grid grid-cols-3 gap-6 lg:gap-8 mb-20">
-          {/* First standard card */}
-          <DesktopServiceCard 
-            {...hairServices[0]} 
-            onBook={() => openModal(requireCategory(hairServices[0].id))} 
-          />
+        {/* Featured tile + five services: two even rows of three on desktop */}
+        <ul className="grid gap-6 md:grid-cols-2 lg:grid-cols-3 lg:gap-8">
+          {/* Featured: Custom Wigging */}
+          <li className="group relative min-h-[400px] overflow-hidden rounded-[28px] bg-midnight-ink text-white shadow-[0_30px_60px_-20px_rgba(17,24,68,0.45)]">
+            {/* Mobile and desktop have separate admin slots; keep honouring both. */}
+            <SlotMedia
+              media={media}
+              slot="salon.hair.featured"
+              className="absolute inset-0 h-full w-full object-cover transition-transform duration-1000 group-hover:scale-105 md:hidden"
+            />
+            <SlotMedia
+              media={media}
+              slot="salon.hair.showcase"
+              className="absolute inset-0 hidden h-full w-full object-cover transition-transform duration-1000 group-hover:scale-105 md:block"
+            />
+            <div className="absolute inset-0 bg-gradient-to-t from-midnight-ink via-midnight-ink/60 to-midnight-ink/10" />
 
-          {/* Featured Video Card - Spans 2 Rows */}
-          <div className="row-span-2 col-span-1 group relative overflow-hidden bg-midnight-ink text-white rounded-[40px] shadow-[0_20px_50px_-12px_rgba(0,0,0,0.4)] hover:shadow-[0_30px_60px_-15px_rgba(212,175,55,0.3)] transition-all duration-500 flex flex-col p-2">
-            <div className="absolute inset-0 opacity-40 group-hover:scale-105 transition-transform duration-1000">
-              <SlotMedia
-                media={media}
-                slot="salon.hair.showcase"
-                className="w-full h-full object-cover"
-              />
-            </div>
-            <div className="absolute inset-0 bg-gradient-to-t from-midnight-ink via-midnight-ink/40 to-transparent" />
-            
-            <div className="relative z-10 border border-white/20 rounded-[32px] h-full flex flex-col justify-between p-8">
-              <div>
-                <span className="inline-block px-4 py-1.5 bg-white text-royal-navy rounded-full font-[family-name:var(--font-montserrat)] text-[10px] uppercase font-bold tracking-widest mb-6 shadow-lg">
-                  Editor&apos;s Choice
-                </span>
-                <h3 className="font-[family-name:var(--font-eb-garamond)] text-[48px] leading-[52px] font-semibold mb-4 text-white group-hover:text-majestic-gold transition-colors duration-300">
-                  Custom<br/>Wigging
+            <div className="relative flex h-full flex-col p-7">
+              <span className="self-start rounded-[999px] bg-majestic-gold px-4 py-1.5 font-[family-name:var(--font-montserrat)] text-[10px] font-bold uppercase tracking-[0.2em] text-royal-navy">
+                Editor&apos;s Choice
+              </span>
+
+              <div className="mt-auto">
+                <h3 className="font-[family-name:var(--font-eb-garamond)] text-[38px] leading-[42px] font-semibold">
+                  Custom Wigging
                 </h3>
-                <p className="font-[family-name:var(--font-montserrat)] text-[16px] leading-[26px] text-white/80 mb-6">
-                  Experience luxury with our bespoke wig making services, perfectly tailored to your unique style and fit.
+                <p className="mt-3 font-[family-name:var(--font-montserrat)] text-[14px] leading-[23px] text-white/80">
+                  Bespoke wigs made for your head, your hairline and your style, from closure units to 360 frontals.
                 </p>
-              </div>
-              <div className="flex flex-col gap-6 mt-12">
-                <div>
-                  <span className="block text-majestic-gold/80 font-[family-name:var(--font-montserrat)] text-xs uppercase tracking-widest font-bold mb-2">
-                    Investment
+
+                <div className="mt-6 flex flex-col gap-4 border-t border-white/15 pt-5">
+                  <span className="font-[family-name:var(--font-montserrat)] text-[15px] font-bold">
+                    {formatFrom(300)}
                   </span>
-                  <span className="inline-block bg-white/10 backdrop-blur-md px-5 py-2 rounded-full border border-white/20 text-white font-[family-name:var(--font-montserrat)] text-[16px] font-semibold">
-                    From 300 GH₵
-                  </span>
+                  <button
+                    type="button"
+                    onClick={() => openModal(customWiggingCategory)}
+                    className="w-full rounded-[999px] bg-majestic-gold px-6 py-3.5 font-[family-name:var(--font-montserrat)] text-[11px] font-bold uppercase leading-[16px] tracking-[0.15em] text-royal-navy transition-all duration-300 hover:-translate-y-0.5 hover:bg-white hover:shadow-[0_15px_30px_rgba(212,175,55,0.35)]"
+                  >
+                    Configure &amp; Book
+                  </button>
                 </div>
-                <button
-                  onClick={() => openModal(customWiggingCategory)}
-                  className="w-full py-4 rounded-xl bg-majestic-gold text-royal-navy font-[family-name:var(--font-montserrat)] text-[12px] leading-[16px] tracking-[0.15em] uppercase font-bold hover:bg-white transition-all shadow-[0_10px_20px_rgba(212,175,55,0.2)] hover:shadow-[0_15px_30px_rgba(212,175,55,0.4)] hover:-translate-y-1"
-                >
-                  Configure &amp; Book
-                </button>
               </div>
             </div>
-          </div>
+          </li>
 
-          {/* Remaining standard cards */}
-          {hairServices.slice(1, 3).map((s) => (
-            <DesktopServiceCard 
-              key={s.id} 
-              {...s} 
-              onBook={() => openModal(requireCategory(s.id))} 
+          {hairServices.map((service, index) => (
+            <ServiceCard
+              key={service.id}
+              index={index}
+              service={service}
+              onBook={() => openModal(requireCategory(service.id))}
             />
           ))}
-          {hairServices.slice(3).map((s) => (
-            <DesktopServiceCard 
-              key={s.id} 
-              {...s} 
-              onBook={() => openModal(requireCategory(s.id))} 
-            />
-          ))}
-        </div>
+        </ul>
       </div>
 
-      <BookingModal 
-        isOpen={isModalOpen} 
-        onClose={() => setIsModalOpen(false)} 
-        category={selectedCategory} 
+      <BookingModal
+        isOpen={isModalOpen}
+        onClose={() => setIsModalOpen(false)}
+        category={selectedCategory}
       />
     </section>
   );

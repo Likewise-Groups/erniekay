@@ -212,7 +212,7 @@ export default function StudentSchedulePage() {
   ];
 
   return (
-    <div className="bg-[#F5F5F5] text-royal-navy min-h-screen font-[family-name:var(--font-montserrat)] antialiased selection:bg-majestic-gold selection:text-royal-navy">
+    <div className="bg-surface-alt text-ink min-h-screen font-[family-name:var(--font-montserrat)] antialiased selection:bg-majestic-gold selection:text-royal-navy">
       
       {/* ── DESKTOP SideNavBar Shell ── */}
       <aside className="fixed left-0 top-0 h-full w-64 bg-royal-navy hidden md:flex flex-col py-8 px-6 border-r border-majestic-gold/20 z-50 text-white">
@@ -247,11 +247,11 @@ export default function StudentSchedulePage() {
         <div className="flex items-center gap-4">
           <span
             onClick={handlePrevStep}
-            className="material-symbols-outlined text-royal-navy cursor-pointer active:scale-90 transition-transform"
+            className="material-symbols-outlined text-ink cursor-pointer active:scale-90 transition-transform"
           >
             arrow_back
           </span>
-          <h1 className="font-headline-md text-headline-md-mobile text-royal-navy uppercase tracking-widest leading-none">
+          <h1 className="font-headline-md text-headline-md-mobile text-ink uppercase tracking-widest leading-none">
             Elite Academy
           </h1>
         </div>
@@ -305,20 +305,20 @@ export default function StudentSchedulePage() {
 
               {/* Step 3: Active */}
               <div className="flex flex-col items-center">
-                <div className="w-8 h-8 rounded-full border border-royal-navy flex items-center justify-center bg-surface">
+                <div className="w-8 h-8 rounded-full border border-ink flex items-center justify-center bg-surface">
                   <div className="w-2 h-2 bg-majestic-gold rounded-full"></div>
                 </div>
               </div>
             </div>
             
             <div className="flex justify-between w-full max-w-lg mx-auto text-center px-2">
-              <span className="font-label-caps text-label-caps text-royal-navy opacity-50 cursor-pointer" onClick={() => setStep(1)}>
+              <span className="font-label-caps text-label-caps text-ink opacity-50 cursor-pointer" onClick={() => setStep(1)}>
                 Service
               </span>
-              <span className={`font-label-caps text-label-caps ${step >= 2 ? "text-royal-navy opacity-50 cursor-pointer" : "text-royal-navy opacity-50"}`} onClick={() => selectedService && setStep(2)}>
+              <span className={`font-label-caps text-label-caps ${step >= 2 ? "text-ink opacity-50 cursor-pointer" : "text-ink opacity-50"}`} onClick={() => selectedService && setStep(2)}>
                 Artist
               </span>
-              <span className={`font-label-caps text-label-caps ${step >= 3 ? "text-royal-navy font-bold" : "text-outline"}`}>
+              <span className={`font-label-caps text-label-caps ${step >= 3 ? "text-ink font-bold" : "text-outline"}`}>
                 Details
               </span>
             </div>
@@ -329,7 +329,7 @@ export default function StudentSchedulePage() {
             <div>
               {/* Header Section */}
               <div className="mb-12 text-center md:text-left">
-                <h1 className="font-display-lg text-display-lg-mobile md:text-display-lg text-royal-navy mb-4 italic">
+                <h1 className="font-display-lg text-display-lg-mobile md:text-display-lg text-ink mb-4 italic">
                   The Ritual of Beauty
                 </h1>
                 <p className="font-body-base text-body-base text-warm-slate max-w-xl">
@@ -345,8 +345,8 @@ export default function StudentSchedulePage() {
                     onClick={() => setSelectedCategory(cat)}
                     className={`px-8 py-3 border font-label-caps text-label-caps transition-all uppercase whitespace-nowrap ${
                       selectedCategory === cat
-                        ? "border-royal-navy bg-royal-navy text-majestic-gold"
-                        : "border-outline-variant text-royal-navy hover:border-royal-navy"
+                        ? "border-ink bg-royal-navy text-majestic-gold"
+                        : "border-outline-variant text-ink hover:border-ink"
                     }`}
                   >
                     {cat}
@@ -364,7 +364,7 @@ export default function StudentSchedulePage() {
                       <div
                         key={service.id}
                         onClick={() => handleSelectService(service)}
-                        className={`md:col-span-8 group relative overflow-hidden bg-white border cursor-pointer service-card transition-all ${
+                        className={`md:col-span-8 group relative overflow-hidden bg-card border cursor-pointer service-card transition-all ${
                           isSelected ? "border-majestic-gold ring-1 ring-majestic-gold" : "border-outline-variant/30"
                         }`}
                       >
@@ -383,7 +383,7 @@ export default function StudentSchedulePage() {
                               <span className="font-label-caps text-label-caps text-champagne-taupe mb-2 block uppercase tracking-[0.2em]">
                                 Signature Look
                               </span>
-                              <h3 className="font-headline-md text-headline-md text-royal-navy mb-4 group-hover:text-majestic-gold transition-colors">
+                              <h3 className="font-headline-md text-headline-md text-ink mb-4 group-hover:text-majestic-gold transition-colors">
                                 {service.name}
                               </h3>
                               <p className="font-body-base text-body-base text-warm-slate mb-6">
@@ -391,10 +391,10 @@ export default function StudentSchedulePage() {
                               </p>
                               <div className="flex items-center gap-6 mb-8">
                                 <div className="flex items-center gap-2">
-                                  <span className="material-symbols-outlined text-royal-navy/50">schedule</span>
+                                  <span className="material-symbols-outlined text-ink/50">schedule</span>
                                   <span className="font-body-base text-body-base">{service.duration}</span>
                                 </div>
-                                <div className="font-body-bold text-body-bold text-royal-navy">{service.price}</div>
+                                <div className="font-body-bold text-body-bold text-ink">{service.price}</div>
                               </div>
                             </div>
                             <button
@@ -416,7 +416,7 @@ export default function StudentSchedulePage() {
                     <div
                       key={service.id}
                       onClick={() => handleSelectService(service)}
-                      className={`md:col-span-4 group bg-white border cursor-pointer service-card transition-all flex flex-col justify-between ${
+                      className={`md:col-span-4 group bg-card border cursor-pointer service-card transition-all flex flex-col justify-between ${
                         isSelected ? "border-majestic-gold ring-1 ring-majestic-gold" : "border-outline-variant/30"
                       }`}
                     >
@@ -434,7 +434,7 @@ export default function StudentSchedulePage() {
                           <span className="font-label-caps text-label-caps text-champagne-taupe mb-2 block uppercase tracking-[0.2em]">
                             {service.category}
                           </span>
-                          <h3 className="font-headline-md text-headline-md text-royal-navy mb-2 group-hover:text-majestic-gold transition-colors">
+                          <h3 className="font-headline-md text-headline-md text-ink mb-2 group-hover:text-majestic-gold transition-colors">
                             {service.name}
                           </h3>
                         </div>
@@ -442,13 +442,13 @@ export default function StudentSchedulePage() {
                       <div className="p-8 pt-0">
                         <div className="flex justify-between items-center mb-6">
                           <span className="font-body-base text-body-base text-warm-slate">{service.duration}</span>
-                          <span className="font-body-bold text-body-bold text-royal-navy">{service.price}</span>
+                          <span className="font-body-bold text-body-bold text-ink">{service.price}</span>
                         </div>
                         <button
                           className={`w-full py-4 border font-label-caps text-label-caps transition-all ${
                             isSelected
                               ? "bg-premium-green text-white border-premium-green"
-                              : "border-royal-navy text-royal-navy hover:bg-royal-navy hover:text-white"
+                              : "border-ink text-ink hover:bg-royal-navy hover:text-white"
                           }`}
                         >
                           {isSelected ? "Selected" : "Select"}
@@ -461,10 +461,10 @@ export default function StudentSchedulePage() {
 
               {/* Mobile Condensed Selection Summary Footer */}
               {selectedService && (
-                <div className="fixed bottom-16 left-0 w-full bg-white border-t border-outline-variant px-6 py-4 flex items-center justify-between z-40 md:hidden">
+                <div className="fixed bottom-16 left-0 w-full bg-card border-t border-outline-variant px-6 py-4 flex items-center justify-between z-40 md:hidden">
                   <div className="flex flex-col">
                     <span className="font-label-caps text-[10px] text-outline-variant">Selection</span>
-                    <span className="font-body-bold text-body-bold text-royal-navy">{selectedService.name}</span>
+                    <span className="font-body-bold text-body-bold text-ink">{selectedService.name}</span>
                   </div>
                   <button
                     onClick={handleNextStep}
@@ -497,7 +497,7 @@ export default function StudentSchedulePage() {
             <div>
               {/* Page Header */}
               <div className="text-center mb-16">
-                <h2 className="font-display-lg text-display-lg-mobile text-royal-navy mb-4">Curated Artisans</h2>
+                <h2 className="font-display-lg text-display-lg-mobile text-ink mb-4">Curated Artisans</h2>
                 <p className="max-w-xl mx-auto font-body-base text-on-surface-variant italic">
                   Select the master professional who will craft your ritual experience.
                 </p>
@@ -512,7 +512,7 @@ export default function StudentSchedulePage() {
                       key={artist.id}
                       onClick={() => handleSelectArtist(artist)}
                       className={`bg-surface-container-lowest border p-6 flex flex-col md:flex-row gap-6 transition-all duration-300 hover:border-majestic-gold group cursor-pointer ${
-                        isSelected ? "border-majestic-gold bg-alabaster-white" : "border-outline-variant"
+                        isSelected ? "border-majestic-gold bg-surface-alt" : "border-outline-variant"
                       }`}
                     >
                       <div className="w-full md:w-48 h-64 overflow-hidden border border-outline-variant relative">
@@ -530,12 +530,12 @@ export default function StudentSchedulePage() {
                       <div className="flex-1 flex flex-col justify-between">
                         <div>
                           <div className="flex justify-between items-start mb-2">
-                            <h3 className="font-headline-md text-royal-navy leading-none">{artist.name}</h3>
+                            <h3 className="font-headline-md text-ink leading-none">{artist.name}</h3>
                             <div className="flex items-center gap-1 text-majestic-gold leading-none">
                               <span className="material-symbols-outlined text-[16px]" style={{ fontVariationSettings: "'FILL' 1" }}>
                                 star
                               </span>
-                              <span className="font-label-caps text-label-caps text-royal-navy leading-none">
+                              <span className="font-label-caps text-label-caps text-ink leading-none">
                                 {artist.rating}
                               </span>
                             </div>
@@ -548,8 +548,8 @@ export default function StudentSchedulePage() {
                         <button
                           className={`w-full py-3 border font-label-caps text-label-caps tracking-widest transition-all duration-300 ${
                             isSelected
-                              ? "bg-royal-navy text-majestic-gold border-royal-navy"
-                              : "border-royal-navy text-royal-navy hover:bg-royal-navy hover:text-majestic-gold"
+                              ? "bg-royal-navy text-majestic-gold border-ink"
+                              : "border-ink text-ink hover:bg-royal-navy hover:text-majestic-gold"
                           }`}
                         >
                           {isSelected ? "SELECTED" : "SELECT ARTISAN"}
@@ -564,7 +564,7 @@ export default function StudentSchedulePage() {
               <div className="flex justify-between items-center pt-12">
                 <button
                   onClick={handlePrevStep}
-                  className="flex items-center gap-2 px-6 py-3 font-bold font-label-caps text-[12px] tracking-[0.1em] uppercase border border-royal-navy text-royal-navy hover:bg-royal-navy hover:text-white transition-all"
+                  className="flex items-center gap-2 px-6 py-3 font-bold font-label-caps text-[12px] tracking-[0.1em] uppercase border border-ink text-ink hover:bg-royal-navy hover:text-white transition-all"
                 >
                   <span className="material-symbols-outlined text-[16px]">arrow_back</span> Back
                 </button>
@@ -588,12 +588,12 @@ export default function StudentSchedulePage() {
             <div className="grid lg:grid-cols-12 gap-gutter-desktop">
               {/* Left Calendar Section */}
               <section className="lg:col-span-5 bg-surface-container-lowest border border-outline-variant p-6 md:p-8">
-                <h2 className="font-display-lg-mobile md:font-display-lg text-royal-navy mb-8">Select Date</h2>
+                <h2 className="font-display-lg-mobile md:font-display-lg text-ink mb-8">Select Date</h2>
                 <div className="flex justify-between items-center mb-6">
-                  <span className="font-body-bold text-royal-navy uppercase tracking-widest">October 2026</span>
+                  <span className="font-body-bold text-ink uppercase tracking-widest">October 2026</span>
                   <div className="flex gap-4">
-                    <button className="material-symbols-outlined text-royal-navy">chevron_left</button>
-                    <button className="material-symbols-outlined text-royal-navy">chevron_right</button>
+                    <button className="material-symbols-outlined text-ink">chevron_left</button>
+                    <button className="material-symbols-outlined text-ink">chevron_right</button>
                   </div>
                 </div>
                 <div className="grid grid-cols-7 gap-2 text-center mb-4">
@@ -625,7 +625,7 @@ export default function StudentSchedulePage() {
                         className={`aspect-square flex items-center justify-center font-body-base transition-colors ${
                           isSelected
                             ? "active-date shadow-lg bg-royal-navy text-majestic-gold border border-majestic-gold"
-                            : "text-royal-navy hover:bg-alabaster-white"
+                            : "text-ink hover:bg-surface-alt"
                         }`}
                       >
                         {d}
@@ -633,10 +633,10 @@ export default function StudentSchedulePage() {
                     );
                   })}
                 </div>
-                <div className="mt-8 pt-6 border-t border-alabaster-white flex items-center gap-4">
-                  <div className="w-3 h-3 bg-majestic-gold border border-royal-navy"></div>
+                <div className="mt-8 pt-6 border-t border-surface-alt flex items-center gap-4">
+                  <div className="w-3 h-3 bg-majestic-gold border border-ink"></div>
                   <span className="text-label-caps font-label-caps text-outline">Selected Date</span>
-                  <div className="w-3 h-3 bg-alabaster-white border border-outline-variant ml-4"></div>
+                  <div className="w-3 h-3 bg-surface-alt border border-outline-variant ml-4"></div>
                   <span className="text-label-caps font-label-caps text-outline">Available</span>
                 </div>
               </section>
@@ -645,7 +645,7 @@ export default function StudentSchedulePage() {
               <section className="lg:col-span-7 space-y-8">
                 {/* Morning Slots */}
                 <div className="bg-surface-container-lowest border border-outline-variant p-6 md:p-8">
-                  <h3 className="font-headline-md text-royal-navy mb-6 flex items-center gap-3">
+                  <h3 className="font-headline-md text-ink mb-6 flex items-center gap-3">
                     <span className="material-symbols-outlined">wb_sunny</span>
                     Morning Slots
                   </h3>
@@ -659,7 +659,7 @@ export default function StudentSchedulePage() {
                           className={`time-slot-pill border py-4 px-2 font-body-bold text-center transition-all hover:scale-105 active:scale-95 ${
                             isSelected
                               ? "border-2 border-majestic-gold bg-royal-navy text-majestic-gold"
-                              : "border-outline-variant hover:border-majestic-gold hover:bg-alabaster-white"
+                              : "border-outline-variant hover:border-majestic-gold hover:bg-surface-alt"
                           }`}
                         >
                           {time}
@@ -674,7 +674,7 @@ export default function StudentSchedulePage() {
 
                 {/* Afternoon Slots */}
                 <div className="bg-surface-container-lowest border border-outline-variant p-6 md:p-8">
-                  <h3 className="font-headline-md text-royal-navy mb-6 flex items-center gap-3">
+                  <h3 className="font-headline-md text-ink mb-6 flex items-center gap-3">
                     <span className="material-symbols-outlined">light_mode</span>
                     Afternoon Slots
                   </h3>
@@ -688,7 +688,7 @@ export default function StudentSchedulePage() {
                           className={`time-slot-pill border py-4 px-2 font-body-bold text-center transition-all hover:scale-105 active:scale-95 ${
                             isSelected
                               ? "border-2 border-majestic-gold bg-royal-navy text-majestic-gold"
-                              : "border-outline-variant hover:border-majestic-gold hover:bg-alabaster-white"
+                              : "border-outline-variant hover:border-majestic-gold hover:bg-surface-alt"
                           }`}
                         >
                           {time}
@@ -700,7 +700,7 @@ export default function StudentSchedulePage() {
 
                 {/* Evening Slots */}
                 <div className="bg-surface-container-lowest border border-outline-variant p-6 md:p-8">
-                  <h3 className="font-headline-md text-royal-navy mb-6 flex items-center gap-3">
+                  <h3 className="font-headline-md text-ink mb-6 flex items-center gap-3">
                     <span className="material-symbols-outlined">bedtime</span>
                     Evening Slots
                   </h3>
@@ -714,7 +714,7 @@ export default function StudentSchedulePage() {
                           className={`time-slot-pill border py-4 px-2 font-body-bold text-center transition-all hover:scale-105 active:scale-95 ${
                             isSelected
                               ? "border-2 border-majestic-gold bg-royal-navy text-majestic-gold"
-                              : "border-outline-variant hover:border-majestic-gold hover:bg-alabaster-white"
+                              : "border-outline-variant hover:border-majestic-gold hover:bg-surface-alt"
                           }`}
                         >
                           {time}
@@ -737,59 +737,59 @@ export default function StudentSchedulePage() {
           {step === 4 && (
             <div className="grid grid-cols-1 md:grid-cols-12 gap-gutter-desktop items-start">
               {/* Left Column: Booking Summary */}
-              <div className="md:col-span-5 bg-white border border-[#EBEBEB] p-10 relative overflow-hidden">
-                <div className="absolute top-0 right-0 w-32 h-32 bg-alabaster-white -mr-16 -mt-16 rotate-45"></div>
-                <h2 className="font-headline-md text-headline-md text-royal-navy mb-8">Booking Summary</h2>
+              <div className="md:col-span-5 bg-card border border-surface-container-high p-10 relative overflow-hidden">
+                <div className="absolute top-0 right-0 w-32 h-32 bg-surface-alt -mr-16 -mt-16 rotate-45"></div>
+                <h2 className="font-headline-md text-headline-md text-ink mb-8">Booking Summary</h2>
                 
                 <div className="space-y-8 relative z-10">
                   <div className="group">
                     <p className="text-label-caps font-label-caps text-champagne-taupe mb-2">SERVICE</p>
-                    <p className="font-body-bold text-body-bold text-royal-navy">{selectedService?.name}</p>
+                    <p className="font-body-bold text-body-bold text-ink">{selectedService?.name}</p>
                     <p className="text-body-base text-warm-slate mt-1">
                       {selectedService?.duration} • {selectedService?.price}
                     </p>
-                    <div className="h-[1px] bg-gradient-to-r from-[#8E7A5A] to-transparent mt-4 w-1/4 group-hover:w-full transition-all duration-500"></div>
+                    <div className="h-[1px] bg-gradient-to-r from-champagne-taupe to-transparent mt-4 w-1/4 group-hover:w-full transition-all duration-500"></div>
                   </div>
 
                   <div className="group">
                     <p className="text-label-caps font-label-caps text-champagne-taupe mb-2">ARTIST</p>
                     <div className="flex items-center gap-4">
                       {selectedArtist && (
-                        <div className="relative w-12 h-12 rounded-full overflow-hidden border border-[#EBEBEB]">
+                        <div className="relative w-12 h-12 rounded-full overflow-hidden border border-surface-container-high">
                           <Image src={selectedArtist.image} alt={selectedArtist.name} fill className="object-cover" unoptimized />
                         </div>
                       )}
                       <div>
-                        <p className="font-body-bold text-body-bold text-royal-navy">{selectedArtist?.name}</p>
+                        <p className="font-body-bold text-body-bold text-ink">{selectedArtist?.name}</p>
                         <p className="text-body-base text-warm-slate">{selectedArtist?.role}</p>
                       </div>
                     </div>
-                    <div className="h-[1px] bg-gradient-to-r from-[#8E7A5A] to-transparent mt-4 w-1/4 group-hover:w-full transition-all duration-500"></div>
+                    <div className="h-[1px] bg-gradient-to-r from-champagne-taupe to-transparent mt-4 w-1/4 group-hover:w-full transition-all duration-500"></div>
                   </div>
 
                   <div className="group">
                     <p className="text-label-caps font-label-caps text-champagne-taupe mb-2">DATE &amp; TIME</p>
-                    <p className="font-body-bold text-body-bold text-royal-navy">
+                    <p className="font-body-bold text-body-bold text-ink">
                       Thursday, October {selectedDateDay}, 2026
                     </p>
                     <p className="text-body-base text-warm-slate mt-1">
                       {selectedTimeSlot}
                     </p>
-                    <div className="h-[1px] bg-gradient-to-r from-[#8E7A5A] to-transparent mt-4 w-1/4 group-hover:w-full transition-all duration-500"></div>
+                    <div className="h-[1px] bg-gradient-to-r from-champagne-taupe to-transparent mt-4 w-1/4 group-hover:w-full transition-all duration-500"></div>
                   </div>
 
                   <div className="group">
                     <p className="text-label-caps font-label-caps text-champagne-taupe mb-2">LOCATION</p>
-                    <p className="font-body-bold text-body-bold text-royal-navy">Erniekay Flagship Salon</p>
+                    <p className="font-body-bold text-body-bold text-ink">Erniekay Flagship Salon</p>
                     <p className="text-body-base text-warm-slate mt-1">128 Luxury Plaza, Victoria Island, Lagos</p>
-                    <div className="h-[1px] bg-gradient-to-r from-[#8E7A5A] to-transparent mt-4 w-1/4 group-hover:w-full transition-all duration-500"></div>
+                    <div className="h-[1px] bg-gradient-to-r from-champagne-taupe to-transparent mt-4 w-1/4 group-hover:w-full transition-all duration-500"></div>
                   </div>
                 </div>
 
-                <div className="mt-12 pt-8 border-t border-[#EBEBEB] flex justify-between items-end">
+                <div className="mt-12 pt-8 border-t border-surface-container-high flex justify-between items-end">
                   <div>
                     <p className="text-label-caps font-label-caps text-warm-slate">ESTIMATED TOTAL</p>
-                    <p className="font-headline-md text-headline-md text-royal-navy">{selectedService?.price}</p>
+                    <p className="font-headline-md text-headline-md text-ink">{selectedService?.price}</p>
                   </div>
                   <span className="text-label-caps font-label-caps text-premium-green flex items-center gap-1">
                     <span className="material-symbols-outlined text-sm" style={{ fontVariationSettings: "'FILL' 1" }}>verified</span> SECURE BOOKING
@@ -798,8 +798,8 @@ export default function StudentSchedulePage() {
               </div>
 
               {/* Right Column: Customer Info Form */}
-              <div className="md:col-span-7 bg-white border border-[#EBEBEB] p-10">
-                <h2 className="font-headline-md text-headline-md text-royal-navy mb-4">Personal Information</h2>
+              <div className="md:col-span-7 bg-card border border-surface-container-high p-10">
+                <h2 className="font-headline-md text-headline-md text-ink mb-4">Personal Information</h2>
                 <p className="text-body-base text-warm-slate mb-10">
                   Please provide your details to finalize the appointment. Your information is handled with the utmost discretion.
                 </p>
@@ -812,7 +812,7 @@ export default function StudentSchedulePage() {
                         required
                         value={fullName}
                         onChange={(e) => setFullName(e.target.value)}
-                        className="w-full bg-white border-b border-champagne-taupe py-4 font-body-base text-royal-navy placeholder:text-[#D1D1D1] focus:outline-none focus:border-b-royal-navy"
+                        className="w-full bg-card border-b border-champagne-taupe py-4 font-body-base text-ink placeholder:text-outline/60 focus:outline-none focus:border-b-ink"
                         placeholder="e.g. Adanna Okoro"
                         type="text"
                       />
@@ -823,7 +823,7 @@ export default function StudentSchedulePage() {
                         required
                         value={email}
                         onChange={(e) => setEmail(e.target.value)}
-                        className="w-full bg-white border-b border-champagne-taupe py-4 font-body-base text-royal-navy placeholder:text-[#D1D1D1] focus:outline-none focus:border-b-royal-navy"
+                        className="w-full bg-card border-b border-champagne-taupe py-4 font-body-base text-ink placeholder:text-outline/60 focus:outline-none focus:border-b-ink"
                         placeholder="adanna.okoro@example.com"
                         type="email"
                       />
@@ -837,14 +837,14 @@ export default function StudentSchedulePage() {
                         required
                         value={phone}
                         onChange={(e) => setPhone(e.target.value)}
-                        className="w-full bg-white border-b border-champagne-taupe py-4 font-body-base text-royal-navy placeholder:text-[#D1D1D1] focus:outline-none focus:border-b-royal-navy"
+                        className="w-full bg-card border-b border-champagne-taupe py-4 font-body-base text-ink placeholder:text-outline/60 focus:outline-none focus:border-b-ink"
                         placeholder="+234 --- --- ----"
                         type="tel"
                       />
                     </div>
                     <div className="relative">
                       <label className="text-label-caps font-label-caps text-champagne-taupe absolute -top-4 left-0">Service Type</label>
-                      <div className="w-full bg-white border-b border-champagne-taupe py-4 font-body-base text-royal-navy">
+                      <div className="w-full bg-card border-b border-champagne-taupe py-4 font-body-base text-ink">
                         Selected: {selectedService?.name}
                       </div>
                     </div>
@@ -855,7 +855,7 @@ export default function StudentSchedulePage() {
                     <textarea
                       value={notes}
                       onChange={(e) => setNotes(e.target.value)}
-                      className="w-full bg-white border-b border-champagne-taupe py-4 font-body-base text-royal-navy placeholder:text-[#D1D1D1] resize-none focus:outline-none focus:border-b-royal-navy"
+                      className="w-full bg-card border-b border-champagne-taupe py-4 font-body-base text-ink placeholder:text-outline/60 resize-none focus:outline-none focus:border-b-ink"
                       placeholder="Share any specific requests or hair concerns with your stylist..."
                       rows={3}
                     ></textarea>
@@ -866,12 +866,12 @@ export default function StudentSchedulePage() {
                       required
                       checked={agreeTerms}
                       onChange={(e) => setAgreeTerms(e.target.checked)}
-                      className="mt-1 border-champagne-taupe rounded-sm text-royal-navy focus:ring-royal-navy cursor-pointer"
+                      className="mt-1 border-champagne-taupe rounded-sm text-ink focus:ring-ink cursor-pointer"
                       id="terms"
                       type="checkbox"
                     />
                     <label className="text-body-base text-warm-slate text-sm cursor-pointer" htmlFor="terms">
-                      I agree to the <a className="text-royal-navy underline font-body-bold" href="#">Terms of Service</a> and acknowledge the 24-hour cancellation policy.
+                      I agree to the <a className="text-ink underline font-body-bold" href="#">Terms of Service</a> and acknowledge the 24-hour cancellation policy.
                     </label>
                   </div>
 
@@ -879,7 +879,7 @@ export default function StudentSchedulePage() {
                     <button
                       onClick={handlePrevStep}
                       type="button"
-                      className="text-label-caps font-label-caps text-warm-slate hover:text-royal-navy flex items-center gap-2 group transition-colors"
+                      className="text-label-caps font-label-caps text-warm-slate hover:text-ink flex items-center gap-2 group transition-colors"
                     >
                       <span className="material-symbols-outlined group-hover:-translate-x-1 transition-transform">arrow_back</span>
                       Back to Calendar
@@ -899,7 +899,7 @@ export default function StudentSchedulePage() {
 
           {/* STEP 5: SUCCESS / CONFIRMATION RECEIPT */}
           {step === 5 && (
-            <div className="max-w-2xl mx-auto bg-white border border-majestic-gold p-8 md:p-12 text-center shadow-lg space-y-8">
+            <div className="max-w-2xl mx-auto bg-card border border-majestic-gold p-8 md:p-12 text-center shadow-lg space-y-8">
               <div className="w-16 h-16 rounded-full bg-premium-green/10 border border-premium-green flex items-center justify-center mx-auto text-premium-green">
                 <span className="material-symbols-outlined text-[36px]" style={{ fontVariationSettings: "'FILL' 1" }}>
                   check_circle
@@ -910,7 +910,7 @@ export default function StudentSchedulePage() {
                 <span className="text-[12px] font-bold font-label-caps tracking-[0.2em] text-champagne-taupe uppercase block">
                   Practical Session Booked
                 </span>
-                <h2 className="font-[family-name:var(--font-eb-garamond)] text-[32px] md:text-[40px] text-royal-navy font-bold">
+                <h2 className="font-[family-name:var(--font-eb-garamond)] text-[32px] md:text-[40px] text-ink font-bold">
                   Your Training Session is Set
                 </h2>
                 <p className="text-warm-slate text-[15px] font-[family-name:var(--font-montserrat)] leading-[24px]">
@@ -919,26 +919,26 @@ export default function StudentSchedulePage() {
               </div>
 
               {/* Invoice details */}
-              <div className="border border-champagne-taupe/20 bg-alabaster-white/50 p-6 text-left space-y-4">
-                <h4 className="text-[12px] font-bold font-label-caps tracking-[0.15em] text-royal-navy border-b border-champagne-taupe/20 pb-2 uppercase">
+              <div className="border border-champagne-taupe/20 bg-surface-alt/50 p-6 text-left space-y-4">
+                <h4 className="text-[12px] font-bold font-label-caps tracking-[0.15em] text-ink border-b border-champagne-taupe/20 pb-2 uppercase">
                   Booking Receipt Details
                 </h4>
                 <div className="space-y-2 text-[14px] font-[family-name:var(--font-montserrat)] text-warm-slate">
                   <div className="flex justify-between">
                     <span>Student Name</span>
-                    <span className="font-bold text-royal-navy">{fullName}</span>
+                    <span className="font-bold text-ink">{fullName}</span>
                   </div>
                   <div className="flex justify-between">
                     <span>Service</span>
-                    <span className="font-bold text-royal-navy">{selectedService?.name}</span>
+                    <span className="font-bold text-ink">{selectedService?.name}</span>
                   </div>
                   <div className="flex justify-between">
                     <span>Assigned Professional</span>
-                    <span className="font-bold text-royal-navy">{selectedArtist?.name}</span>
+                    <span className="font-bold text-ink">{selectedArtist?.name}</span>
                   </div>
                   <div className="flex justify-between">
                     <span>Date &amp; Time</span>
-                    <span className="font-semibold text-royal-navy">
+                    <span className="font-semibold text-ink">
                       October {selectedDateDay}, 2026 at {selectedTimeSlot}
                     </span>
                   </div>
@@ -949,7 +949,7 @@ export default function StudentSchedulePage() {
               <div className="flex flex-col sm:flex-row gap-4 justify-center">
                 <Link
                   href="/academy/portal/dashboard"
-                  className="px-8 py-3 text-royal-navy border border-royal-navy font-bold font-label-caps text-[12px] tracking-[0.1em] uppercase hover:bg-royal-navy hover:text-white transition-all text-center"
+                  className="px-8 py-3 text-ink border border-ink font-bold font-label-caps text-[12px] tracking-[0.1em] uppercase hover:bg-royal-navy hover:text-white transition-all text-center"
                 >
                   Return to Dashboard
                 </Link>

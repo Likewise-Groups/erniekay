@@ -32,11 +32,11 @@ export default function StudentPortalPage() {
   };
 
   return (
-    <div className="bg-alabaster-white text-on-background min-h-screen flex flex-col font-[family-name:var(--font-montserrat)] antialiased overflow-x-hidden">
+    <div className="bg-surface-alt text-on-background min-h-screen flex flex-col font-[family-name:var(--font-montserrat)] antialiased overflow-x-hidden">
       {/* TopAppBar Component */}
       <header className="fixed top-0 w-full bg-surface z-50 border-b border-champagne-taupe/30 flex items-center justify-between px-6 md:px-[64px] h-20">
         <div className="flex items-center gap-4">
-          <button className="material-symbols-outlined text-royal-navy active:opacity-80 transition-opacity">
+          <button className="material-symbols-outlined text-ink active:opacity-80 transition-opacity">
             menu
           </button>
           <div className="relative w-56 h-20 -ml-4">
@@ -61,7 +61,7 @@ export default function StudentPortalPage() {
               Help
             </a>
           </nav>
-          <button className="material-symbols-outlined text-royal-navy active:opacity-80 transition-opacity">
+          <button className="material-symbols-outlined text-ink active:opacity-80 transition-opacity">
             account_circle
           </button>
         </div>
@@ -78,7 +78,7 @@ export default function StudentPortalPage() {
             priority
             unoptimized
           />
-          <div className="absolute inset-0 bg-gradient-to-b from-royal-navy/40 to-alabaster-white/90 flex flex-col justify-end p-6 md:p-[64px]">
+          <div className="absolute inset-0 bg-gradient-to-b from-royal-navy/40 to-surface-alt/90 flex flex-col justify-end p-6 md:p-[64px]">
             <div className="mb-4">
               <span className="font-[family-name:var(--font-montserrat)] text-[11px] font-bold text-majestic-gold bg-royal-navy px-3 py-1.5 tracking-[0.2em] uppercase">
                 CRAFTING EXCELLENCE
@@ -91,7 +91,7 @@ export default function StudentPortalPage() {
         <section className="flex-grow px-6 md:px-[64px] -mt-8 relative z-10 flex justify-center">
           <div className="w-full max-w-[500px] bg-surface-container-lowest border border-champagne-taupe/20 p-8 shadow-md">
             <div className="text-center mb-10">
-              <h2 className="font-[family-name:var(--font-eb-garamond)] text-[28px] leading-[36px] font-semibold text-royal-navy mb-2">
+              <h2 className="font-[family-name:var(--font-eb-garamond)] text-[28px] leading-[36px] font-semibold text-ink mb-2">
                 Welcome Back, Artist
               </h2>
               <p className="font-[family-name:var(--font-montserrat)] text-warm-slate text-sm">
@@ -102,9 +102,9 @@ export default function StudentPortalPage() {
             {/* Login Form */}
             <form className="space-y-8" onSubmit={handleSubmit}>
               {/* Email / ID Input */}
-              <div className="relative border-b border-champagne-taupe focus-within:border-royal-navy transition-colors duration-300 py-2">
+              <div className="relative border-b border-champagne-taupe focus-within:border-ink transition-colors duration-300 py-2">
                 <input
-                  className="block w-full px-0 py-2 bg-transparent border-none outline-none focus:ring-0 text-royal-navy font-[family-name:var(--font-montserrat)]"
+                  className="block w-full px-0 py-2 bg-transparent border-none outline-none focus:ring-0 text-ink font-[family-name:var(--font-montserrat)]"
                   id="email"
                   name="email"
                   type="text"
@@ -117,7 +117,7 @@ export default function StudentPortalPage() {
                 <label
                   className={`absolute left-0 transition-all duration-300 origin-left pointer-events-none ${
                     emailFocused || email !== ""
-                      ? "-translate-y-5 scale-[0.85] text-royal-navy font-bold"
+                      ? "-translate-y-5 scale-[0.85] text-ink font-bold"
                       : "top-3 text-warm-slate"
                   }`}
                   htmlFor="email"
@@ -127,9 +127,9 @@ export default function StudentPortalPage() {
               </div>
 
               {/* Password Input */}
-              <div className="relative border-b border-champagne-taupe focus-within:border-royal-navy transition-colors duration-300 py-2">
+              <div className="relative border-b border-champagne-taupe focus-within:border-ink transition-colors duration-300 py-2">
                 <input
-                  className="block w-full px-0 py-2 bg-transparent border-none outline-none focus:ring-0 text-royal-navy font-[family-name:var(--font-montserrat)]"
+                  className="block w-full px-0 py-2 bg-transparent border-none outline-none focus:ring-0 text-ink font-[family-name:var(--font-montserrat)]"
                   id="password"
                   name="password"
                   type={showPassword ? "text" : "password"}
@@ -142,7 +142,7 @@ export default function StudentPortalPage() {
                 <label
                   className={`absolute left-0 transition-all duration-300 origin-left pointer-events-none ${
                     passwordFocused || password !== ""
-                      ? "-translate-y-5 scale-[0.85] text-royal-navy font-bold"
+                      ? "-translate-y-5 scale-[0.85] text-ink font-bold"
                       : "top-3 text-warm-slate"
                   }`}
                   htmlFor="password"
@@ -150,7 +150,7 @@ export default function StudentPortalPage() {
                   Password
                 </label>
                 <button
-                  className="absolute right-0 top-3 font-[family-name:var(--font-montserrat)] text-[10px] text-royal-navy hover:text-majestic-gold transition-colors tracking-widest uppercase"
+                  className="absolute right-0 top-3 font-[family-name:var(--font-montserrat)] text-[10px] text-ink hover:text-majestic-gold transition-colors tracking-widest uppercase"
                   onClick={() => setShowPassword(!showPassword)}
                   type="button"
                 >
@@ -170,7 +170,7 @@ export default function StudentPortalPage() {
                     />
                     <div className="w-4 h-4 border border-champagne-taupe bg-transparent group-active:scale-95 transition-transform flex items-center justify-center">
                       {rememberMe && (
-                        <span className="material-symbols-outlined text-[12px] text-royal-navy font-bold leading-none">
+                        <span className="material-symbols-outlined text-[12px] text-ink font-bold leading-none">
                           check
                         </span>
                       )}
@@ -181,7 +181,7 @@ export default function StudentPortalPage() {
                   </span>
                 </label>
                 <a
-                  className="font-[family-name:var(--font-montserrat)] text-[11px] text-royal-navy hover:text-majestic-gold transition-colors tracking-wider uppercase font-bold border-b border-transparent hover:border-majestic-gold"
+                  className="font-[family-name:var(--font-montserrat)] text-[11px] text-ink hover:text-majestic-gold transition-colors tracking-wider uppercase font-bold border-b border-transparent hover:border-majestic-gold"
                   href="#"
                 >
                   Forgot Password?
@@ -199,16 +199,16 @@ export default function StudentPortalPage() {
 
             {/* Secondary Actions */}
             <div className="mt-8 text-center">
-              <p className="text-[12px] font-[family-name:var(--font-montserrat)] text-warm-slate opacity-80 mb-4 bg-alabaster-white p-3 border border-champagne-taupe/30">
-                <span className="font-bold text-royal-navy uppercase tracking-widest text-[10px] block mb-1">Demo Environment</span>
-                Login with <strong className="text-royal-navy">admin@test.com</strong> or <strong className="text-royal-navy">student@test.com</strong>
+              <p className="text-[12px] font-[family-name:var(--font-montserrat)] text-warm-slate opacity-80 mb-4 bg-surface-alt p-3 border border-champagne-taupe/30">
+                <span className="font-bold text-ink uppercase tracking-widest text-[10px] block mb-1">Demo Environment</span>
+                Login with <strong className="text-ink">admin@test.com</strong> or <strong className="text-ink">student@test.com</strong>
               </p>
             </div>
 
             <div className="mt-6 space-y-4 text-center">
               <p className="font-[family-name:var(--font-montserrat)] text-sm text-warm-slate">
                 Don&apos;t have an account? <br />
-                <Link className="text-royal-navy font-bold hover:text-majestic-gold transition-colors" href="/contact">
+                <Link className="text-ink font-bold hover:text-majestic-gold transition-colors" href="/contact">
                   Contact Admissions
                 </Link>
               </p>
@@ -220,7 +220,7 @@ export default function StudentPortalPage() {
                 <div className="h-[1px] w-8 bg-champagne-taupe/30" />
               </div>
               <Link
-                className="inline-block font-[family-name:var(--font-montserrat)] text-[12px] text-royal-navy border border-royal-navy px-8 py-3 hover:bg-royal-navy hover:text-white transition-all tracking-[0.2em] uppercase font-bold"
+                className="inline-block font-[family-name:var(--font-montserrat)] text-[12px] text-ink border border-ink px-8 py-3 hover:bg-royal-navy hover:text-white transition-all tracking-[0.2em] uppercase font-bold"
                 href="/academy"
               >
                 Explore Programs
@@ -234,14 +234,14 @@ export default function StudentPortalPage() {
           <span className="material-symbols-outlined text-majestic-gold opacity-50 text-4xl mb-4">
             format_quote
           </span>
-          <p className="font-[family-name:var(--font-eb-garamond)] text-xl italic text-royal-navy px-4">
+          <p className="font-[family-name:var(--font-eb-garamond)] text-xl italic text-ink px-4">
             &ldquo;Beauty begins the moment you decide to be yourself.&rdquo;
           </p>
         </section>
       </main>
 
       {/* Footer Component */}
-      <footer className="bg-alabaster-white border-t border-champagne-taupe/20 flex flex-col items-center py-8 px-6 space-y-4 w-full">
+      <footer className="bg-surface-alt border-t border-champagne-taupe/20 flex flex-col items-center py-8 px-6 space-y-4 w-full">
         <div className="relative w-64 h-32 mb-2">
           <Image 
             src="/erniekayacademy logo.jpeg" 
@@ -252,13 +252,13 @@ export default function StudentPortalPage() {
           />
         </div>
         <div className="flex flex-wrap justify-center gap-6">
-          <a className="font-[family-name:var(--font-montserrat)] text-[12px] leading-[16px] tracking-widest uppercase font-bold text-warm-slate hover:text-royal-navy transition-colors" href="#">
+          <a className="font-[family-name:var(--font-montserrat)] text-[12px] leading-[16px] tracking-widest uppercase font-bold text-warm-slate hover:text-ink transition-colors" href="#">
             Privacy Policy
           </a>
-          <a className="font-[family-name:var(--font-montserrat)] text-[12px] leading-[16px] tracking-widest uppercase font-bold text-warm-slate hover:text-royal-navy transition-colors" href="#">
+          <a className="font-[family-name:var(--font-montserrat)] text-[12px] leading-[16px] tracking-widest uppercase font-bold text-warm-slate hover:text-ink transition-colors" href="#">
             Terms of Service
           </a>
-          <a className="font-[family-name:var(--font-montserrat)] text-[12px] leading-[16px] tracking-widest uppercase font-bold text-warm-slate hover:text-royal-navy transition-colors" href="#">
+          <a className="font-[family-name:var(--font-montserrat)] text-[12px] leading-[16px] tracking-widest uppercase font-bold text-warm-slate hover:text-ink transition-colors" href="#">
             Cookie Policy
           </a>
         </div>

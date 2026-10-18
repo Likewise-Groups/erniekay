@@ -4,7 +4,7 @@ import type { MediaOverrides } from "@/lib/mediaSlots";
 
 export default function AboutHero({ media }: { media?: MediaOverrides }) {
   return (
-    <section className="relative min-h-[80vh] flex items-center justify-center overflow-hidden bg-gradient-to-br from-[#f8f6f0] to-[#f4eee6] py-[120px]">
+    <section className="relative min-h-[80vh] flex items-center justify-center overflow-hidden bg-gradient-to-br from-[#f8f6f0] to-[#f4eee6] dark:from-surface dark:to-surface-container-low py-[120px]">
       {/* Decorative Orbs */}
       <div className="absolute top-0 right-0 w-[600px] h-[600px] bg-majestic-gold/10 rounded-full blur-[100px] translate-x-1/3 -translate-y-1/3" />
       <div className="absolute bottom-0 left-0 w-[500px] h-[500px] bg-royal-navy/5 rounded-full blur-[80px] -translate-x-1/4 translate-y-1/4" />
@@ -20,7 +20,7 @@ export default function AboutHero({ media }: { media?: MediaOverrides }) {
                   The Visionaries
                 </span>
               </div>
-              <h1 className="font-[family-name:var(--font-eb-garamond)] text-[48px] md:text-[64px] lg:text-[72px] leading-[52px] md:leading-[68px] lg:leading-[76px] font-semibold text-royal-navy mb-8">
+              <h1 className="font-[family-name:var(--font-eb-garamond)] text-[48px] md:text-[64px] lg:text-[72px] leading-[52px] md:leading-[68px] lg:leading-[76px] font-semibold text-ink mb-8">
                 Clinical Precision. <br className="hidden md:block"/> Artistic Soul.
               </h1>
               <p className="font-[family-name:var(--font-montserrat)] text-[16px] md:text-[18px] leading-[28px] md:leading-[32px] text-on-surface-variant max-w-xl border-l-2 border-majestic-gold/30 pl-6">
@@ -44,9 +44,9 @@ export default function AboutHero({ media }: { media?: MediaOverrides }) {
               </div>
               
               {/* Floating badge */}
-              <div className="absolute bottom-10 -left-6 md:-left-12 bg-white/90 backdrop-blur-md px-8 py-6 rounded-2xl shadow-xl border border-majestic-gold/20 flex flex-col items-center">
+              <div className="absolute bottom-10 -left-6 md:-left-12 bg-card/90 backdrop-blur-md px-8 py-6 rounded-2xl shadow-xl border border-majestic-gold/20 flex flex-col items-center">
                 <span className="font-[family-name:var(--font-eb-garamond)] text-[32px] font-bold text-majestic-gold mb-1">8+</span>
-                <span className="font-[family-name:var(--font-montserrat)] text-[10px] uppercase tracking-widest font-bold text-royal-navy text-center">Years of<br/>Excellence</span>
+                <span className="font-[family-name:var(--font-montserrat)] text-[10px] uppercase tracking-widest font-bold text-ink text-center">Years of<br/>Excellence</span>
               </div>
             </FadeIn>
           </div>

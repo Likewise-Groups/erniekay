@@ -27,7 +27,7 @@ export default function StudentDashboardPage() {
   ];
 
   return (
-    <div className="font-[family-name:var(--font-montserrat)] text-royal-navy bg-[#F5F5F5] min-h-screen">
+    <div className="font-[family-name:var(--font-montserrat)] text-ink bg-surface-alt min-h-screen">
       
       {/* ── Desktop SideNavBar Navigation ── */}
       <aside className="fixed left-0 top-0 h-full hidden md:flex flex-col z-40 bg-royal-navy w-64 text-white">
@@ -45,7 +45,7 @@ export default function StudentDashboardPage() {
         <div className="px-6 py-4 mb-8">
           <div className="flex items-center gap-3">
             <div className="w-10 h-10 bg-majestic-gold flex items-center justify-center">
-              <span className="material-symbols-outlined text-royal-navy">person</span>
+              <span className="material-symbols-outlined text-ink">person</span>
             </div>
             <div>
               <p className="font-[family-name:var(--font-montserrat)] text-[10px] uppercase font-bold text-majestic-gold tracking-wider">
@@ -75,7 +75,7 @@ export default function StudentDashboardPage() {
             </Link>
           ))}
         </nav>
-        <div className="p-6 border-t border-alabaster-white/10">
+        <div className="p-6 border-t border-surface-alt/10">
           <button className="w-full py-3 bg-majestic-gold text-royal-navy font-[family-name:var(--font-montserrat)] text-[12px] uppercase tracking-widest font-bold hover:brightness-110 transition-all">
             Enroll in New Course
           </button>
@@ -160,26 +160,26 @@ export default function StudentDashboardPage() {
       )}
 
       {/* ── Main Canvas ── */}
-      <main className="md:ml-64 min-h-screen bg-alabaster-white flex flex-col">
+      <main className="md:ml-64 min-h-screen bg-surface-alt flex flex-col">
         {/* Top Bar */}
         <header className="sticky top-0 w-full h-16 bg-surface z-30 flex justify-between items-center px-6 md:px-8 border-b border-champagne-taupe/30">
           <div className="flex items-center gap-3">
             <button
               onClick={() => setMobileMenuOpen(true)}
-              className="material-symbols-outlined md:hidden text-royal-navy active:opacity-80 transition-opacity"
+              className="material-symbols-outlined md:hidden text-ink active:opacity-80 transition-opacity"
             >
               menu
             </button>
-            <span className="font-[family-name:var(--font-eb-garamond)] text-[22px] md:text-[28px] font-semibold text-royal-navy">
+            <span className="font-[family-name:var(--font-eb-garamond)] text-[22px] md:text-[28px] font-semibold text-ink">
               Dashboard
             </span>
           </div>
           <div className="flex items-center gap-6">
             <div className="flex items-center gap-4">
-              <span className="material-symbols-outlined text-royal-navy cursor-pointer hover:text-majestic-gold transition-colors">
+              <span className="material-symbols-outlined text-ink cursor-pointer hover:text-majestic-gold transition-colors">
                 notifications
               </span>
-              <span className="material-symbols-outlined text-royal-navy cursor-pointer hover:text-majestic-gold transition-colors">
+              <span className="material-symbols-outlined text-ink cursor-pointer hover:text-majestic-gold transition-colors">
                 help
               </span>
             </div>
@@ -203,7 +203,7 @@ export default function StudentDashboardPage() {
               <p className="font-[family-name:var(--font-montserrat)] text-[10px] uppercase font-bold text-champagne-taupe tracking-[0.2em]">
                 ACADEMY EXCELLENCE
               </p>
-              <h2 className="font-[family-name:var(--font-eb-garamond)] text-[36px] md:text-[44px] leading-tight text-royal-navy font-semibold">
+              <h2 className="font-[family-name:var(--font-eb-garamond)] text-[36px] md:text-[44px] leading-tight text-ink font-semibold">
                 Welcome back, Isabella
               </h2>
               <p className="text-warm-slate max-w-lg text-[14px]">
@@ -211,20 +211,20 @@ export default function StudentDashboardPage() {
               </p>
             </div>
             <div className="lg:col-span-5 grid grid-cols-3 gap-4">
-              <div className="bg-white border border-champagne-taupe/20 p-6 text-center hover:shadow-lg hover:-translate-y-0.5 transition-all duration-300">
-                <p className="font-[family-name:var(--font-eb-garamond)] text-[28px] font-bold text-royal-navy">4</p>
+              <div className="bg-card border border-champagne-taupe/20 p-6 text-center hover:shadow-lg hover:-translate-y-0.5 transition-all duration-300">
+                <p className="font-[family-name:var(--font-eb-garamond)] text-[28px] font-bold text-ink">4</p>
                 <p className="font-[family-name:var(--font-montserrat)] text-[9px] uppercase font-bold tracking-wider text-champagne-taupe">
                   Modules
                 </p>
               </div>
-              <div className="bg-white border border-champagne-taupe/20 p-6 text-center hover:shadow-lg hover:-translate-y-0.5 transition-all duration-300">
-                <p className="font-[family-name:var(--font-eb-garamond)] text-[28px] font-bold text-royal-navy">2</p>
+              <div className="bg-card border border-champagne-taupe/20 p-6 text-center hover:shadow-lg hover:-translate-y-0.5 transition-all duration-300">
+                <p className="font-[family-name:var(--font-eb-garamond)] text-[28px] font-bold text-ink">2</p>
                 <p className="font-[family-name:var(--font-montserrat)] text-[9px] uppercase font-bold tracking-wider text-champagne-taupe">
                   Certs
                 </p>
               </div>
-              <div className="bg-white border border-champagne-taupe/20 p-6 text-center hover:shadow-lg hover:-translate-y-0.5 transition-all duration-300">
-                <p className="font-[family-name:var(--font-eb-garamond)] text-[28px] font-bold text-royal-navy">120</p>
+              <div className="bg-card border border-champagne-taupe/20 p-6 text-center hover:shadow-lg hover:-translate-y-0.5 transition-all duration-300">
+                <p className="font-[family-name:var(--font-eb-garamond)] text-[28px] font-bold text-ink">120</p>
                 <p className="font-[family-name:var(--font-montserrat)] text-[9px] uppercase font-bold tracking-wider text-champagne-taupe">
                   Hours
                 </p>
@@ -242,7 +242,7 @@ export default function StudentDashboardPage() {
                 <h3 className="font-[family-name:var(--font-eb-garamond)] text-[22px] font-semibold mb-6 border-b border-champagne-taupe/20 pb-4">
                   Continue Learning
                 </h3>
-                <div className="group relative bg-white border border-champagne-taupe/30 overflow-hidden transition-all hover:border-majestic-gold hover:shadow-lg">
+                <div className="group relative bg-card border border-champagne-taupe/30 overflow-hidden transition-all hover:border-majestic-gold hover:shadow-lg">
                   <div className="flex flex-col md:flex-row">
                     <div className="md:w-1/2 h-64 md:h-auto overflow-hidden relative min-h-[220px]">
                       <Image
@@ -258,7 +258,7 @@ export default function StudentDashboardPage() {
                         <p className="font-[family-name:var(--font-montserrat)] text-[10px] font-bold text-majestic-gold mb-2 tracking-widest uppercase">
                           PRIMARY COURSE
                         </p>
-                        <h4 className="font-[family-name:var(--font-eb-garamond)] text-[24px] font-semibold text-royal-navy leading-tight">
+                        <h4 className="font-[family-name:var(--font-eb-garamond)] text-[24px] font-semibold text-ink leading-tight">
                           Masterclass in Bridal Artistry
                         </h4>
                       </div>
@@ -267,7 +267,7 @@ export default function StudentDashboardPage() {
                           <span>COURSE PROGRESS</span>
                           <span>65%</span>
                         </div>
-                        <div className="w-full h-1 bg-[#F5F5F5]">
+                        <div className="w-full h-1 bg-surface-alt">
                           <div className="h-full bg-majestic-gold transition-all duration-1000 ease-out" style={{ width: "65%" }}></div>
                         </div>
                       </div>
@@ -282,7 +282,7 @@ export default function StudentDashboardPage() {
               {/* Schedule cards */}
               <article>
                 <div className="flex justify-between items-end mb-6 border-b border-champagne-taupe/20 pb-4">
-                  <h3 className="font-[family-name:var(--font-eb-garamond)] text-[22px] font-semibold text-royal-navy">
+                  <h3 className="font-[family-name:var(--font-eb-garamond)] text-[22px] font-semibold text-ink">
                     Upcoming Sessions
                   </h3>
                   <button className="font-[family-name:var(--font-montserrat)] text-[10px] font-bold text-champagne-taupe hover:text-majestic-gold transition-colors tracking-widest uppercase">
@@ -291,14 +291,14 @@ export default function StudentDashboardPage() {
                 </div>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   {/* Class 1 */}
-                  <div className="p-6 bg-white border border-champagne-taupe/20 flex gap-6 items-center hover:shadow-lg hover:-translate-y-0.5 transition-all duration-300">
+                  <div className="p-6 bg-card border border-champagne-taupe/20 flex gap-6 items-center hover:shadow-lg hover:-translate-y-0.5 transition-all duration-300">
                     <div className="text-center border-r border-champagne-taupe/20 pr-6">
                       <p className="font-[family-name:var(--font-montserrat)] text-[10px] font-bold text-majestic-gold tracking-widest">TODAY</p>
-                      <p className="font-[family-name:var(--font-eb-garamond)] text-[24px] font-bold text-royal-navy">2</p>
+                      <p className="font-[family-name:var(--font-eb-garamond)] text-[24px] font-bold text-ink">2</p>
                       <p className="font-[family-name:var(--font-montserrat)] text-[9px] font-bold text-warm-slate">PM</p>
                     </div>
                     <div>
-                      <h5 className="font-[family-name:var(--font-montserrat)] text-[14px] font-bold text-royal-navy">
+                      <h5 className="font-[family-name:var(--font-montserrat)] text-[14px] font-bold text-ink">
                         Editorial Hair Styling
                       </h5>
                       <p className="font-[family-name:var(--font-montserrat)] text-[10px] font-bold text-champagne-taupe uppercase tracking-wider mt-1">
@@ -307,14 +307,14 @@ export default function StudentDashboardPage() {
                     </div>
                   </div>
                   {/* Class 2 */}
-                  <div className="p-6 bg-white border border-champagne-taupe/20 flex gap-6 items-center hover:shadow-lg hover:-translate-y-0.5 transition-all duration-300">
+                  <div className="p-6 bg-card border border-champagne-taupe/20 flex gap-6 items-center hover:shadow-lg hover:-translate-y-0.5 transition-all duration-300">
                     <div className="text-center border-r border-champagne-taupe/20 pr-6">
                       <p className="font-[family-name:var(--font-montserrat)] text-[10px] font-bold text-warm-slate tracking-widest">TOMW</p>
-                      <p className="font-[family-name:var(--font-eb-garamond)] text-[24px] font-bold text-royal-navy">10</p>
+                      <p className="font-[family-name:var(--font-eb-garamond)] text-[24px] font-bold text-ink">10</p>
                       <p className="font-[family-name:var(--font-montserrat)] text-[9px] font-bold text-warm-slate">AM</p>
                     </div>
                     <div>
-                      <h5 className="font-[family-name:var(--font-montserrat)] text-[14px] font-bold text-royal-navy">
+                      <h5 className="font-[family-name:var(--font-montserrat)] text-[14px] font-bold text-ink">
                         Color Theory &amp; Aesthetics
                       </h5>
                       <p className="font-[family-name:var(--font-montserrat)] text-[10px] font-bold text-champagne-taupe uppercase tracking-wider mt-1">
@@ -389,7 +389,7 @@ export default function StudentDashboardPage() {
               </aside>
 
               {/* Master Tip Widget */}
-              <div className="bg-white border border-champagne-taupe/20 p-8 space-y-4 hover:shadow-lg hover:-translate-y-0.5 transition-all duration-300">
+              <div className="bg-card border border-champagne-taupe/20 p-8 space-y-4 hover:shadow-lg hover:-translate-y-0.5 transition-all duration-300">
                 <div className="h-40 bg-surface overflow-hidden -mx-8 -mt-8 mb-4 relative">
                   <Image
                     className="object-cover"
@@ -402,14 +402,14 @@ export default function StudentDashboardPage() {
                 <p className="font-[family-name:var(--font-montserrat)] text-[10px] font-bold text-champagne-taupe tracking-widest uppercase">
                   MASTER TIP
                 </p>
-                <h4 className="font-[family-name:var(--font-montserrat)] text-[15px] font-bold text-royal-navy">
+                <h4 className="font-[family-name:var(--font-montserrat)] text-[15px] font-bold text-ink">
                   The Ritual of Skin Preparation
                 </h4>
                 <p className="text-[13px] text-warm-slate leading-relaxed">
                   Luxury bridal artistry begins with the canvas. Access our exclusive video library on editorial skin prep routines.
                 </p>
                 <a
-                  className="inline-block font-[family-name:var(--font-montserrat)] text-[10px] font-bold text-royal-navy border-b border-majestic-gold pb-1 hover:text-majestic-gold transition-colors tracking-widest uppercase"
+                  className="inline-block font-[family-name:var(--font-montserrat)] text-[10px] font-bold text-ink border-b border-majestic-gold pb-1 hover:text-majestic-gold transition-colors tracking-widest uppercase"
                   href="#"
                 >
                   WATCH RESOURCE

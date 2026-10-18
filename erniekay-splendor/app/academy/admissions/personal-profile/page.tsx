@@ -220,7 +220,7 @@ export default function AdmissionsPersonalProfilePage() {
             <span className="font-label-caps text-label-caps text-champagne-taupe block mb-2">
               STEP 02 OF 04
             </span>
-            <h1 className="font-display-lg text-display-lg text-royal-navy leading-tight">
+            <h1 className="font-display-lg text-display-lg text-ink leading-tight">
               Personal & Professional Profile
             </h1>
             <p className="mt-4 text-on-surface-variant max-w-xl font-body-base">
@@ -242,7 +242,7 @@ export default function AdmissionsPersonalProfilePage() {
             {/* Personal Identification Section */}
             <section>
               <div className="flex items-center gap-4 mb-8">
-                <h2 className="font-headline-md text-royal-navy">
+                <h2 className="font-headline-md text-ink">
                   Identity & Contact
                 </h2>
                 <div className="h-[1px] flex-1 bg-outline-variant"></div>
@@ -251,7 +251,7 @@ export default function AdmissionsPersonalProfilePage() {
               <div className="grid grid-cols-1 md:grid-cols-2 gap-x-12 gap-y-8">
                 {/* Full Name */}
                 <div className="relative">
-                  <div className="border-b border-outline-variant focus-within:border-royal-navy transition-colors">
+                  <div className="border-b border-outline-variant focus-within:border-ink transition-colors">
                     <label className="block font-label-caps text-[10px] text-on-surface-variant mb-1">
                       LEGAL FULL NAME
                     </label>
@@ -261,7 +261,7 @@ export default function AdmissionsPersonalProfilePage() {
                       value={formData.fullName}
                       onChange={handleInputChange}
                       placeholder="e.g. Julianne V. Sterling"
-                      className="w-full py-2 bg-transparent border-none focus:ring-0 placeholder:text-outline p-0 text-royal-navy font-body-bold"
+                      className="w-full py-2 bg-transparent border-none focus:ring-0 placeholder:text-outline p-0 text-ink font-body-bold"
                     />
                   </div>
                   {errors.fullName && (
@@ -271,7 +271,7 @@ export default function AdmissionsPersonalProfilePage() {
 
                 {/* Email */}
                 <div className="relative">
-                  <div className="border-b border-outline-variant focus-within:border-royal-navy transition-colors">
+                  <div className="border-b border-outline-variant focus-within:border-ink transition-colors">
                     <label className="block font-label-caps text-[10px] text-on-surface-variant mb-1">
                       EMAIL ADDRESS
                     </label>
@@ -281,7 +281,7 @@ export default function AdmissionsPersonalProfilePage() {
                       value={formData.email}
                       onChange={handleInputChange}
                       placeholder="julianne@example.com"
-                      className="w-full py-2 bg-transparent border-none focus:ring-0 placeholder:text-outline p-0 text-royal-navy font-body-bold"
+                      className="w-full py-2 bg-transparent border-none focus:ring-0 placeholder:text-outline p-0 text-ink font-body-bold"
                     />
                   </div>
                   {errors.email && (
@@ -291,7 +291,7 @@ export default function AdmissionsPersonalProfilePage() {
 
                 {/* Phone */}
                 <div className="relative">
-                  <div className="border-b border-outline-variant focus-within:border-royal-navy transition-colors">
+                  <div className="border-b border-outline-variant focus-within:border-ink transition-colors">
                     <label className="block font-label-caps text-[10px] text-on-surface-variant mb-1">
                       PHONE NUMBER
                     </label>
@@ -301,7 +301,7 @@ export default function AdmissionsPersonalProfilePage() {
                       value={formData.phone}
                       onChange={handleInputChange}
                       placeholder="+44 (0) 20 7946 0958"
-                      className="w-full py-2 bg-transparent border-none focus:ring-0 placeholder:text-outline p-0 text-royal-navy font-body-bold"
+                      className="w-full py-2 bg-transparent border-none focus:ring-0 placeholder:text-outline p-0 text-ink font-body-bold"
                     />
                   </div>
                   {errors.phone && (
@@ -311,7 +311,7 @@ export default function AdmissionsPersonalProfilePage() {
 
                 {/* Date of Birth */}
                 <div className="relative">
-                  <div className="border-b border-outline-variant focus-within:border-royal-navy transition-colors">
+                  <div className="border-b border-outline-variant focus-within:border-ink transition-colors">
                     <label className="block font-label-caps text-[10px] text-on-surface-variant mb-1">
                       DATE OF BIRTH
                     </label>
@@ -320,7 +320,7 @@ export default function AdmissionsPersonalProfilePage() {
                       name="dateOfBirth"
                       value={formData.dateOfBirth}
                       onChange={handleInputChange}
-                      className="w-full py-2 bg-transparent border-none focus:ring-0 p-0 text-royal-navy font-body-bold"
+                      className="w-full py-2 bg-transparent border-none focus:ring-0 p-0 text-ink font-body-bold"
                     />
                   </div>
                   {errors.dateOfBirth && (
@@ -335,7 +335,7 @@ export default function AdmissionsPersonalProfilePage() {
             {/* Professional Experience Section */}
             <section>
               <div className="flex items-center gap-4 mb-8">
-                <h2 className="font-headline-md text-royal-navy">
+                <h2 className="font-headline-md text-ink">
                   Industry Background
                 </h2>
                 <div className="h-[1px] flex-1 bg-outline-variant"></div>
@@ -345,7 +345,7 @@ export default function AdmissionsPersonalProfilePage() {
                 {/* Previous Training */}
                 <div className="flex flex-col md:flex-row gap-12">
                   <div className="w-full md:w-1/3">
-                    <h4 className="font-body-bold text-royal-navy mb-2">
+                    <h4 className="font-body-bold text-ink mb-2">
                       Previous Training
                     </h4>
                     <p className="text-sm text-on-surface-variant">
@@ -361,7 +361,7 @@ export default function AdmissionsPersonalProfilePage() {
                       onChange={handleInputChange}
                       placeholder="Detail your certifications here..."
                       rows={4}
-                      className="w-full bg-white border border-outline-variant p-4 focus:border-royal-navy focus:ring-0 transition-all font-body-base text-sm"
+                      className="w-full bg-card border border-outline-variant p-4 focus:border-ink focus:ring-0 transition-all font-body-base text-sm"
                     ></textarea>
                     {errors.previousTraining && (
                       <p className="text-error text-xs mt-1">
@@ -374,7 +374,7 @@ export default function AdmissionsPersonalProfilePage() {
                 {/* Years in Industry */}
                 <div className="flex flex-col md:flex-row gap-12">
                   <div className="w-full md:w-1/3">
-                    <h4 className="font-body-bold text-royal-navy mb-2">
+                    <h4 className="font-body-bold text-ink mb-2">
                       Years in Industry
                     </h4>
                     <p className="text-sm text-on-surface-variant">
@@ -398,7 +398,7 @@ export default function AdmissionsPersonalProfilePage() {
                           }
                           className="peer sr-only"
                         />
-                        <div className="border border-outline-variant p-4 text-center group-hover:border-majestic-gold peer-checked:border-royal-navy peer-checked:bg-royal-navy peer-checked:text-white transition-all">
+                        <div className="border border-outline-variant p-4 text-center group-hover:border-majestic-gold peer-checked:border-ink peer-checked:bg-royal-navy peer-checked:text-white transition-all">
                           <span className="font-label-caps text-xs">
                             {years} YEARS
                           </span>
@@ -418,19 +418,19 @@ export default function AdmissionsPersonalProfilePage() {
             {/* Artistic Narrative Section */}
             <section>
               <div className="flex items-center gap-4 mb-8">
-                <h2 className="font-headline-md text-royal-navy">
+                <h2 className="font-headline-md text-ink">
                   Artistic Narrative
                 </h2>
                 <div className="h-[1px] flex-1 bg-outline-variant"></div>
               </div>
 
-              <div className="bg-white border border-outline-variant p-10 flex flex-col items-center text-center">
+              <div className="bg-card border border-outline-variant p-10 flex flex-col items-center text-center">
                 <div className="w-20 h-20 mb-6 bg-surface-container rounded-full flex items-center justify-center text-champagne-taupe">
                   <span className="material-symbols-outlined text-4xl">
                     cloud_upload
                   </span>
                 </div>
-                <h3 className="font-headline-md text-royal-navy mb-3">
+                <h3 className="font-headline-md text-ink mb-3">
                   Upload Your Portfolio or Statement
                 </h3>
                 <p className="text-on-surface-variant max-w-lg mb-8 font-body-base">
@@ -442,7 +442,7 @@ export default function AdmissionsPersonalProfilePage() {
                 {/* File Upload Display */}
                 {formData.portfolioFile && (
                   <div className="mb-6 p-4 bg-surface-container rounded w-full max-w-md">
-                    <p className="font-body-bold text-royal-navy text-sm">
+                    <p className="font-body-bold text-ink text-sm">
                       📄 {formData.portfolioFile.name}
                     </p>
                     <p className="text-xs text-on-surface-variant">
@@ -464,7 +464,7 @@ export default function AdmissionsPersonalProfilePage() {
                   </label>
                   <button
                     type="button"
-                    className="px-8 py-3 border border-outline text-on-surface-variant font-label-caps text-xs tracking-widest hover:border-royal-navy transition-all"
+                    className="px-8 py-3 border border-outline text-on-surface-variant font-label-caps text-xs tracking-widest hover:border-ink transition-all"
                   >
                     LINK PORTFOLIO
                   </button>
@@ -489,7 +489,7 @@ export default function AdmissionsPersonalProfilePage() {
               <button
                 type="button"
                 onClick={handlePreviousStep}
-                className="flex items-center gap-2 text-on-surface-variant font-label-caps text-xs hover:text-royal-navy transition-colors"
+                className="flex items-center gap-2 text-on-surface-variant font-label-caps text-xs hover:text-ink transition-colors"
               >
                 <span className="material-symbols-outlined text-sm">
                   arrow_back
@@ -499,7 +499,7 @@ export default function AdmissionsPersonalProfilePage() {
               <button
                 type="submit"
                 disabled={isSubmitting}
-                className="px-12 py-4 bg-royal-navy text-on-primary font-label-caps text-sm tracking-[0.2em] border border-majestic-gold hover:bg-primary-container active:scale-95 transition-all shadow-lg shadow-royal-navy/10 disabled:opacity-50"
+                className="px-12 py-4 bg-royal-navy text-on-primary font-label-caps text-sm tracking-[0.2em] border border-majestic-gold hover:bg-primary-container active:scale-95 transition-all shadow-lg shadow-ink/10 disabled:opacity-50"
               >
                 {isSubmitting ? "SUBMITTING..." : "CONTINUE TO PROFESSIONAL REVIEW"}
               </button>

@@ -43,9 +43,9 @@ interface AdmissionsSideNavProps {
 
 export default function AdmissionsSideNav({ currentStep = "selection" }: AdmissionsSideNavProps) {
   return (
-    <aside className="hidden lg:flex flex-col h-screen sticky top-[80px] bg-surface-container-low dark:bg-surface-container-lowest h-full w-64 border-r border-outline-variant py-8">
+    <aside className="hidden lg:flex flex-col h-screen sticky top-[80px] bg-surface-container-low h-full w-64 border-r border-outline-variant py-8">
       <div className="px-6 mb-10">
-        <h2 className="font-headline-md text-headline-md text-royal-navy">
+        <h2 className="font-headline-md text-headline-md text-ink">
           Admissions Flow
         </h2>
         <p className="text-on-surface-variant text-sm mt-1">Academy Intake 2024</p>
@@ -62,8 +62,8 @@ export default function AdmissionsSideNav({ currentStep = "selection" }: Admissi
                 pl-5 py-4 flex items-center gap-3 transition-colors
                 ${
                   isActive
-                    ? "text-royal-navy dark:text-majestic-gold font-bold border-l-4 border-majestic-gold pl-4 bg-white/50"
-                    : "text-on-surface-variant dark:text-outline-variant hover:bg-surface-variant dark:hover:bg-on-surface-variant cursor-pointer"
+                    ? "text-ink font-bold border-l-4 border-majestic-gold pl-4 bg-card/50"
+                    : "text-on-surface-variant hover:bg-surface-variant cursor-pointer"
                 }
               `}
             >
@@ -80,7 +80,7 @@ export default function AdmissionsSideNav({ currentStep = "selection" }: Admissi
       </nav>
 
       <div className="p-6">
-        <button className="w-full py-3 border border-royal-navy text-royal-navy font-label-caps text-label-caps hover:bg-royal-navy hover:text-white transition-all">
+        <button className="w-full py-3 border border-ink text-ink font-label-caps text-label-caps hover:bg-royal-navy hover:text-white transition-all">
           Save Draft
         </button>
       </div>

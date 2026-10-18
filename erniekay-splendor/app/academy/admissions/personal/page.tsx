@@ -7,15 +7,15 @@ import Footer from "@/components/Footer";
 
 export default function AdmissionsPersonalPage() {
   return (
-    <div className="flex flex-col min-h-screen bg-alabaster-white">
+    <div className="flex flex-col min-h-screen bg-surface-alt">
       <AdmissionsTopNav />
 
       <div className="flex flex-grow">
         <AdmissionsSideNav currentStep="personal" />
 
-        <main className="flex-grow bg-alabaster-white px-margin-mobile md:px-margin-desktop py-12">
+        <main className="flex-grow bg-surface-alt px-margin-mobile md:px-margin-desktop py-12">
           <section className="max-w-[900px]">
-            <h1 className="font-display-lg text-display-lg text-royal-navy mb-4">
+            <h1 className="font-display-lg text-display-lg text-ink mb-4">
               Personal Information
             </h1>
             <p className="font-body-base text-body-base text-on-surface-variant leading-relaxed mb-12">
@@ -26,56 +26,56 @@ export default function AdmissionsPersonalPage() {
             <form className="space-y-8 max-w-2xl">
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div>
-                  <label className="block font-label-caps text-label-caps text-royal-navy mb-2">
+                  <label className="block font-label-caps text-label-caps text-ink mb-2">
                     First Name
                   </label>
                   <input
                     type="text"
-                    className="w-full border border-outline-variant p-3 font-body-base focus:outline-none focus:border-royal-navy"
+                    className="w-full border border-outline-variant p-3 font-body-base focus:outline-none focus:border-ink"
                     placeholder="First name"
                   />
                 </div>
                 <div>
-                  <label className="block font-label-caps text-label-caps text-royal-navy mb-2">
+                  <label className="block font-label-caps text-label-caps text-ink mb-2">
                     Last Name
                   </label>
                   <input
                     type="text"
-                    className="w-full border border-outline-variant p-3 font-body-base focus:outline-none focus:border-royal-navy"
+                    className="w-full border border-outline-variant p-3 font-body-base focus:outline-none focus:border-ink"
                     placeholder="Last name"
                   />
                 </div>
               </div>
 
               <div>
-                <label className="block font-label-caps text-label-caps text-royal-navy mb-2">
+                <label className="block font-label-caps text-label-caps text-ink mb-2">
                   Email Address
                 </label>
                 <input
                   type="email"
-                  className="w-full border border-outline-variant p-3 font-body-base focus:outline-none focus:border-royal-navy"
+                  className="w-full border border-outline-variant p-3 font-body-base focus:outline-none focus:border-ink"
                   placeholder="your@email.com"
                 />
               </div>
 
               <div>
-                <label className="block font-label-caps text-label-caps text-royal-navy mb-2">
+                <label className="block font-label-caps text-label-caps text-ink mb-2">
                   Phone Number
                 </label>
                 <input
                   type="tel"
-                  className="w-full border border-outline-variant p-3 font-body-base focus:outline-none focus:border-royal-navy"
+                  className="w-full border border-outline-variant p-3 font-body-base focus:outline-none focus:border-ink"
                   placeholder="+1 (555) 000-0000"
                 />
               </div>
 
               <div>
-                <label className="block font-label-caps text-label-caps text-royal-navy mb-2">
+                <label className="block font-label-caps text-label-caps text-ink mb-2">
                   Location
                 </label>
                 <input
                   type="text"
-                  className="w-full border border-outline-variant p-3 font-body-base focus:outline-none focus:border-royal-navy"
+                  className="w-full border border-outline-variant p-3 font-body-base focus:outline-none focus:border-ink"
                   placeholder="City, Country"
                 />
               </div>
@@ -83,7 +83,7 @@ export default function AdmissionsPersonalPage() {
               <div className="border-t border-outline-variant pt-8 flex justify-between">
                 <Link
                   href="/academy/admissions/selection"
-                  className="flex items-center gap-2 text-on-surface-variant font-label-caps text-label-caps hover:text-royal-navy transition-all"
+                  className="flex items-center gap-2 text-on-surface-variant font-label-caps text-label-caps hover:text-ink transition-all"
                 >
                   <span className="material-symbols-outlined">
                     arrow_back

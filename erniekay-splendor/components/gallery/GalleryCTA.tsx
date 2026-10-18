@@ -13,7 +13,7 @@ export default function GalleryCTA() {
             Ready to manifest your most radiant self? Whether it&apos;s for your wedding day, a personal transformation, or professional advancement, our doors are open.
           </p>
           <div className="flex flex-col md:flex-row justify-center gap-6 relative z-10">
-            <button className="bg-majestic-gold text-midnight-ink px-10 py-5 font-[family-name:var(--font-montserrat)] text-[12px] leading-[16px] tracking-[0.15em] uppercase font-bold hover:bg-white transition-colors duration-300">
+            <button className="bg-majestic-gold text-midnight-ink px-10 py-5 font-[family-name:var(--font-montserrat)] text-[12px] leading-[16px] tracking-[0.15em] uppercase font-bold hover:bg-card transition-colors duration-300">
               Book Your Session
             </button>
             <button className="bg-transparent text-on-primary border border-on-primary px-10 py-5 font-[family-name:var(--font-montserrat)] text-[12px] leading-[16px] tracking-[0.15em] uppercase font-bold hover:bg-on-primary hover:text-midnight-ink transition-all duration-300">

@@ -8,15 +8,15 @@ import { submitAdmission } from "@/app/actions/admissions";
 
 export default function AdmissionsReviewPage() {
   return (
-    <div className="flex flex-col min-h-screen bg-alabaster-white">
+    <div className="flex flex-col min-h-screen bg-surface-alt">
       <AdmissionsTopNav />
 
       <div className="flex flex-grow">
         <AdmissionsSideNav currentStep="review" />
 
-        <main className="flex-grow bg-alabaster-white px-margin-mobile md:px-margin-desktop py-12">
+        <main className="flex-grow bg-surface-alt px-margin-mobile md:px-margin-desktop py-12">
           <section className="max-w-[900px]">
-            <h1 className="font-display-lg text-display-lg text-royal-navy mb-4">
+            <h1 className="font-display-lg text-display-lg text-ink mb-4">
               Review Your Application
             </h1>
             <p className="font-body-base text-body-base text-on-surface-variant leading-relaxed mb-12">
@@ -26,14 +26,14 @@ export default function AdmissionsReviewPage() {
 
             <div className="space-y-8">
               {/* Program Selection Section */}
-              <div className="border border-outline-variant p-8 bg-white">
+              <div className="border border-outline-variant p-8 bg-card">
                 <div className="flex justify-between items-center mb-4">
-                  <h3 className="font-headline-md text-headline-md text-royal-navy">
+                  <h3 className="font-headline-md text-headline-md text-ink">
                     Selected Program
                   </h3>
                   <Link
                     href="/academy/admissions/selection"
-                    className="text-royal-navy hover:text-majestic-gold font-label-caps text-label-caps transition-colors"
+                    className="text-ink hover:text-majestic-gold font-label-caps text-label-caps transition-colors"
                   >
                     Edit
                   </Link>
@@ -44,39 +44,39 @@ export default function AdmissionsReviewPage() {
               </div>
 
               {/* Personal Information Section */}
-              <div className="border border-outline-variant p-8 bg-white">
+              <div className="border border-outline-variant p-8 bg-card">
                 <div className="flex justify-between items-center mb-4">
-                  <h3 className="font-headline-md text-headline-md text-royal-navy">
+                  <h3 className="font-headline-md text-headline-md text-ink">
                     Personal Information
                   </h3>
                   <Link
                     href="/academy/admissions/personal"
-                    className="text-royal-navy hover:text-majestic-gold font-label-caps text-label-caps transition-colors"
+                    className="text-ink hover:text-majestic-gold font-label-caps text-label-caps transition-colors"
                   >
                     Edit
                   </Link>
                 </div>
                 <div className="grid grid-cols-2 gap-4 text-on-surface-variant">
                   <div>
-                    <p className="font-label-caps text-label-caps text-royal-navy mb-1">
+                    <p className="font-label-caps text-label-caps text-ink mb-1">
                       First Name
                     </p>
                     <p>John</p>
                   </div>
                   <div>
-                    <p className="font-label-caps text-label-caps text-royal-navy mb-1">
+                    <p className="font-label-caps text-label-caps text-ink mb-1">
                       Last Name
                     </p>
                     <p>Doe</p>
                   </div>
                   <div>
-                    <p className="font-label-caps text-label-caps text-royal-navy mb-1">
+                    <p className="font-label-caps text-label-caps text-ink mb-1">
                       Email
                     </p>
                     <p>john@example.com</p>
                   </div>
                   <div>
-                    <p className="font-label-caps text-label-caps text-royal-navy mb-1">
+                    <p className="font-label-caps text-label-caps text-ink mb-1">
                       Phone
                     </p>
                     <p>+1 (555) 000-0000</p>
@@ -85,33 +85,33 @@ export default function AdmissionsReviewPage() {
               </div>
 
               {/* Professional Background Section */}
-              <div className="border border-outline-variant p-8 bg-white">
+              <div className="border border-outline-variant p-8 bg-card">
                 <div className="flex justify-between items-center mb-4">
-                  <h3 className="font-headline-md text-headline-md text-royal-navy">
+                  <h3 className="font-headline-md text-headline-md text-ink">
                     Professional Background
                   </h3>
                   <Link
                     href="/academy/admissions/professional"
-                    className="text-royal-navy hover:text-majestic-gold font-label-caps text-label-caps transition-colors"
+                    className="text-ink hover:text-majestic-gold font-label-caps text-label-caps transition-colors"
                   >
                     Edit
                   </Link>
                 </div>
                 <div className="space-y-4 text-on-surface-variant">
                   <div>
-                    <p className="font-label-caps text-label-caps text-royal-navy mb-1">
+                    <p className="font-label-caps text-label-caps text-ink mb-1">
                       Current Role
                     </p>
                     <p>Professional Makeup Artist</p>
                   </div>
                   <div>
-                    <p className="font-label-caps text-label-caps text-royal-navy mb-1">
+                    <p className="font-label-caps text-label-caps text-ink mb-1">
                       Experience
                     </p>
                     <p>5+ years</p>
                   </div>
                   <div>
-                    <p className="font-label-caps text-label-caps text-royal-navy mb-1">
+                    <p className="font-label-caps text-label-caps text-ink mb-1">
                       Specialization
                     </p>
                     <p>Makeup</p>
@@ -120,25 +120,25 @@ export default function AdmissionsReviewPage() {
               </div>
 
               {/* Terms & Conditions */}
-              <div className="border border-outline-variant p-8 bg-white">
+              <div className="border border-outline-variant p-8 bg-card">
                 <label className="flex items-start gap-4">
                   <input
                     type="checkbox"
-                    className="mt-1 w-5 h-5 border-outline-variant text-royal-navy focus:ring-majestic-gold"
+                    className="mt-1 w-5 h-5 border-outline-variant text-ink focus:ring-majestic-gold"
                   />
                   <div>
                     <p className="font-body-base text-body-base text-on-surface-variant">
                       I have reviewed all information and agree to the academy&rsquo;s{" "}
                       <Link
                         href="#"
-                        className="text-royal-navy hover:underline"
+                        className="text-ink hover:underline"
                       >
                         Terms of Service
                       </Link>{" "}
                       and{" "}
                       <Link
                         href="#"
-                        className="text-royal-navy hover:underline"
+                        className="text-ink hover:underline"
                       >
                         Privacy Policy
                       </Link>
@@ -152,7 +152,7 @@ export default function AdmissionsReviewPage() {
               <div className="border-t border-outline-variant pt-8 flex justify-between">
                 <Link
                   href="/academy/admissions/professional"
-                  className="flex items-center gap-2 text-on-surface-variant font-label-caps text-label-caps hover:text-royal-navy transition-all"
+                  className="flex items-center gap-2 text-on-surface-variant font-label-caps text-label-caps hover:text-ink transition-all"
                 >
                   <span className="material-symbols-outlined">
                     arrow_back

@@ -84,7 +84,7 @@ export default function ProfileSettingsPage() {
       <div className="flex min-h-screen overflow-hidden">
         
         {/* ── DESKTOP SideNavBar Shell ── */}
-        <aside className="hidden md:flex flex-col h-full py-8 bg-royal-navy dark:bg-primary-container docked left-0 h-full w-64 fixed z-50 text-white">
+        <aside className="hidden md:flex flex-col h-full py-8 bg-royal-navy docked left-0 h-full w-64 fixed z-50 text-white">
           <div className="px-6 mb-10">
             <h1 className="font-[family-name:var(--font-eb-garamond)] text-[28px] font-semibold text-majestic-gold">Academy Portal</h1>
             <p className="font-[family-name:var(--font-montserrat)] text-[10px] text-alabaster-white/60 tracking-widest mt-1 uppercase">STUDENT ACCESS</p>
@@ -176,19 +176,19 @@ export default function ProfileSettingsPage() {
             <div className="flex items-center gap-4">
               <span
                 onClick={() => setMobileMenuOpen(true)}
-                className="material-symbols-outlined md:hidden text-royal-navy cursor-pointer"
+                className="material-symbols-outlined md:hidden text-ink cursor-pointer"
               >
                 menu
               </span>
-              <h2 className="font-[family-name:var(--font-eb-garamond)] text-[20px] md:text-[24px] font-semibold text-royal-navy leading-none">
+              <h2 className="font-[family-name:var(--font-eb-garamond)] text-[20px] md:text-[24px] font-semibold text-ink leading-none">
                 Erniekay Splendor Academy
               </h2>
             </div>
             <div className="flex items-center gap-6">
-              <span className="material-symbols-outlined text-royal-navy cursor-pointer hover:text-majestic-gold transition-colors">
+              <span className="material-symbols-outlined text-ink cursor-pointer hover:text-majestic-gold transition-colors">
                 notifications
               </span>
-              <span className="material-symbols-outlined text-royal-navy cursor-pointer hover:text-majestic-gold transition-colors">
+              <span className="material-symbols-outlined text-ink cursor-pointer hover:text-majestic-gold transition-colors">
                 help_outline
               </span>
               <div className="w-8 h-8 rounded-full bg-royal-navy overflow-hidden relative">
@@ -208,7 +208,7 @@ export default function ProfileSettingsPage() {
             
             {/* Page Header Section */}
             <section className="mb-16">
-              <h3 className="font-[family-name:var(--font-eb-garamond)] text-[48px] leading-[56px] text-royal-navy mb-4 font-semibold">
+              <h3 className="font-[family-name:var(--font-eb-garamond)] text-[48px] leading-[56px] text-ink mb-4 font-semibold">
                 Profile Settings
               </h3>
               <p className="font-[family-name:var(--font-montserrat)] text-sm text-warm-slate max-w-2xl leading-relaxed">
@@ -222,8 +222,8 @@ export default function ProfileSettingsPage() {
               <div className="lg:col-span-8 space-y-12">
                 
                 {/* Personal Identity Section */}
-                <section className="bg-white p-8 md:p-10 border border-outline-variant">
-                  <h4 className="font-[family-name:var(--font-eb-garamond)] text-[28px] font-semibold text-royal-navy mb-8">
+                <section className="bg-card p-8 md:p-10 border border-outline-variant">
+                  <h4 className="font-[family-name:var(--font-eb-garamond)] text-[28px] font-semibold text-ink mb-8">
                     Personal Identity
                   </h4>
                   <div className="flex flex-col md:flex-row gap-10 items-start">
@@ -241,7 +241,7 @@ export default function ProfileSettingsPage() {
                       </div>
                       <button
                         onClick={handlePhotoChange}
-                        className="mt-4 w-full font-[family-name:var(--font-montserrat)] text-[10px] text-royal-navy border border-royal-navy py-2 hover:bg-royal-navy hover:text-majestic-gold transition-all font-bold tracking-wider"
+                        className="mt-4 w-full font-[family-name:var(--font-montserrat)] text-[10px] text-ink border border-ink py-2 hover:bg-royal-navy hover:text-majestic-gold transition-all font-bold tracking-wider"
                       >
                         CHANGE PHOTO
                       </button>
@@ -251,13 +251,13 @@ export default function ProfileSettingsPage() {
                       <div className="relative">
                         <label
                           className={`block font-[family-name:var(--font-montserrat)] text-[12px] font-bold mb-2 tracking-widest transition-colors duration-300 ${
-                            focusFields.name ? "text-majestic-gold" : "text-royal-navy"
+                            focusFields.name ? "text-majestic-gold" : "text-ink"
                           }`}
                         >
                           FULL NAME
                         </label>
                         <input
-                          className="w-full border-b border-champagne-taupe bg-transparent py-2 text-royal-navy text-sm focus:outline-none focus:border-royal-navy transition-colors"
+                          className="w-full border-b border-champagne-taupe bg-transparent py-2 text-ink text-sm focus:outline-none focus:border-ink transition-colors"
                           type="text"
                           value={fullName}
                           onChange={(e) => setFullName(e.target.value)}
@@ -268,13 +268,13 @@ export default function ProfileSettingsPage() {
                       <div className="relative">
                         <label
                           className={`block font-[family-name:var(--font-montserrat)] text-[12px] font-bold mb-2 tracking-widest transition-colors duration-300 ${
-                            focusFields.email ? "text-majestic-gold" : "text-royal-navy"
+                            focusFields.email ? "text-majestic-gold" : "text-ink"
                           }`}
                         >
                           CONTACT EMAIL
                         </label>
                         <input
-                          className="w-full border-b border-champagne-taupe bg-transparent py-2 text-royal-navy text-sm focus:outline-none focus:border-royal-navy transition-colors"
+                          className="w-full border-b border-champagne-taupe bg-transparent py-2 text-ink text-sm focus:outline-none focus:border-ink transition-colors"
                           type="email"
                           value={email}
                           onChange={(e) => setEmail(e.target.value)}
@@ -285,13 +285,13 @@ export default function ProfileSettingsPage() {
                       <div className="relative">
                         <label
                           className={`block font-[family-name:var(--font-montserrat)] text-[12px] font-bold mb-2 tracking-widest transition-colors duration-300 ${
-                            focusFields.bio ? "text-majestic-gold" : "text-royal-navy"
+                            focusFields.bio ? "text-majestic-gold" : "text-ink"
                           }`}
                         >
                           PROFESSIONAL BIO
                         </label>
                         <textarea
-                          className="w-full border-b border-champagne-taupe bg-transparent py-2 text-royal-navy text-sm focus:outline-none focus:border-royal-navy transition-colors resize-none"
+                          className="w-full border-b border-champagne-taupe bg-transparent py-2 text-ink text-sm focus:outline-none focus:border-ink transition-colors resize-none"
                           rows={4}
                           value={bio}
                           onChange={(e) => setBio(e.target.value)}
@@ -307,40 +307,40 @@ export default function ProfileSettingsPage() {
                 </section>
 
                 {/* Academic Credentials Section */}
-                <section className="bg-white p-8 md:p-10 border border-outline-variant">
+                <section className="bg-card p-8 md:p-10 border border-outline-variant">
                   <div className="flex justify-between items-center mb-8">
-                    <h4 className="font-[family-name:var(--font-eb-garamond)] text-[28px] font-semibold text-royal-navy leading-none">
+                    <h4 className="font-[family-name:var(--font-eb-garamond)] text-[28px] font-semibold text-ink leading-none">
                       Academic Credentials
                     </h4>
-                    <span className="bg-royal-navy/5 text-royal-navy font-[family-name:var(--font-montserrat)] text-[10px] font-bold tracking-widest px-3 py-1 border border-royal-navy/10 uppercase">
+                    <span className="bg-ink/5 text-ink font-[family-name:var(--font-montserrat)] text-[10px] font-bold tracking-widest px-3 py-1 border border-ink/10 uppercase">
                       VERIFIED STUDENT
                     </span>
                   </div>
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-                    <div className="p-4 bg-alabaster-white border border-outline-variant/30">
+                    <div className="p-4 bg-surface-alt border border-outline-variant/30">
                       <label className="block font-[family-name:var(--font-montserrat)] text-[10px] text-warm-slate mb-1 font-bold tracking-wider uppercase">
                         STUDENT ID
                       </label>
-                      <p className="font-bold text-royal-navy text-sm">SA-99283-E</p>
+                      <p className="font-bold text-ink text-sm">SA-99283-E</p>
                     </div>
-                    <div className="p-4 bg-alabaster-white border border-outline-variant/30">
+                    <div className="p-4 bg-surface-alt border border-outline-variant/30">
                       <label className="block font-[family-name:var(--font-montserrat)] text-[10px] text-warm-slate mb-1 font-bold tracking-wider uppercase">
                         ENROLLMENT DATE
                       </label>
-                      <p className="font-bold text-royal-navy text-sm">Sept 2023</p>
+                      <p className="font-bold text-ink text-sm">Sept 2023</p>
                     </div>
-                    <div className="p-4 bg-alabaster-white border border-outline-variant/30 md:col-span-2">
+                    <div className="p-4 bg-surface-alt border border-outline-variant/30 md:col-span-2">
                       <label className="block font-[family-name:var(--font-montserrat)] text-[10px] text-warm-slate mb-1 font-bold tracking-wider uppercase">
                         CURRENT PROGRAM
                       </label>
-                      <p className="font-[family-name:var(--font-eb-garamond)] text-xl text-royal-navy font-semibold">
+                      <p className="font-[family-name:var(--font-eb-garamond)] text-xl text-ink font-semibold">
                         Advanced Masterclass in Bridal Artistry
                       </p>
                     </div>
                   </div>
                   <div className="mt-10 flex items-center justify-between py-6 border-t border-champagne-taupe/20">
                     <div>
-                      <p className="font-bold text-royal-navy text-sm">Public Portfolio Visibility</p>
+                      <p className="font-bold text-ink text-sm">Public Portfolio Visibility</p>
                       <p className="text-xs text-warm-slate leading-relaxed">
                         Allow recruiters and clients to see your profile in the directory.
                       </p>
@@ -353,7 +353,7 @@ export default function ProfileSettingsPage() {
                         onChange={(e) => setPortfolioVisibility(e.target.checked)}
                       />
                       <div className="w-12 h-6 bg-outline-variant rounded-full transition-colors peer peer-checked:bg-royal-navy flex items-center px-1">
-                        <div className="w-4 h-4 bg-white rounded-full transition-transform peer-checked:translate-x-6 transform duration-300 peer-checked:bg-majestic-gold"></div>
+                        <div className="w-4 h-4 bg-card rounded-full transition-transform peer-checked:translate-x-6 transform duration-300 peer-checked:bg-majestic-gold"></div>
                       </div>
                     </label>
                   </div>
@@ -364,17 +364,17 @@ export default function ProfileSettingsPage() {
               <div className="lg:col-span-4 space-y-12">
                 
                 {/* Security & Access Section */}
-                <section className="bg-white p-8 border border-outline-variant">
-                  <h4 className="font-[family-name:var(--font-eb-garamond)] text-2xl text-royal-navy mb-6 font-semibold">
+                <section className="bg-card p-8 border border-outline-variant">
+                  <h4 className="font-[family-name:var(--font-eb-garamond)] text-2xl text-ink mb-6 font-semibold">
                     Security &amp; Access
                   </h4>
                   <div className="space-y-6">
                     <div>
-                      <label className="block font-[family-name:var(--font-montserrat)] text-[12px] font-bold text-royal-navy mb-2 tracking-widest">
+                      <label className="block font-[family-name:var(--font-montserrat)] text-[12px] font-bold text-ink mb-2 tracking-widest">
                         CURRENT PASSWORD
                       </label>
                       <input
-                        className="w-full border-b border-champagne-taupe bg-transparent py-2 text-royal-navy text-sm focus:outline-none focus:border-royal-navy transition-colors"
+                        className="w-full border-b border-champagne-taupe bg-transparent py-2 text-ink text-sm focus:outline-none focus:border-ink transition-colors"
                         placeholder="••••••••"
                         type="password"
                         value={currentPassword}
@@ -382,22 +382,22 @@ export default function ProfileSettingsPage() {
                       />
                     </div>
                     <div>
-                      <label className="block font-[family-name:var(--font-montserrat)] text-[12px] font-bold text-royal-navy mb-2 tracking-widest">
+                      <label className="block font-[family-name:var(--font-montserrat)] text-[12px] font-bold text-ink mb-2 tracking-widest">
                         NEW PASSWORD
                       </label>
                       <input
-                        className="w-full border-b border-champagne-taupe bg-transparent py-2 text-royal-navy text-sm focus:outline-none focus:border-royal-navy transition-colors"
+                        className="w-full border-b border-champagne-taupe bg-transparent py-2 text-ink text-sm focus:outline-none focus:border-ink transition-colors"
                         type="password"
                         value={newPassword}
                         onChange={(e) => setNewPassword(e.target.value)}
                       />
                     </div>
                     <div>
-                      <label className="block font-[family-name:var(--font-montserrat)] text-[12px] font-bold text-royal-navy mb-2 tracking-widest">
+                      <label className="block font-[family-name:var(--font-montserrat)] text-[12px] font-bold text-ink mb-2 tracking-widest">
                         CONFIRM NEW PASSWORD
                       </label>
                       <input
-                        className="w-full border-b border-champagne-taupe bg-transparent py-2 text-royal-navy text-sm focus:outline-none focus:border-royal-navy transition-colors"
+                        className="w-full border-b border-champagne-taupe bg-transparent py-2 text-ink text-sm focus:outline-none focus:border-ink transition-colors"
                         type="password"
                         value={confirmPassword}
                         onChange={(e) => setConfirmPassword(e.target.value)}
@@ -415,7 +415,7 @@ export default function ProfileSettingsPage() {
                           <span className="material-symbols-outlined text-premium-green" style={{ fontVariationSettings: "'FILL' 1" }}>
                             verified_user
                           </span>
-                          <span className="font-bold text-sm text-royal-navy">Two-Factor Auth</span>
+                          <span className="font-bold text-sm text-ink">Two-Factor Auth</span>
                         </div>
                         <span className="text-[10px] font-[family-name:var(--font-montserrat)] font-bold text-premium-green tracking-widest uppercase">
                           ENABLED
@@ -429,13 +429,13 @@ export default function ProfileSettingsPage() {
                 </section>
 
                 {/* Notification Preferences Section */}
-                <section className="bg-white p-8 border border-outline-variant">
-                  <h4 className="font-[family-name:var(--font-eb-garamond)] text-2xl text-royal-navy mb-6 font-semibold">
+                <section className="bg-card p-8 border border-outline-variant">
+                  <h4 className="font-[family-name:var(--font-eb-garamond)] text-2xl text-ink mb-6 font-semibold">
                     Notifications
                   </h4>
                   <div className="space-y-6">
                     <div className="flex items-center justify-between">
-                      <span className="text-sm text-royal-navy">Course Updates</span>
+                      <span className="text-sm text-ink">Course Updates</span>
                       <label className="relative inline-flex items-center cursor-pointer">
                         <input
                           type="checkbox"
@@ -444,12 +444,12 @@ export default function ProfileSettingsPage() {
                           onChange={(e) => setCourseUpdates(e.target.checked)}
                         />
                         <div className="w-10 h-5 bg-outline-variant rounded-full transition-colors peer peer-checked:bg-royal-navy flex items-center px-0.5">
-                          <div className="w-3.5 h-3.5 bg-white rounded-full transition-transform peer-checked:translate-x-5 transform duration-300"></div>
+                          <div className="w-3.5 h-3.5 bg-card rounded-full transition-transform peer-checked:translate-x-5 transform duration-300"></div>
                         </div>
                       </label>
                     </div>
                     <div className="flex items-center justify-between">
-                      <span className="text-sm text-royal-navy">Grade Alerts</span>
+                      <span className="text-sm text-ink">Grade Alerts</span>
                       <label className="relative inline-flex items-center cursor-pointer">
                         <input
                           type="checkbox"
@@ -458,12 +458,12 @@ export default function ProfileSettingsPage() {
                           onChange={(e) => setGradeAlerts(e.target.checked)}
                         />
                         <div className="w-10 h-5 bg-outline-variant rounded-full transition-colors peer peer-checked:bg-royal-navy flex items-center px-0.5">
-                          <div className="w-3.5 h-3.5 bg-white rounded-full transition-transform peer-checked:translate-x-5 transform duration-300"></div>
+                          <div className="w-3.5 h-3.5 bg-card rounded-full transition-transform peer-checked:translate-x-5 transform duration-300"></div>
                         </div>
                       </label>
                     </div>
                     <div className="flex items-center justify-between">
-                      <span className="text-sm text-royal-navy">Academy News</span>
+                      <span className="text-sm text-ink">Academy News</span>
                       <label className="relative inline-flex items-center cursor-pointer">
                         <input
                           type="checkbox"
@@ -472,7 +472,7 @@ export default function ProfileSettingsPage() {
                           onChange={(e) => setAcademyNews(e.target.checked)}
                         />
                         <div className="w-10 h-5 bg-outline-variant rounded-full transition-colors peer peer-checked:bg-royal-navy flex items-center px-0.5">
-                          <div className="w-3.5 h-3.5 bg-white rounded-full transition-transform peer-checked:translate-x-5 transform duration-300"></div>
+                          <div className="w-3.5 h-3.5 bg-card rounded-full transition-transform peer-checked:translate-x-5 transform duration-300"></div>
                         </div>
                       </label>
                     </div>
@@ -498,10 +498,10 @@ export default function ProfileSettingsPage() {
           </div>
 
           {/* Footer (Shared Component) */}
-          <footer className="mt-auto bg-alabaster-white border-t border-outline-variant w-full">
+          <footer className="mt-auto bg-surface-alt border-t border-outline-variant w-full">
             <div className="flex flex-col md:flex-row justify-between items-center px-6 md:px-16 py-8 w-full">
               <div className="mb-4 md:mb-0">
-                <span className="font-[family-name:var(--font-montserrat)] text-[12px] font-bold text-royal-navy uppercase tracking-wider">
+                <span className="font-[family-name:var(--font-montserrat)] text-[12px] font-bold text-ink uppercase tracking-wider">
                   © 2024 Erniekay Splendor Beauty Academy
                 </span>
               </div>

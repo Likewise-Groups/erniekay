@@ -50,14 +50,14 @@ export default function CourseContentPage({ params }: PageProps) {
       <div className="flex min-h-screen overflow-hidden">
         
         {/* ── DESKTOP Curriculum SideNavBar (md+) ── */}
-        <aside className="hidden md:flex flex-col h-screen w-80 sticky left-0 bg-surface-container-low dark:bg-primary-container border-r border-outline-variant dark:border-midnight-ink py-8 px-4 z-50 text-royal-navy dark:text-white">
+        <aside className="hidden md:flex flex-col h-screen w-80 sticky left-0 bg-surface-container-low border-r border-outline-variant py-8 px-4 z-50 text-ink">
           {/* Header Identity */}
           <div className="mb-10 px-4">
-            <h1 className="font-[family-name:var(--font-eb-garamond)] text-[22px] font-semibold text-royal-navy dark:text-majestic-gold tracking-tight leading-tight">
+            <h1 className="font-[family-name:var(--font-eb-garamond)] text-[22px] font-semibold text-ink tracking-tight leading-tight">
               {currentCourse.title}
             </h1>
             <div className="mt-4 flex items-center justify-between">
-              <span className="font-[family-name:var(--font-montserrat)] text-[11px] font-bold text-warm-slate dark:text-champagne-taupe">
+              <span className="font-[family-name:var(--font-montserrat)] text-[11px] font-bold text-warm-slate">
                 {currentCourse.progress}% Completed
               </span>
               <div className="h-1 w-24 bg-outline-variant rounded-full overflow-hidden">
@@ -76,7 +76,7 @@ export default function CourseContentPage({ params }: PageProps) {
                 return (
                   <div
                     key={index}
-                    className="flex items-center gap-4 py-3 px-4 text-warm-slate dark:text-champagne-taupe font-medium hover:bg-surface-bright dark:hover:bg-surface-tint/10 transition-all duration-300 cursor-pointer group hover:translate-x-1"
+                    className="flex items-center gap-4 py-3 px-4 text-warm-slate font-medium hover:bg-surface-bright transition-all duration-300 cursor-pointer group hover:translate-x-1"
                   >
                     <span className="material-symbols-outlined text-premium-green" style={{ fontVariationSettings: "'FILL' 1" }}>
                       check_circle
@@ -90,7 +90,7 @@ export default function CourseContentPage({ params }: PageProps) {
                 return (
                   <div
                     key={index}
-                    className="flex items-center gap-4 py-3 px-4 text-royal-navy dark:text-majestic-gold font-bold bg-white dark:bg-midnight-ink border-l-4 border-majestic-gold transition-all duration-200 cursor-pointer"
+                    className="flex items-center gap-4 py-3 px-4 text-ink font-bold bg-card border-l-4 border-majestic-gold transition-all duration-200 cursor-pointer"
                   >
                     <span className="material-symbols-outlined">radio_button_checked</span>
                     <span className="font-[family-name:var(--font-montserrat)] text-[12px] font-bold uppercase tracking-wider">
@@ -105,7 +105,7 @@ export default function CourseContentPage({ params }: PageProps) {
                 return (
                   <div
                     key={index}
-                    className="flex items-center gap-4 py-3 px-4 text-warm-slate dark:text-champagne-taupe font-medium opacity-60 cursor-not-allowed"
+                    className="flex items-center gap-4 py-3 px-4 text-warm-slate font-medium opacity-60 cursor-not-allowed"
                   >
                     <span className="material-symbols-outlined">lock</span>
                     <span className="font-[family-name:var(--font-montserrat)] text-[12px] font-bold uppercase tracking-wider">
@@ -126,8 +126,8 @@ export default function CourseContentPage({ params }: PageProps) {
               View Syllabus
             </button>
             <div className="flex justify-around text-warm-slate">
-              <span className="material-symbols-outlined cursor-pointer hover:text-royal-navy transition-colors">help</span>
-              <span className="material-symbols-outlined cursor-pointer hover:text-royal-navy transition-colors">settings</span>
+              <span className="material-symbols-outlined cursor-pointer hover:text-ink transition-colors">help</span>
+              <span className="material-symbols-outlined cursor-pointer hover:text-ink transition-colors">settings</span>
             </div>
           </div>
         </aside>
@@ -135,12 +135,12 @@ export default function CourseContentPage({ params }: PageProps) {
         {/* ── MOBILE Curriculum Drawer Menu Overlay (<md) ── */}
         {mobileMenuOpen && (
           <div className="fixed inset-0 z-50 flex md:hidden bg-midnight-ink/80 backdrop-blur-sm">
-            <div className="relative w-80 bg-surface-container-low text-royal-navy flex flex-col p-6 h-full transition-transform duration-300">
+            <div className="relative w-80 bg-surface-container-low text-ink flex flex-col p-6 h-full transition-transform duration-300">
               <div className="flex justify-between items-center mb-8">
-                <h1 className="font-[family-name:var(--font-eb-garamond)] text-xl font-semibold text-royal-navy leading-none">
+                <h1 className="font-[family-name:var(--font-eb-garamond)] text-xl font-semibold text-ink leading-none">
                   Academy Portal
                 </h1>
-                <button onClick={() => setMobileMenuOpen(false)} className="text-royal-navy hover:text-majestic-gold">
+                <button onClick={() => setMobileMenuOpen(false)} className="text-ink hover:text-majestic-gold">
                   <span className="material-symbols-outlined">close</span>
                 </button>
               </div>
@@ -180,9 +180,9 @@ export default function CourseContentPage({ params }: PageProps) {
                 <span className="text-sm font-medium">42 mins remaining</span>
               </div>
               <div className="flex gap-4">
-                <span className="material-symbols-outlined text-royal-navy cursor-pointer">notifications</span>
+                <span className="material-symbols-outlined text-ink cursor-pointer">notifications</span>
                 <Link href="/academy/portal/profile" className="flex items-center">
-                  <span className="material-symbols-outlined text-royal-navy cursor-pointer">account_circle</span>
+                  <span className="material-symbols-outlined text-ink cursor-pointer">account_circle</span>
                 </Link>
               </div>
             </div>
@@ -234,7 +234,7 @@ export default function CourseContentPage({ params }: PageProps) {
               <div className="lg:col-span-8 space-y-8">
                 <div>
                   <div className="h-[1px] bg-gradient-to-r from-majestic-gold to-transparent mb-6"></div>
-                  <h2 className="font-[family-name:var(--font-eb-garamond)] text-[48px] leading-tight text-royal-navy mb-4 font-semibold">
+                  <h2 className="font-[family-name:var(--font-eb-garamond)] text-[48px] leading-tight text-ink mb-4 font-semibold">
                     Editorial Skin Prep &amp; Base Artistry
                   </h2>
                   <p className="font-[family-name:var(--font-montserrat)] text-sm text-warm-slate leading-relaxed">
@@ -243,7 +243,7 @@ export default function CourseContentPage({ params }: PageProps) {
                 </div>
 
                 <div className="bg-surface-container-low p-8 border border-outline-variant border-l-4 border-l-majestic-gold">
-                  <h3 className="font-[family-name:var(--font-eb-garamond)] text-[28px] text-royal-navy mb-6 font-semibold leading-none">
+                  <h3 className="font-[family-name:var(--font-eb-garamond)] text-[28px] text-ink mb-6 font-semibold leading-none">
                     Key Takeaways
                   </h3>
                   <ul className="space-y-4">
@@ -264,7 +264,7 @@ export default function CourseContentPage({ params }: PageProps) {
                 </div>
 
                 <div className="flex flex-col sm:flex-row items-center gap-4 pt-8 border-t border-outline-variant">
-                  <button className="w-full sm:w-auto px-8 py-3 bg-transparent text-royal-navy border border-royal-navy font-[family-name:var(--font-montserrat)] text-[12px] font-bold uppercase tracking-widest hover:bg-royal-navy hover:text-white transition-all duration-300">
+                  <button className="w-full sm:w-auto px-8 py-3 bg-transparent text-ink border border-ink font-[family-name:var(--font-montserrat)] text-[12px] font-bold uppercase tracking-widest hover:bg-royal-navy hover:text-white transition-all duration-300">
                     Previous Lesson
                   </button>
                   <button
@@ -281,7 +281,7 @@ export default function CourseContentPage({ params }: PageProps) {
                       "Mark as Complete"
                     )}
                   </button>
-                  <button className="w-full sm:w-auto px-8 py-3 bg-transparent text-royal-navy border border-royal-navy font-[family-name:var(--font-montserrat)] text-[12px] font-bold uppercase tracking-widest hover:bg-royal-navy hover:text-white transition-all duration-300">
+                  <button className="w-full sm:w-auto px-8 py-3 bg-transparent text-ink border border-ink font-[family-name:var(--font-montserrat)] text-[12px] font-bold uppercase tracking-widest hover:bg-royal-navy hover:text-white transition-all duration-300">
                     Next Lesson
                   </button>
                 </div>
@@ -301,12 +301,12 @@ export default function CourseContentPage({ params }: PageProps) {
                       <div
                         key={idx}
                         onClick={() => alert(`Preparing ${mat.title} download...`)}
-                        className="group flex items-center justify-between p-4 bg-white border border-outline-variant hover:border-majestic-gold transition-colors cursor-pointer shadow-sm"
+                        className="group flex items-center justify-between p-4 bg-card border border-outline-variant hover:border-majestic-gold transition-colors cursor-pointer shadow-sm"
                       >
                         <div className="flex items-center gap-3">
-                          <span className="material-symbols-outlined text-royal-navy">{mat.icon}</span>
+                          <span className="material-symbols-outlined text-ink">{mat.icon}</span>
                           <div>
-                            <p className="font-bold text-royal-navy text-sm leading-none mb-1">{mat.title}</p>
+                            <p className="font-bold text-ink text-sm leading-none mb-1">{mat.title}</p>
                             <p className="text-xs text-warm-slate">{mat.size}</p>
                           </div>
                         </div>
@@ -325,15 +325,15 @@ export default function CourseContentPage({ params }: PageProps) {
         {/* ── MOBILE Canvas Layout (<md) ── */}
         <main className="flex-1 flex flex-col h-screen md:hidden bg-surface pb-24 overflow-y-auto">
           {/* Mobile Header */}
-          <header className="bg-surface dark:bg-on-surface border-b border-champagne-taupe sticky top-0 z-40 h-16 w-full flex justify-between items-center px-6 flex-shrink-0">
+          <header className="bg-surface border-b border-champagne-taupe sticky top-0 z-40 h-16 w-full flex justify-between items-center px-6 flex-shrink-0">
             <div className="flex items-center gap-4">
               <button
                 onClick={() => setMobileMenuOpen(true)}
-                className="text-royal-navy dark:text-majestic-gold hover:bg-alabaster-white p-2 rounded flex items-center"
+                className="text-ink hover:bg-surface-alt p-2 rounded flex items-center"
               >
                 <span className="material-symbols-outlined">menu</span>
               </button>
-              <h1 className="font-[family-name:var(--font-eb-garamond)] text-[22px] font-semibold text-royal-navy dark:text-majestic-gold">
+              <h1 className="font-[family-name:var(--font-eb-garamond)] text-[22px] font-semibold text-ink">
                 Academy Portal
               </h1>
             </div>
@@ -389,25 +389,25 @@ export default function CourseContentPage({ params }: PageProps) {
                   Module 03 — Artistry Fundamentals
                 </span>
               </div>
-              <h2 className="font-[family-name:var(--font-eb-garamond)] text-[32px] text-royal-navy mb-4 leading-tight font-semibold">
+              <h2 className="font-[family-name:var(--font-eb-garamond)] text-[32px] text-ink mb-4 leading-tight font-semibold">
                 Editorial Skin Prep &amp; Base Artistry
               </h2>
               <p className="font-[family-name:var(--font-montserrat)] text-sm text-warm-slate mb-6 leading-relaxed">
                 Master the foundations of the &ldquo;Splendor Signature&rdquo; glow. In this lesson, we explore high-performance priming techniques and the precise layering of editorial-grade foundations to create a canvas that radiates under studio lighting.
               </p>
-              <div className="bg-alabaster-white p-4 border-l-2 border-majestic-gold">
-                <h4 className="font-bold text-royal-navy mb-2 uppercase tracking-wider text-xs">
+              <div className="bg-surface-alt p-4 border-l-2 border-majestic-gold">
+                <h4 className="font-bold text-ink mb-2 uppercase tracking-wider text-xs">
                   Core Objectives
                 </h4>
                 <ul className="space-y-2">
                   <li className="flex items-start gap-2 text-xs text-warm-slate font-medium">
-                    <span className="material-symbols-outlined text-royal-navy text-sm mt-0.5" style={{ fontVariationSettings: "'FILL' 1" }}>
+                    <span className="material-symbols-outlined text-ink text-sm mt-0.5" style={{ fontVariationSettings: "'FILL' 1" }}>
                       check_circle
                     </span>
                     Identifying skin undertones for bridal longevity.
                   </li>
                   <li className="flex items-start gap-2 text-xs text-warm-slate font-medium">
-                    <span className="material-symbols-outlined text-royal-navy text-sm mt-0.5" style={{ fontVariationSettings: "'FILL' 1" }}>
+                    <span className="material-symbols-outlined text-ink text-sm mt-0.5" style={{ fontVariationSettings: "'FILL' 1" }}>
                       check_circle
                     </span>
                     Customizing emulsion ratios for different textures.
@@ -419,7 +419,7 @@ export default function CourseContentPage({ params }: PageProps) {
             {/* Mobile Academic Resources */}
             <section className="px-6 pb-8">
               <div className="flex items-center justify-between border-b border-champagne-taupe pb-2 mb-6">
-                <h3 className="font-[family-name:var(--font-eb-garamond)] text-[22px] font-semibold text-royal-navy">
+                <h3 className="font-[family-name:var(--font-eb-garamond)] text-[22px] font-semibold text-ink">
                   Academic Resources
                 </h3>
                 <span className="material-symbols-outlined text-champagne-taupe">library_books</span>
@@ -433,14 +433,14 @@ export default function CourseContentPage({ params }: PageProps) {
                   <div
                     key={idx}
                     onClick={() => alert(`Preparing ${mat.title} download...`)}
-                    className="flex items-center justify-between p-4 bg-white border border-surface-container-highest hover:border-majestic-gold transition-colors active:scale-[0.98] cursor-pointer"
+                    className="flex items-center justify-between p-4 bg-card border border-surface-container-highest hover:border-majestic-gold transition-colors active:scale-[0.98] cursor-pointer"
                   >
                     <div className="flex items-center gap-4">
                       <div className="w-10 h-10 flex items-center justify-center bg-royal-navy text-majestic-gold">
                         <span className="material-symbols-outlined">{mat.icon}</span>
                       </div>
                       <div>
-                        <p className="font-bold text-sm text-royal-navy leading-none mb-1">{mat.title}</p>
+                        <p className="font-bold text-sm text-ink leading-none mb-1">{mat.title}</p>
                         <p className="text-xs text-warm-slate">{mat.size}</p>
                       </div>
                     </div>
@@ -487,25 +487,25 @@ export default function CourseContentPage({ params }: PageProps) {
           {/* Mobile BottomNavBar Component */}
           <nav className="fixed bottom-0 left-0 w-full flex justify-around items-center bg-surface border-t border-champagne-taupe px-4 pb-2 z-50 h-20">
             <Link
-              className="flex flex-col items-center justify-center text-royal-navy dark:text-majestic-gold border-t-2 border-majestic-gold pt-2 h-full w-1/4 scale-95 transition-transform"
+              className="flex flex-col items-center justify-center text-ink border-t-2 border-majestic-gold pt-2 h-full w-1/4 scale-95 transition-transform"
               href="/academy/portal/courses"
             >
               <span className="material-symbols-outlined" style={{ fontVariationSettings: "'FILL' 1" }}>school</span>
               <span className="font-bold text-[10px] mt-1 uppercase tracking-wider">Courses</span>
             </Link>
-            <a className="flex flex-col items-center justify-center text-warm-slate pt-2 h-full w-1/4 hover:text-royal-navy transition-colors" href="#">
+            <a className="flex flex-col items-center justify-center text-warm-slate pt-2 h-full w-1/4 hover:text-ink transition-colors" href="#">
               <span className="material-symbols-outlined">library_books</span>
               <span className="font-bold text-[10px] mt-1 uppercase tracking-wider">Resources</span>
             </a>
             <Link
-              className="flex flex-col items-center justify-center text-warm-slate pt-2 h-full w-1/4 hover:text-royal-navy transition-colors"
+              className="flex flex-col items-center justify-center text-warm-slate pt-2 h-full w-1/4 hover:text-ink transition-colors"
               href="/academy/portal/grades"
             >
               <span className="material-symbols-outlined">grade</span>
               <span className="font-bold text-[10px] mt-1 uppercase tracking-wider">Grades</span>
             </Link>
             <Link
-              className="flex flex-col items-center justify-center text-warm-slate pt-2 h-full w-1/4 hover:text-royal-navy transition-colors"
+              className="flex flex-col items-center justify-center text-warm-slate pt-2 h-full w-1/4 hover:text-ink transition-colors"
               href="/academy/portal/profile"
             >
               <span className="material-symbols-outlined">person</span>

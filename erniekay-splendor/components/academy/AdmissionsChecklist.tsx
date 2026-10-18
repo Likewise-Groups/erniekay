@@ -29,8 +29,8 @@ export default function AdmissionsChecklist({
   showTip = true,
 }: AdmissionsChecklistProps) {
   return (
-    <aside className="hidden xl:block w-[320px] bg-white border-l border-outline-variant p-8 overflow-y-auto max-h-[calc(100vh-80px)] sticky top-20">
-      <h4 className="font-label-caps text-label-caps text-royal-navy mb-8 border-b border-majestic-gold pb-2 inline-block">
+    <aside className="hidden xl:block w-[320px] bg-card border-l border-outline-variant p-8 overflow-y-auto max-h-[calc(100vh-80px)] sticky top-20">
+      <h4 className="font-label-caps text-label-caps text-ink mb-8 border-b border-majestic-gold pb-2 inline-block">
         ACADEMY REQUIREMENTS
       </h4>
 
@@ -57,7 +57,7 @@ export default function AdmissionsChecklist({
               </span>
             </div>
             <div>
-              <p className="font-body-bold text-sm text-royal-navy">
+              <p className="font-body-bold text-sm text-ink">
                 {item.title}
               </p>
               <p className="text-xs text-on-surface-variant">
@@ -73,12 +73,12 @@ export default function AdmissionsChecklist({
         <div className="mt-16 pt-8 border-t border-outline-variant">
           <div className="bg-surface-container-low p-6">
             <span
-              className="material-symbols-outlined text-royal-navy mb-3 block"
+              className="material-symbols-outlined text-ink mb-3 block"
               style={{ fontVariationSettings: "'FILL' 1" }}
             >
               auto_awesome
             </span>
-            <h5 className="font-headline-md text-lg text-royal-navy mb-2">
+            <h5 className="font-headline-md text-lg text-ink mb-2">
               Artistic Edge
             </h5>
             <p className="text-xs text-on-surface-variant leading-relaxed">

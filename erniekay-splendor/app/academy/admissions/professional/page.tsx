@@ -7,15 +7,15 @@ import Footer from "@/components/Footer";
 
 export default function AdmissionsProfessionalPage() {
   return (
-    <div className="flex flex-col min-h-screen bg-alabaster-white">
+    <div className="flex flex-col min-h-screen bg-surface-alt">
       <AdmissionsTopNav />
 
       <div className="flex flex-grow">
         <AdmissionsSideNav currentStep="professional" />
 
-        <main className="flex-grow bg-alabaster-white px-margin-mobile md:px-margin-desktop py-12">
+        <main className="flex-grow bg-surface-alt px-margin-mobile md:px-margin-desktop py-12">
           <section className="max-w-[900px]">
-            <h1 className="font-display-lg text-display-lg text-royal-navy mb-4">
+            <h1 className="font-display-lg text-display-lg text-ink mb-4">
               Professional Background
             </h1>
             <p className="font-body-base text-body-base text-on-surface-variant leading-relaxed mb-12">
@@ -25,21 +25,21 @@ export default function AdmissionsProfessionalPage() {
 
             <form className="space-y-8 max-w-2xl">
               <div>
-                <label className="block font-label-caps text-label-caps text-royal-navy mb-2">
+                <label className="block font-label-caps text-label-caps text-ink mb-2">
                   Current Role / Position
                 </label>
                 <input
                   type="text"
-                  className="w-full border border-outline-variant p-3 font-body-base focus:outline-none focus:border-royal-navy"
+                  className="w-full border border-outline-variant p-3 font-body-base focus:outline-none focus:border-ink"
                   placeholder="e.g., Makeup Artist, Beauty Entrepreneur"
                 />
               </div>
 
               <div>
-                <label className="block font-label-caps text-label-caps text-royal-navy mb-2">
+                <label className="block font-label-caps text-label-caps text-ink mb-2">
                   Years of Experience in Beauty Industry
                 </label>
-                <select className="w-full border border-outline-variant p-3 font-body-base focus:outline-none focus:border-royal-navy">
+                <select className="w-full border border-outline-variant p-3 font-body-base focus:outline-none focus:border-ink">
                   <option>Select experience level</option>
                   <option>0-1 year</option>
                   <option>1-3 years</option>
@@ -49,10 +49,10 @@ export default function AdmissionsProfessionalPage() {
               </div>
 
               <div>
-                <label className="block font-label-caps text-label-caps text-royal-navy mb-2">
+                <label className="block font-label-caps text-label-caps text-ink mb-2">
                   Primary Specialization
                 </label>
-                <select className="w-full border border-outline-variant p-3 font-body-base focus:outline-none focus:border-royal-navy">
+                <select className="w-full border border-outline-variant p-3 font-body-base focus:outline-none focus:border-ink">
                   <option>Select specialization</option>
                   <option>Hair</option>
                   <option>Makeup</option>
@@ -63,23 +63,23 @@ export default function AdmissionsProfessionalPage() {
               </div>
 
               <div>
-                <label className="block font-label-caps text-label-caps text-royal-navy mb-2">
+                <label className="block font-label-caps text-label-caps text-ink mb-2">
                   What motivated you to apply?
                 </label>
                 <textarea
                   rows={5}
-                  className="w-full border border-outline-variant p-3 font-body-base focus:outline-none focus:border-royal-navy"
+                  className="w-full border border-outline-variant p-3 font-body-base focus:outline-none focus:border-ink"
                   placeholder="Tell us about your motivation and goals..."
                 />
               </div>
 
               <div>
-                <label className="block font-label-caps text-label-caps text-royal-navy mb-2">
+                <label className="block font-label-caps text-label-caps text-ink mb-2">
                   Portfolio or Work Examples (URL)
                 </label>
                 <input
                   type="url"
-                  className="w-full border border-outline-variant p-3 font-body-base focus:outline-none focus:border-royal-navy"
+                  className="w-full border border-outline-variant p-3 font-body-base focus:outline-none focus:border-ink"
                   placeholder="https://yourportfolio.com"
                 />
               </div>
@@ -87,7 +87,7 @@ export default function AdmissionsProfessionalPage() {
               <div className="border-t border-outline-variant pt-8 flex justify-between">
                 <Link
                   href="/academy/admissions/personal"
-                  className="flex items-center gap-2 text-on-surface-variant font-label-caps text-label-caps hover:text-royal-navy transition-all"
+                  className="flex items-center gap-2 text-on-surface-variant font-label-caps text-label-caps hover:text-ink transition-all"
                 >
                   <span className="material-symbols-outlined">
                     arrow_back

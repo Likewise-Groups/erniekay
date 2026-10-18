@@ -10,13 +10,13 @@ import type { MediaOverrides } from "@/lib/mediaSlots";
  */
 export default function CourseCatalog({ media }: { media?: MediaOverrides }) {
   return (
-    <section className="py-[112px] bg-alabaster-white">
+    <section className="py-[112px] bg-surface-alt">
       <div className="max-w-[1280px] mx-auto px-6 md:px-[64px]">
         {/* Section header */}
         <FadeIn>
           <div className="flex flex-col md:flex-row justify-between items-end mb-16 gap-6">
             <div className="max-w-xl">
-              <h2 className="font-[family-name:var(--font-eb-garamond)] text-[40px] md:text-[48px] leading-[48px] md:leading-[56px] tracking-[-0.01em] font-semibold text-royal-navy gold-hairline">
+              <h2 className="font-[family-name:var(--font-eb-garamond)] text-[40px] md:text-[48px] leading-[48px] md:leading-[56px] tracking-[-0.01em] font-semibold text-ink gold-hairline">
                 The Curriculum
               </h2>
               <p className="mt-10 font-[family-name:var(--font-montserrat)] text-[16px] leading-[26px] text-warm-slate">
@@ -26,7 +26,7 @@ export default function CourseCatalog({ media }: { media?: MediaOverrides }) {
             </div>
             <Link
               href="#"
-              className="font-[family-name:var(--font-montserrat)] text-[12px] leading-[16px] tracking-[0.15em] uppercase font-bold text-royal-navy border-b border-royal-navy pb-1 hover:text-majestic-gold hover:border-majestic-gold transition-all shrink-0"
+              className="font-[family-name:var(--font-montserrat)] text-[12px] leading-[16px] tracking-[0.15em] uppercase font-bold text-ink border-b border-ink pb-1 hover:text-majestic-gold hover:border-majestic-gold transition-all shrink-0"
             >
               View All Modules
             </Link>
@@ -38,7 +38,7 @@ export default function CourseCatalog({ media }: { media?: MediaOverrides }) {
 
           {/* Card 1 — wide (8 cols), horizontal */}
           <FadeIn className="md:col-span-8" delay={0}>
-            <div className="group cursor-pointer overflow-hidden bg-white border border-outline-variant h-full">
+            <div className="group cursor-pointer overflow-hidden bg-card border border-outline-variant h-full">
               <div className="flex flex-col md:flex-row h-full">
                 <div className="relative md:w-1/2 h-60 md:h-auto overflow-hidden flex-shrink-0">
                   <SlotMedia
@@ -58,7 +58,7 @@ export default function CourseCatalog({ media }: { media?: MediaOverrides }) {
                         12 Weeks
                       </span>
                     </div>
-                    <h3 className="font-[family-name:var(--font-eb-garamond)] text-[28px] leading-[36px] tracking-[-0.005em] font-semibold text-royal-navy mb-4">
+                    <h3 className="font-[family-name:var(--font-eb-garamond)] text-[28px] leading-[36px] tracking-[-0.005em] font-semibold text-ink mb-4">
                       Masterclass in Bridal Artistry
                     </h3>
                     <p className="font-[family-name:var(--font-montserrat)] text-[16px] leading-[26px] text-warm-slate mb-8">
@@ -79,7 +79,7 @@ export default function CourseCatalog({ media }: { media?: MediaOverrides }) {
 
           {/* Card 2 — narrow (4 cols), vertical */}
           <FadeIn className="md:col-span-4" delay={80}>
-            <div className="group cursor-pointer bg-white border border-outline-variant flex flex-col h-full">
+            <div className="group cursor-pointer bg-card border border-outline-variant flex flex-col h-full">
               <div className="relative h-64 overflow-hidden flex-shrink-0">
                 <SlotMedia
                   media={media}
@@ -98,7 +98,7 @@ export default function CourseCatalog({ media }: { media?: MediaOverrides }) {
                       6 Weeks
                     </span>
                   </div>
-                  <h3 className="font-[family-name:var(--font-eb-garamond)] text-[28px] leading-[36px] tracking-[-0.005em] font-semibold text-royal-navy mb-4">
+                  <h3 className="font-[family-name:var(--font-eb-garamond)] text-[28px] leading-[36px] tracking-[-0.005em] font-semibold text-ink mb-4">
                     Editorial Hair Styling
                   </h3>
                   <p className="font-[family-name:var(--font-montserrat)] text-[16px] leading-[26px] text-warm-slate mb-6">
@@ -107,7 +107,7 @@ export default function CourseCatalog({ media }: { media?: MediaOverrides }) {
                 </div>
                 <button
                   id="apply-editorial-hair"
-                  className="w-full border border-royal-navy text-royal-navy py-3 font-[family-name:var(--font-montserrat)] text-[12px] leading-[16px] tracking-[0.15em] uppercase font-bold hover:bg-royal-navy hover:text-white transition-colors"
+                  className="w-full border border-ink text-ink py-3 font-[family-name:var(--font-montserrat)] text-[12px] leading-[16px] tracking-[0.15em] uppercase font-bold hover:bg-royal-navy hover:text-white transition-colors"
                 >
                   Apply Now
                 </button>
@@ -117,7 +117,7 @@ export default function CourseCatalog({ media }: { media?: MediaOverrides }) {
 
           {/* Card 3 — narrow (4 cols), vertical */}
           <FadeIn className="md:col-span-4" delay={0}>
-            <div className="group cursor-pointer bg-white border border-outline-variant flex flex-col h-full">
+            <div className="group cursor-pointer bg-card border border-outline-variant flex flex-col h-full">
               <div className="relative h-64 overflow-hidden flex-shrink-0">
                 <SlotMedia
                   media={media}
@@ -136,7 +136,7 @@ export default function CourseCatalog({ media }: { media?: MediaOverrides }) {
                       8 Weeks
                     </span>
                   </div>
-                  <h3 className="font-[family-name:var(--font-eb-garamond)] text-[28px] leading-[36px] tracking-[-0.005em] font-semibold text-royal-navy mb-4">
+                  <h3 className="font-[family-name:var(--font-eb-garamond)] text-[28px] leading-[36px] tracking-[-0.005em] font-semibold text-ink mb-4">
                     Advanced Skin Therapy
                   </h3>
                   <p className="font-[family-name:var(--font-montserrat)] text-[16px] leading-[26px] text-warm-slate mb-6">
@@ -146,7 +146,7 @@ export default function CourseCatalog({ media }: { media?: MediaOverrides }) {
                 </div>
                 <button
                   id="apply-skin-therapy"
-                  className="w-full border border-royal-navy text-royal-navy py-3 font-[family-name:var(--font-montserrat)] text-[12px] leading-[16px] tracking-[0.15em] uppercase font-bold hover:bg-royal-navy hover:text-white transition-colors"
+                  className="w-full border border-ink text-ink py-3 font-[family-name:var(--font-montserrat)] text-[12px] leading-[16px] tracking-[0.15em] uppercase font-bold hover:bg-royal-navy hover:text-white transition-colors"
                 >
                   Apply Now
                 </button>
@@ -173,7 +173,7 @@ export default function CourseCatalog({ media }: { media?: MediaOverrides }) {
                   </div>
                   <button
                     id="apply-business-beauty"
-                    className="w-full bg-majestic-gold text-royal-navy py-4 font-[family-name:var(--font-montserrat)] text-[12px] leading-[16px] tracking-[0.15em] uppercase font-bold hover:bg-white transition-colors"
+                    className="w-full bg-majestic-gold text-royal-navy py-4 font-[family-name:var(--font-montserrat)] text-[12px] leading-[16px] tracking-[0.15em] uppercase font-bold hover:bg-card transition-colors"
                   >
                     Request Prospectus
                   </button>

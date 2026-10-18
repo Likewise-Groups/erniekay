@@ -21,7 +21,7 @@ export default function Footer() {
         <div className="font-[family-name:var(--font-eb-garamond)] text-[28px] leading-[36px] font-semibold text-majestic-gold">
           ERNIEKAY SPLENDOR
         </div>
-        <p className="font-[family-name:var(--font-montserrat)] text-[16px] leading-[26px] text-surface-variant">
+        <p className="font-[family-name:var(--font-montserrat)] text-[16px] leading-[26px] text-on-dark-variant">
           Elevating beauty through precision, artistry, and editorial excellence.
         </p>
       </div>
@@ -36,7 +36,7 @@ export default function Footer() {
             <li key={l.label}>
               <Link
                 href={l.href}
-                className="text-surface-variant hover:text-majestic-gold transition-colors font-[family-name:var(--font-montserrat)] text-[16px] leading-[26px]"
+                className="text-on-dark-variant hover:text-majestic-gold transition-colors font-[family-name:var(--font-montserrat)] text-[16px] leading-[26px]"
               >
                 {l.label}
               </Link>
@@ -55,7 +55,7 @@ export default function Footer() {
             <li key={l.label}>
               <Link
                 href={l.href}
-                className="text-surface-variant hover:text-majestic-gold transition-colors font-[family-name:var(--font-montserrat)] text-[16px] leading-[26px]"
+                className="text-on-dark-variant hover:text-majestic-gold transition-colors font-[family-name:var(--font-montserrat)] text-[16px] leading-[26px]"
               >
                 {l.label}
               </Link>
@@ -87,7 +87,7 @@ export default function Footer() {
             <span className="material-symbols-outlined">mail</span>
           </a>
         </div>
-        <p className="text-surface-variant font-[family-name:var(--font-montserrat)] text-[10px] leading-[16px] tracking-[0.15em]">
+        <p className="text-on-dark-variant font-[family-name:var(--font-montserrat)] text-[10px] leading-[16px] tracking-[0.15em]">
           © 2024 Erniekay Splendor. All rights reserved. Timeless Editorial Elegance.
         </p>
       </div>

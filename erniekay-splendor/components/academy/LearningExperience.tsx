@@ -22,7 +22,7 @@ const features = [
 
 export default function LearningExperience({ media }: { media?: MediaOverrides }) {
   return (
-    <section className="py-[112px] bg-white overflow-hidden">
+    <section className="py-[112px] bg-card overflow-hidden">
       <div className="max-w-[1280px] mx-auto px-6 md:px-[64px]">
         <div className="grid grid-cols-1 md:grid-cols-12 gap-6 items-center">
 
@@ -47,13 +47,13 @@ export default function LearningExperience({ media }: { media?: MediaOverrides }
             <span className="font-[family-name:var(--font-montserrat)] text-[12px] leading-[16px] tracking-[0.3em] uppercase text-majestic-gold block mb-4">
               The Environment
             </span>
-            <h2 className="font-[family-name:var(--font-eb-garamond)] text-[36px] md:text-[48px] leading-tight tracking-[-0.01em] font-semibold text-royal-navy mb-8">
+            <h2 className="font-[family-name:var(--font-eb-garamond)] text-[36px] md:text-[48px] leading-tight tracking-[-0.01em] font-semibold text-ink mb-8">
               Where Theory Meets Artistry
             </h2>
             <div className="space-y-8">
               {features.map((f) => (
                 <div key={f.icon}>
-                  <h4 className="font-[family-name:var(--font-montserrat)] text-[16px] leading-[26px] font-semibold text-royal-navy flex items-center gap-3">
+                  <h4 className="font-[family-name:var(--font-montserrat)] text-[16px] leading-[26px] font-semibold text-ink flex items-center gap-3">
                     <span className="material-symbols-outlined text-majestic-gold shrink-0">
                       {f.icon}
                     </span>

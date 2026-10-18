@@ -25,14 +25,14 @@ const milestones = [
 
 export default function Milestones() {
   return (
-    <section className="py-[112px] bg-alabaster-white overflow-hidden">
+    <section className="py-[112px] bg-surface-alt overflow-hidden">
       <div className="max-w-[1280px] mx-auto px-6 md:px-[64px]">
         <div className="text-center mb-16">
           <FadeIn>
             <span className="font-[family-name:var(--font-montserrat)] text-[12px] leading-[16px] tracking-[0.15em] uppercase font-bold text-champagne-taupe block mb-4">
               Our Journey
             </span>
-            <h2 className="font-[family-name:var(--font-eb-garamond)] text-[36px] md:text-[44px] leading-[44px] font-semibold text-royal-navy">
+            <h2 className="font-[family-name:var(--font-eb-garamond)] text-[36px] md:text-[44px] leading-[44px] font-semibold text-ink">
               Milestones of Excellence
             </h2>
           </FadeIn>
@@ -51,7 +51,7 @@ export default function Milestones() {
               }`}
             >
               {/* Timeline dot */}
-              <div className="absolute left-[20px] md:left-1/2 w-4 h-4 bg-majestic-gold border border-royal-navy rounded-full -translate-x-[7px]" />
+              <div className="absolute left-[20px] md:left-1/2 w-4 h-4 bg-majestic-gold border border-ink rounded-full -translate-x-[7px]" />
 
               {/* Spacing holder column on desktop */}
               <div className="hidden md:block md:w-[45%]" />
@@ -59,11 +59,11 @@ export default function Milestones() {
               {/* Timeline content block */}
               <div className="w-full md:w-[45%] pl-10 md:pl-0">
                 <FadeIn delay={150}>
-                  <div className="bg-white border border-outline-variant p-8 shadow-sm hover:shadow-md transition-shadow duration-300">
+                  <div className="bg-card border border-outline-variant p-8 shadow-sm hover:shadow-md transition-shadow duration-300">
                     <span className="font-[family-name:var(--font-montserrat)] text-[24px] font-bold text-champagne-taupe mb-2 block">
                       {m.year}
                     </span>
-                    <h4 className="font-[family-name:var(--font-eb-garamond)] text-[20px] leading-[26px] font-semibold text-royal-navy mb-2">
+                    <h4 className="font-[family-name:var(--font-eb-garamond)] text-[20px] leading-[26px] font-semibold text-ink mb-2">
                       {m.title}
                     </h4>
                     <p className="font-[family-name:var(--font-montserrat)] text-[14px] leading-[22px] text-warm-slate">

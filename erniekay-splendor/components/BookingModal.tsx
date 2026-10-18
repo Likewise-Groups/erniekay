@@ -4,24 +4,9 @@ import React, { useMemo, useState } from "react";
 
 import BookingCalendar from "@/components/BookingCalendar";
 import { formatLongDate, formatSlot } from "@/lib/availability";
-import { subServiceRows } from "@/lib/serviceCatalog";
+import { subServiceRows, type ServiceCategory, type SubService } from "@/lib/serviceCatalog";
 
-export type SubService = {
-  name: string;
-  price: string | number;
-  /** Sub-category heading, e.g. "Shampooing" over its Regular/Special variants. */
-  group?: string;
-  /** Short text shown under a group heading; `name` stays the qualified one. */
-  label?: string;
-};
-
-export type ServiceCategory = {
-  id: string;
-  title: string;
-  subServices: SubService[];
-  /** Customer-facing caveat shown above the sub-service list. */
-  note?: string;
-};
+export type { ServiceCategory, SubService };
 
 type BookingModalProps = {
   isOpen: boolean;
@@ -30,7 +15,18 @@ type BookingModalProps = {
 };
 
 type PaymentMethod = "momo" | "card";
-type ModalStep = 1 | 2 | 3 | 4;
+type ModalStep = "services" | "options" | "details" | "payment" | "receipt";
+
+const STEP_LABELS: Record<ModalStep, string> = {
+  services: "Services",
+  options: "Options",
+  details: "Details",
+  payment: "Payment",
+  receipt: "Receipt",
+};
+
+/** A sub-service that needs a follow-up step: a tier to pick or questions to answer. */
+const needsOptions = (sub: SubService) => Boolean(sub.tiers?.length || sub.questions?.length);
 
 type PaymentResult = {
   referenceId: string;
@@ -58,13 +54,26 @@ const currency = new Intl.NumberFormat("en-GH", {
   maximumFractionDigits: 0,
 });
 
+/** "400-1000" → "GH₵400 – 1,000"; a single figure formats as itself. */
+const formatPriceRange = (price: string | number): string => {
+  if (typeof price === "number") return currency.format(price);
+  const [low, high] = (price.match(/\d+/g) ?? []).map(Number);
+  if (low === undefined) return price;
+  if (high === undefined) return currency.format(low) + (price.includes("+") ? "+" : "");
+  return `${currency.format(low)} – ${high.toLocaleString("en-GH")}`;
+};
+
 // The opening hours, the slot grid and the "is this free" rule all live in
 // lib/availability.ts now — they were previously declared here and, differently
 // again, in the /booking wizard.
 
 export default function BookingModal({ isOpen, onClose, category }: BookingModalProps) {
-  const [step, setStep] = useState<ModalStep>(1);
+  const [step, setStep] = useState<ModalStep>("services");
   const [selectedSubServices, setSelectedSubServices] = useState<SubService[]>([]);
+  /** Chosen tier per tiered sub-service, keyed by the parent's name. */
+  const [tierChoices, setTierChoices] = useState<Record<string, SubService>>({});
+  /** Follow-up answers, keyed by `${sub.name}:${question.id}`. */
+  const [answers, setAnswers] = useState<Record<string, string>>({});
   const [formData, setFormData] = useState({
     name: "",
     email: "",
@@ -82,20 +91,57 @@ export default function BookingModal({ isOpen, onClose, category }: BookingModal
   // Separate from `error`: the booking succeeded, only the payment did not.
   const [paymentError, setPaymentError] = useState("");
 
+  /**
+   * What is actually being booked: each tiered sub-service replaced by the tier
+   * chosen for it. This is what is priced and sent — the server cannot price a
+   * tiered parent on its own.
+   */
+  const bookedServices = useMemo(
+    () => selectedSubServices.map((sub) => (sub.tiers ? tierChoices[sub.name] ?? sub : sub)),
+    [selectedSubServices, tierChoices]
+  );
+
   const totalPrice = useMemo(
-    () => selectedSubServices.reduce((acc, sub) => acc + parsePrice(sub.price), 0),
-    [selectedSubServices]
+    () => bookedServices.reduce((acc, sub) => acc + parsePrice(sub.price), 0),
+    [bookedServices]
   );
 
   if (!isOpen || !category) return null;
 
-  const selectedNames = selectedSubServices.map((service) => service.name).join(", ");
-  const canContinueToDetails = selectedSubServices.length > 0;
+  const optionServices = selectedSubServices.filter(needsOptions);
+  const steps: ModalStep[] = [
+    "services",
+    ...(optionServices.length ? (["options"] as const) : []),
+    "details",
+    "payment",
+    "receipt",
+  ];
+  const stepIndex = steps.indexOf(step);
+  const goNext = () => setStep(steps[stepIndex + 1]);
+  const goBack = () => setStep(steps[stepIndex - 1]);
+
+  const selectedNames = bookedServices.map((service) => service.name).join(", ");
+  const optionsSummary = optionServices.flatMap((sub) =>
+    (sub.questions ?? []).map((question) => `${question.title}: ${answers[`${sub.name}:${question.id}`]}`)
+  );
+  const optionsComplete = optionServices.every(
+    (sub) =>
+      (!sub.tiers || tierChoices[sub.name]) &&
+      (sub.questions ?? []).every((question) => answers[`${sub.name}:${question.id}`])
+  );
   const canContinueToPayment = formData.name && formData.email && formData.phone && formData.date && formData.time;
+  const canContinue =
+    step === "services"
+      ? selectedSubServices.length > 0
+      : step === "options"
+        ? optionsComplete
+        : Boolean(canContinueToPayment);
 
   const reset = () => {
-    setStep(1);
+    setStep("services");
     setSelectedSubServices([]);
+    setTierChoices({});
+    setAnswers({});
     setFormData({ name: "", email: "", phone: "", date: "", time: "", notes: "" });
     setPaymentMethod("momo");
     setIsSubmitting(false);
@@ -140,12 +186,13 @@ export default function BookingModal({ isOpen, onClose, category }: BookingModal
         category: category.title,
         // Sent as an array: joining and re-splitting on "," shatters the two
         // catalogue names that contain commas, e.g. "Closure (2*6, 4*4)".
-        selectedServices: selectedSubServices.map((sub) => sub.name),
+        selectedServices: bookedServices.map((sub) => sub.name),
         date: formData.date,
         time: formData.time,
         notes: [
           formData.notes,
           `Selected services: ${selectedNames}`,
+          ...optionsSummary,
           `Payment method: ${paymentMethod === "momo" ? "MTN Mobile Money" : "Card"}`,
         ]
           .filter(Boolean)
@@ -227,7 +274,7 @@ export default function BookingModal({ isOpen, onClose, category }: BookingModal
     try {
       const payment = await requestMomoPayment(appointmentId);
       setPaymentResult(payment);
-      setStep(4);
+      setStep("receipt");
 
       if (payment.status === "PENDING") {
         setIsAwaitingPayment(true);
@@ -243,7 +290,7 @@ export default function BookingModal({ isOpen, onClose, category }: BookingModal
       // receipt step with a retry rather than discarding everything the
       // customer entered, which is what the old ordering did.
       setPaymentError(err instanceof Error ? err.message : "Payment could not be started.");
-      setStep(4);
+      setStep("receipt");
     } finally {
       setIsSubmitting(false);
     }
@@ -271,7 +318,7 @@ export default function BookingModal({ isOpen, onClose, category }: BookingModal
       // back to the calendar with the time cleared, so the fix is one click.
       if (err instanceof Error && err.name === "SlotUnavailable") {
         setFormData((current) => ({ ...current, time: "" }));
-        setStep(2);
+        setStep("details");
       }
 
       return;
@@ -281,7 +328,7 @@ export default function BookingModal({ isOpen, onClose, category }: BookingModal
       // Card has no processor yet. The booking stands as unpaid — deliberately
       // no synthetic reference, so nothing can mistake it for a real payment.
       setPaymentResult(null);
-      setStep(4);
+      setStep("receipt");
       setIsSubmitting(false);
       return;
     }
@@ -291,7 +338,7 @@ export default function BookingModal({ isOpen, onClose, category }: BookingModal
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-midnight-ink/70 px-4 py-6 backdrop-blur-md">
-      <div className="flex max-h-[92vh] w-full max-w-3xl flex-col overflow-hidden border border-majestic-gold/40 bg-white shadow-2xl">
+      <div className="flex max-h-[92vh] w-full max-w-3xl flex-col overflow-hidden border border-majestic-gold/40 bg-card shadow-2xl">
         <div className="bg-royal-navy px-6 py-5 text-white md:px-8">
           <div className="flex items-start justify-between gap-6">
             <div>
@@ -307,11 +354,12 @@ export default function BookingModal({ isOpen, onClose, category }: BookingModal
             </button>
           </div>
 
-          <div className="mt-6 grid grid-cols-4 gap-2">
-            {["Services", "Details", "Payment", "Receipt"].map((label, index) => {
-              const active = step >= index + 1;
+          <div className={`mt-6 grid gap-2 ${steps.length === 5 ? "grid-cols-5" : "grid-cols-4"}`}>
+            {steps.map((id, index) => {
+              const active = stepIndex >= index;
+              const label = STEP_LABELS[id];
               return (
-                <div key={label}>
+                <div key={id}>
                   <div className={`h-1 ${active ? "bg-majestic-gold" : "bg-white/20"}`} />
                   <p className={`mt-2 text-[10px] font-bold uppercase tracking-[0.12em] ${active ? "text-white" : "text-white/45"}`}>
                     {label}
@@ -329,11 +377,11 @@ export default function BookingModal({ isOpen, onClose, category }: BookingModal
             </div>
           )}
 
-          {step === 1 && (
+          {step === "services" && (
             <div>
-              <h3 className="font-headline-md text-headline-md text-royal-navy">Choose your services</h3>
+              <h3 className="font-headline-md text-headline-md text-ink">Choose your services</h3>
               {category.note && (
-                <p className="mt-4 border-l-2 border-majestic-gold bg-majestic-gold/10 px-4 py-3 text-sm text-royal-navy">
+                <p className="mt-4 border-l-2 border-majestic-gold bg-majestic-gold/10 px-4 py-3 text-sm text-ink">
                   <span className="font-body-bold">Please note: </span>
                   {category.note}
                 </p>
@@ -359,16 +407,18 @@ export default function BookingModal({ isOpen, onClose, category }: BookingModal
                       key={row.key}
                       onClick={() => toggleSubService(sub)}
                       className={`flex min-h-[72px] items-center justify-between border px-4 py-3 text-left transition-all ${
-                        selected ? "border-majestic-gold bg-majestic-gold/10" : "border-outline-variant hover:border-royal-navy"
+                        selected ? "border-majestic-gold bg-majestic-gold/10" : "border-outline-variant hover:border-ink"
                       }`}
                     >
                       <span className="flex items-center gap-3">
                         <span className={`flex h-6 w-6 items-center justify-center border ${selected ? "border-majestic-gold bg-majestic-gold" : "border-outline"}`}>
-                          {selected && <span className="material-symbols-outlined text-[16px] text-royal-navy">check</span>}
+                          {selected && <span className="material-symbols-outlined text-[16px] text-ink">check</span>}
                         </span>
-                        <span className="font-body-bold text-royal-navy">{row.label}</span>
+                        <span className="font-body-bold text-ink">{row.label}</span>
                       </span>
-                      <span className="font-body-bold text-royal-navy">{currency.format(parsePrice(sub.price))}</span>
+                      <span className="font-body-bold text-ink">
+                        {sub.tiers ? `From ${currency.format(parsePrice(sub.price))}` : currency.format(parsePrice(sub.price))}
+                      </span>
                     </button>
                   );
                 })}
@@ -376,15 +426,93 @@ export default function BookingModal({ isOpen, onClose, category }: BookingModal
             </div>
           )}
 
-          {step === 2 && (
+          {step === "options" && (
+            <div className="space-y-8">
+              {optionServices.map((sub) => (
+                <div key={sub.name} className="space-y-8">
+                  {sub.tiers && (
+                    <fieldset>
+                      <legend className="font-headline-md text-headline-md text-ink">{sub.tierTitle ?? `Choose your ${sub.name.toLowerCase()}`}
+                      </legend>
+                      {sub.tiers.some((tier) => typeof tier.price === "string" && /\d\D+\d/.test(tier.price)) && (
+                        <p className="mt-2 text-sm text-warm-slate">
+                          Your deposit is the starting price. The final price depends on your hair and is confirmed in the salon.
+                        </p>
+                      )}
+                      <div className={`mt-5 grid gap-3 ${sub.tiers.length > 3 ? "sm:grid-cols-2" : ""}`}>
+                        {sub.tiers.map((tier) => {
+                          const selected = tierChoices[sub.name]?.name === tier.name;
+                          return (
+                            <button
+                              key={tier.name}
+                              type="button"
+                              role="radio"
+                              aria-checked={selected}
+                              onClick={() => setTierChoices((prev) => ({ ...prev, [sub.name]: tier }))}
+                              className={`flex min-h-[64px] items-center justify-between border px-4 py-3 text-left transition-all ${
+                                selected ? "border-majestic-gold bg-majestic-gold/10" : "border-outline-variant hover:border-ink"
+                              }`}
+                            >
+                              <span className="flex items-center gap-3">
+                                <span className={`flex h-5 w-5 items-center justify-center rounded-full border ${selected ? "border-majestic-gold" : "border-outline"}`}>
+                                  {selected && <span className="h-2.5 w-2.5 rounded-full bg-majestic-gold" />}
+                                </span>
+                                <span className="font-body-bold text-ink">{tier.label ?? tier.name}</span>
+                              </span>
+                              <span className="font-body-bold text-ink">{formatPriceRange(tier.price)}</span>
+                            </button>
+                          );
+                        })}
+                      </div>
+                    </fieldset>
+                  )}
+
+                  {(sub.questions ?? []).map((question, index) => {
+                    const key = `${sub.name}:${question.id}`;
+                    return (
+                      <fieldset key={key}>
+                        <legend className="text-label-caps font-label-caps text-warm-slate">
+                          {index + 1}. {question.title}
+                        </legend>
+                        <div className="mt-3 flex flex-wrap gap-2">
+                          {question.options.map((option) => {
+                            const selected = answers[key] === option.label;
+                            return (
+                              <button
+                                key={option.label}
+                                type="button"
+                                role="radio"
+                                aria-checked={selected}
+                                onClick={() => setAnswers((prev) => ({ ...prev, [key]: option.label }))}
+                                className={`border px-4 py-2 text-left text-sm transition-all ${
+                                  selected
+                                    ? "border-majestic-gold bg-majestic-gold/10 text-ink"
+                                    : "border-outline-variant text-ink hover:border-ink"
+                                }`}
+                              >
+                                <span className="font-body-bold">{option.label}</span>
+                                {option.hint && <span className="block text-xs text-warm-slate">{option.hint}</span>}
+                              </button>
+                            );
+                          })}
+                        </div>
+                      </fieldset>
+                    );
+                  })}
+                </div>
+              ))}
+            </div>
+          )}
+
+          {step === "details" && (
             <div>
-              <h3 className="font-headline-md text-headline-md text-royal-navy">Client details</h3>
+              <h3 className="font-headline-md text-headline-md text-ink">Client details</h3>
               <div className="mt-6 grid gap-5 md:grid-cols-2">
                 <input required value={formData.name} onChange={(e) => setFormData({ ...formData, name: e.target.value })} placeholder="Full name" className="border border-outline-variant px-4 py-3 font-body-base" />
                 <input required value={formData.email} onChange={(e) => setFormData({ ...formData, email: e.target.value })} placeholder="Email address" type="email" className="border border-outline-variant px-4 py-3 font-body-base" />
                 <input required value={formData.phone} onChange={(e) => setFormData({ ...formData, phone: e.target.value })} placeholder="MTN MoMo phone number" type="tel" className="border border-outline-variant px-4 py-3 font-body-base" />
                 <div className="md:col-span-2">
-                  <span className="mb-2 block text-[11px] font-bold uppercase tracking-[0.12em] text-royal-navy">
+                  <span className="mb-2 block text-[11px] font-bold uppercase tracking-[0.12em] text-ink">
                     Appointment
                   </span>
                   <BookingCalendar
@@ -404,10 +532,10 @@ export default function BookingModal({ isOpen, onClose, category }: BookingModal
             </div>
           )}
 
-          {step === 3 && (
+          {step === "payment" && (
             <div className="grid gap-6 lg:grid-cols-[1fr_280px]">
               <div>
-                <h3 className="font-headline-md text-headline-md text-royal-navy">Payment method</h3>
+                <h3 className="font-headline-md text-headline-md text-ink">Payment method</h3>
                 <div className="mt-5 space-y-3">
                   <button
                     onClick={() => setPaymentMethod("momo")}
@@ -415,7 +543,7 @@ export default function BookingModal({ isOpen, onClose, category }: BookingModal
                   >
                     <span className="material-symbols-outlined text-premium-green">phone_iphone</span>
                     <span>
-                      <span className="block font-body-bold text-royal-navy">MTN Mobile Money</span>
+                      <span className="block font-body-bold text-ink">MTN Mobile Money</span>
                       <span className="text-sm text-warm-slate">A payment prompt is sent to the customer phone.</span>
                     </span>
                   </button>
@@ -423,9 +551,9 @@ export default function BookingModal({ isOpen, onClose, category }: BookingModal
                     onClick={() => setPaymentMethod("card")}
                     className={`flex w-full items-center gap-4 border p-4 text-left ${paymentMethod === "card" ? "border-majestic-gold bg-majestic-gold/10" : "border-outline-variant"}`}
                   >
-                    <span className="material-symbols-outlined text-royal-navy">credit_card</span>
+                    <span className="material-symbols-outlined text-ink">credit_card</span>
                     <span>
-                      <span className="block font-body-bold text-royal-navy">Card</span>
+                      <span className="block font-body-bold text-ink">Card</span>
                       <span className="text-sm text-warm-slate">Recorded as pending until a card processor is connected.</span>
                     </span>
                   </button>
@@ -434,24 +562,27 @@ export default function BookingModal({ isOpen, onClose, category }: BookingModal
               <div className="border border-outline-variant bg-surface p-5">
                 <p className="text-label-caps font-label-caps text-warm-slate">Booking summary</p>
                 <div className="mt-4 space-y-3 text-sm text-warm-slate">
-                  {selectedSubServices.map((service) => (
+                  {bookedServices.map((service) => (
                     <div key={service.name} className="flex justify-between gap-3">
                       <span>{service.name}</span>
-                      <span className="font-body-bold text-royal-navy">{currency.format(parsePrice(service.price))}</span>
+                      <span className="font-body-bold text-ink">{currency.format(parsePrice(service.price))}</span>
                     </div>
+                  ))}
+                  {optionsSummary.map((line) => (
+                    <p key={line} className="text-xs">{line}</p>
                   ))}
                 </div>
                 <div className="mt-5 border-t border-outline-variant pt-4">
                   <div className="flex justify-between">
-                    <span className="font-body-bold text-royal-navy">Total</span>
-                    <span className="font-headline-md text-2xl text-royal-navy">{currency.format(totalPrice)}</span>
+                    <span className="font-body-bold text-ink">Total</span>
+                    <span className="font-headline-md text-2xl text-ink">{currency.format(totalPrice)}</span>
                   </div>
                 </div>
               </div>
             </div>
           )}
 
-          {step === 4 && bookingResult && (
+          {step === "receipt" && bookingResult && (
             <div className="mx-auto max-w-xl text-center">
               {/* Reflects the real payment state. A green tick regardless of
                   status would tell a customer their booking is paid while the
@@ -475,7 +606,7 @@ export default function BookingModal({ isOpen, onClose, category }: BookingModal
                 </span>
               </div>
               <p className="mt-5 text-label-caps font-label-caps text-champagne-taupe">Booking received</p>
-              <h3 className="mt-2 font-headline-md text-4xl text-royal-navy">
+              <h3 className="mt-2 font-headline-md text-4xl text-ink">
                 {paymentResult?.status === "SUCCESSFUL"
                   ? "Payment confirmed"
                   : paymentResult?.status === "FAILED"
@@ -513,24 +644,24 @@ export default function BookingModal({ isOpen, onClose, category }: BookingModal
               <div className="mt-7 border border-outline-variant bg-surface p-5 text-left">
                 <div className="flex justify-between border-b border-outline-variant pb-3">
                   <span className="text-sm text-warm-slate">Client</span>
-                  <span className="font-body-bold text-royal-navy">{formData.name}</span>
+                  <span className="font-body-bold text-ink">{formData.name}</span>
                 </div>
                 <div className="flex justify-between border-b border-outline-variant py-3">
                   <span className="text-sm text-warm-slate">Services</span>
-                  <span className="max-w-[60%] text-right font-body-bold text-royal-navy">{selectedNames}</span>
+                  <span className="max-w-[60%] text-right font-body-bold text-ink">{selectedNames}</span>
                 </div>
                 <div className="flex justify-between border-b border-outline-variant py-3">
                   <span className="text-sm text-warm-slate">Reference</span>
-                  <span className="font-body-bold text-royal-navy">
+                  <span className="font-body-bold text-ink">
                     {paymentResult?.referenceId ?? bookingResult.id}
                   </span>
                 </div>
                 <div className="flex justify-between pt-3">
-                  <span className="font-body-bold text-royal-navy">Total</span>
+                  <span className="font-body-bold text-ink">Total</span>
                   {/* The server's figure, not the browser's — this is what was
                       actually charged. They agree today; if they ever diverge,
                       the customer should see the authoritative one. */}
-                  <span className="font-headline-md text-2xl text-royal-navy">
+                  <span className="font-headline-md text-2xl text-ink">
                     {currency.format(bookingResult.amountDue || totalPrice)}
                   </span>
                 </div>
@@ -541,23 +672,23 @@ export default function BookingModal({ isOpen, onClose, category }: BookingModal
 
         <div className="flex items-center justify-between gap-3 border-t border-outline-variant bg-surface px-6 py-5 md:px-8">
           <button
-            onClick={() => (step === 1 ? handleClose() : setStep((current) => (current - 1) as ModalStep))}
-            className="border border-royal-navy px-5 py-3 text-label-caps font-label-caps text-royal-navy transition-colors hover:bg-royal-navy hover:text-white"
+            onClick={() => (step === "services" || step === "receipt" ? handleClose() : goBack())}
+            className="border border-ink px-5 py-3 text-label-caps font-label-caps text-ink transition-colors hover:bg-royal-navy hover:text-white"
           >
-            {step === 1 || step === 4 ? "Close" : "Back"}
+            {step === "services" || step === "receipt" ? "Close" : "Back"}
           </button>
 
-          {step < 3 && (
+          {stepIndex < steps.indexOf("payment") && (
             <button
-              onClick={() => setStep((current) => (current + 1) as ModalStep)}
-              disabled={step === 1 ? !canContinueToDetails : !canContinueToPayment}
+              onClick={goNext}
+              disabled={!canContinue}
               className="bg-royal-navy px-6 py-3 text-label-caps font-label-caps text-majestic-gold transition-colors hover:bg-midnight-ink disabled:cursor-not-allowed disabled:opacity-40"
             >
               Continue
             </button>
           )}
 
-          {step === 3 && (
+          {step === "payment" && (
             <button
               onClick={handleSubmitBooking}
               disabled={isSubmitting || !canContinueToPayment}

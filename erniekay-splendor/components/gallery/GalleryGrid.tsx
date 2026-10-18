@@ -150,7 +150,7 @@ export default function GalleryGrid({ media }: { media?: MediaOverrides }) {
               onClick={() => setActiveTab(cat.id)}
               className={`font-[family-name:var(--font-montserrat)] text-[12px] leading-[16px] tracking-[0.15em] uppercase font-bold transition-all duration-300 pb-1 ${
                 activeTab === cat.id
-                  ? "text-primary border-b-2 border-majestic-gold"
+                  ? "text-ink border-b-2 border-majestic-gold"
                   : "text-on-surface-variant hover:text-majestic-gold"
               }`}
             >

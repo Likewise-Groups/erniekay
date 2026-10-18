@@ -73,7 +73,7 @@ export default function MyCoursesPage() {
   ];
 
   return (
-    <div className="bg-alabaster-white text-on-surface font-[family-name:var(--font-montserrat)] min-h-screen">
+    <div className="bg-surface-alt text-on-surface font-[family-name:var(--font-montserrat)] min-h-screen">
       
       {/* ── DESKTOP SideNavBar Shell ── */}
       <aside className="fixed left-0 top-0 h-full w-64 bg-royal-navy hidden md:flex flex-col py-8 px-6 border-r border-majestic-gold/20 z-50 text-white">
@@ -123,7 +123,7 @@ export default function MyCoursesPage() {
 
       {/* ── MOBILE Top AppBar ── */}
       <header className="fixed top-0 left-0 w-full z-50 bg-surface border-b border-champagne-taupe/30 flex justify-between items-center h-16 px-6 block md:hidden">
-        <h1 className="font-[family-name:var(--font-eb-garamond)] text-[28px] text-royal-navy leading-none font-semibold">
+        <h1 className="font-[family-name:var(--font-eb-garamond)] text-[28px] text-ink leading-none font-semibold">
           Beauty Academy
         </h1>
         <div className="flex items-center gap-4">
@@ -150,7 +150,7 @@ export default function MyCoursesPage() {
             <span className="font-[family-name:var(--font-montserrat)] text-[12px] leading-[16px] tracking-[0.15em] uppercase font-bold text-champagne-taupe mb-4 block">
               ERNIEKAY SPLENDOR ACADEMY
             </span>
-            <h2 className="font-[family-name:var(--font-eb-garamond)] text-[48px] leading-[56px] font-semibold text-royal-navy mb-4">
+            <h2 className="font-[family-name:var(--font-eb-garamond)] text-[48px] leading-[56px] font-semibold text-ink mb-4">
               My Courses
             </h2>
             <p className="font-[family-name:var(--font-montserrat)] text-[16px] leading-[26px] text-warm-slate max-w-2xl leading-relaxed">
@@ -160,7 +160,7 @@ export default function MyCoursesPage() {
         </header>
 
         {/* Search & Filter Bar */}
-        <section className="sticky top-0 z-40 bg-alabaster-white/95 backdrop-blur-md border-b border-outline-variant">
+        <section className="sticky top-0 z-40 bg-surface-alt/95 backdrop-blur-md border-b border-outline-variant">
           <div className="max-w-[1280px] mx-auto px-[64px] py-6 flex justify-between items-center gap-6">
             {/* Filter tabs */}
             <div className="flex gap-8">
@@ -170,8 +170,8 @@ export default function MyCoursesPage() {
                   onClick={() => setActiveTab(tab.id)}
                   className={`font-[family-name:var(--font-montserrat)] text-[12px] leading-[16px] tracking-[0.15em] uppercase font-bold pb-2 transition-all border-b-2 ${
                     activeTab === tab.id
-                      ? "text-royal-navy border-majestic-gold"
-                      : "text-warm-slate border-transparent hover:text-royal-navy"
+                      ? "text-ink border-majestic-gold"
+                      : "text-warm-slate border-transparent hover:text-ink"
                   }`}
                 >
                   {tab.label}
@@ -180,11 +180,11 @@ export default function MyCoursesPage() {
             </div>
             {/* Search inputs */}
             <div className="relative w-80 group">
-              <span className="material-symbols-outlined absolute left-0 top-1/2 -translate-y-1/2 text-warm-slate group-focus-within:text-royal-navy transition-colors">
+              <span className="material-symbols-outlined absolute left-0 top-1/2 -translate-y-1/2 text-warm-slate group-focus-within:text-ink transition-colors">
                 search
               </span>
               <input
-                className="w-full bg-transparent border-b border-champagne-taupe py-2 pl-8 pr-4 font-[family-name:var(--font-montserrat)] text-[11px] font-bold tracking-wider focus:outline-none focus:border-royal-navy transition-all placeholder:text-warm-slate/50"
+                className="w-full bg-transparent border-b border-champagne-taupe py-2 pl-8 pr-4 font-[family-name:var(--font-montserrat)] text-[11px] font-bold tracking-wider focus:outline-none focus:border-ink transition-all placeholder:text-warm-slate/50"
                 placeholder="SEARCH CATALOG..."
                 type="text"
                 value={searchQuery}
@@ -220,7 +220,7 @@ export default function MyCoursesPage() {
 
                     {/* Course copy metadata */}
                     <div className="p-8">
-                      <h3 className="font-[family-name:var(--font-eb-garamond)] text-[24px] font-semibold text-royal-navy mb-4 leading-tight">
+                      <h3 className="font-[family-name:var(--font-eb-garamond)] text-[24px] font-semibold text-ink mb-4 leading-tight">
                         {course.title}
                       </h3>
                       {course.status === "completed" ? (
@@ -249,7 +249,7 @@ export default function MyCoursesPage() {
                   {/* Actions buttons */}
                   <div className="p-8 pt-0 mt-auto">
                     {course.status === "completed" ? (
-                      <Link href={`/academy/portal/courses/${course.id}`} className="w-full block text-center bg-transparent text-royal-navy border border-royal-navy py-4 font-[family-name:var(--font-montserrat)] text-[11px] font-bold tracking-widest hover:bg-royal-navy hover:text-white transition-colors uppercase">
+                      <Link href={`/academy/portal/courses/${course.id}`} className="w-full block text-center bg-transparent text-ink border border-ink py-4 font-[family-name:var(--font-montserrat)] text-[11px] font-bold tracking-widest hover:bg-royal-navy hover:text-white transition-colors uppercase">
                         REVIEW MATERIALS
                       </Link>
                     ) : (
@@ -299,7 +299,7 @@ export default function MyCoursesPage() {
       <main className="mt-16 pt-8 block md:hidden">
         {/* Headline Section */}
         <section className="px-6 mb-8">
-          <h2 className="font-[family-name:var(--font-eb-garamond)] text-[28px] font-semibold text-royal-navy mb-2">
+          <h2 className="font-[family-name:var(--font-eb-garamond)] text-[28px] font-semibold text-ink mb-2">
             My Courses
           </h2>
           <p className="text-warm-slate font-[family-name:var(--font-montserrat)] text-[14px] leading-relaxed">
@@ -354,7 +354,7 @@ export default function MyCoursesPage() {
                     {course.category}
                   </span>
                 )}
-                <h3 className="font-[family-name:var(--font-eb-garamond)] text-[22px] font-semibold text-royal-navy mb-4">
+                <h3 className="font-[family-name:var(--font-eb-garamond)] text-[22px] font-semibold text-ink mb-4">
                   {course.title}
                 </h3>
                 
@@ -362,7 +362,7 @@ export default function MyCoursesPage() {
                   <div className="mb-6">
                     <div className="flex justify-between items-center mb-2">
                       <span className="font-[family-name:var(--font-montserrat)] text-[10px] text-warm-slate font-bold">Progress</span>
-                      <span className="font-[family-name:var(--font-montserrat)] text-[12px] font-bold text-royal-navy">{course.progress}%</span>
+                      <span className="font-[family-name:var(--font-montserrat)] text-[12px] font-bold text-ink">{course.progress}%</span>
                     </div>
                     <div className="w-full h-[2px] bg-surface-variant relative">
                       <div className="absolute top-0 left-0 h-full bg-majestic-gold" style={{ width: `${course.progress}%` }}></div>
@@ -371,7 +371,7 @@ export default function MyCoursesPage() {
                 )}
 
                 {course.status === "completed" ? (
-                  <Link href={`/academy/portal/courses/${course.id}`} className="w-full block text-center py-4 border border-royal-navy text-royal-navy font-[family-name:var(--font-montserrat)] text-[12px] font-bold uppercase tracking-wider active:scale-95 transition-all">
+                  <Link href={`/academy/portal/courses/${course.id}`} className="w-full block text-center py-4 border border-ink text-ink font-[family-name:var(--font-montserrat)] text-[12px] font-bold uppercase tracking-wider active:scale-95 transition-all">
                     Review Materials
                   </Link>
                 ) : (

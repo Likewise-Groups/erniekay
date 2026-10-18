@@ -89,14 +89,14 @@ export default function AddToPortfolioPage() {
   };
 
   return (
-    <div className="bg-alabaster-white text-on-surface font-[family-name:var(--font-montserrat)] min-h-screen antialiased">
+    <div className="bg-surface-alt text-on-surface font-[family-name:var(--font-montserrat)] min-h-screen antialiased">
       <div className="flex min-h-screen">
         
         {/* ── DESKTOP SideNavBar ── */}
-        <aside className="hidden md:flex flex-col h-screen w-64 bg-alabaster-white dark:bg-primary-container border-r border-outline-variant dark:border-warm-slate fixed left-0 top-0 z-50 text-royal-navy dark:text-white">
+        <aside className="hidden md:flex flex-col h-screen w-64 bg-surface-alt border-r border-outline-variant fixed left-0 top-0 z-50 text-ink">
           <div className="flex flex-col h-full py-8 px-4">
             <div className="mb-10 px-2">
-              <h1 className="font-[family-name:var(--font-eb-garamond)] text-[28px] leading-tight text-royal-navy dark:text-majestic-gold font-semibold">
+              <h1 className="font-[family-name:var(--font-eb-garamond)] text-[28px] leading-tight text-ink font-semibold">
                 Erniekay Splendor
               </h1>
               <p className="font-[family-name:var(--font-montserrat)] text-[10px] uppercase font-bold text-champagne-taupe tracking-widest mt-1">
@@ -110,8 +110,8 @@ export default function AddToPortfolioPage() {
                   href={link.href}
                   className={`flex items-center gap-3 px-4 py-3 transition-all duration-200 ${
                     link.active
-                      ? "text-royal-navy dark:text-majestic-gold border-r-4 border-majestic-gold bg-surface-container-high font-bold"
-                      : "text-warm-slate dark:text-on-surface-variant hover:text-royal-navy hover:bg-surface-container-highest dark:hover:bg-primary"
+                      ? "text-ink border-r-4 border-majestic-gold bg-surface-container-high font-bold"
+                      : "text-warm-slate hover:text-ink hover:bg-surface-container-highest"
                   }`}
                 >
                   <span className="material-symbols-outlined">{link.icon}</span>
@@ -124,11 +124,11 @@ export default function AddToPortfolioPage() {
                 Book Training
               </button>
               <div className="pt-6 border-t border-outline-variant space-y-2">
-                <a className="flex items-center gap-3 px-4 py-2 text-warm-slate hover:text-royal-navy transition-all" href="#">
+                <a className="flex items-center gap-3 px-4 py-2 text-warm-slate hover:text-ink transition-all" href="#">
                   <span className="material-symbols-outlined">help</span>
                   <span className="font-[family-name:var(--font-montserrat)] text-[12px] uppercase font-bold tracking-wider">Help Center</span>
                 </a>
-                <Link className="flex items-center gap-3 px-4 py-2 text-warm-slate hover:text-royal-navy transition-all" href="/academy/portal">
+                <Link className="flex items-center gap-3 px-4 py-2 text-warm-slate hover:text-ink transition-all" href="/academy/portal">
                   <span className="material-symbols-outlined">logout</span>
                   <span className="font-[family-name:var(--font-montserrat)] text-[12px] uppercase font-bold tracking-wider">Logout</span>
                 </Link>
@@ -181,37 +181,37 @@ export default function AddToPortfolioPage() {
           <header className="fixed top-0 w-full z-50 bg-background border-b border-outline-variant flex justify-between items-center px-6 h-16 md:hidden">
             <button
               onClick={() => setMobileMenuOpen(true)}
-              className="text-royal-navy active:opacity-80 active:scale-95 transition-all"
+              className="text-ink active:opacity-80 active:scale-95 transition-all"
             >
               <span className="material-symbols-outlined">menu</span>
             </button>
-            <span className="font-[family-name:var(--font-eb-garamond)] text-xl text-royal-navy tracking-tighter uppercase font-semibold">
+            <span className="font-[family-name:var(--font-eb-garamond)] text-xl text-ink tracking-tighter uppercase font-semibold">
               Academy Elite
             </span>
-            <button className="text-royal-navy active:opacity-80 active:scale-95 transition-all">
+            <button className="text-ink active:opacity-80 active:scale-95 transition-all">
               <span className="material-symbols-outlined">notifications</span>
             </button>
           </header>
 
           {/* Desktop-only TopNavBar */}
-          <header className="hidden md:flex justify-between items-center w-full px-8 h-20 bg-surface dark:bg-primary border-b border-outline-variant dark:border-warm-slate sticky top-0 z-40">
+          <header className="hidden md:flex justify-between items-center w-full px-8 h-20 bg-surface border-b border-outline-variant sticky top-0 z-40">
             <div className="flex items-center gap-4">
               <nav className="flex items-center gap-2 font-[family-name:var(--font-montserrat)] text-[12px] font-bold tracking-widest text-warm-slate uppercase">
-                <Link className="hover:text-royal-navy" href="/academy/portal/dashboard">Portal</Link>
+                <Link className="hover:text-ink" href="/academy/portal/dashboard">Portal</Link>
                 <span className="material-symbols-outlined text-[12px]">chevron_right</span>
-                <span className="hover:text-royal-navy">Portfolio</span>
+                <span className="hover:text-ink">Portfolio</span>
                 <span className="material-symbols-outlined text-[12px]">chevron_right</span>
-                <span className="text-royal-navy font-bold">Add New Work</span>
+                <span className="text-ink font-bold">Add New Work</span>
               </nav>
             </div>
             <div className="flex items-center gap-6">
-              <span className="material-symbols-outlined text-royal-navy cursor-pointer hover:bg-surface-container-low p-2 transition-colors duration-300">
+              <span className="material-symbols-outlined text-ink cursor-pointer hover:bg-surface-container-low p-2 transition-colors duration-300">
                 notifications
               </span>
               <div className="flex items-center gap-3 border-l border-outline-variant pl-6">
                 <div className="text-right hidden sm:block">
                   <p className="font-[family-name:var(--font-montserrat)] text-[10px] uppercase font-bold text-champagne-taupe tracking-wider">Student Artist</p>
-                  <p className="font-bold text-royal-navy text-[14px]">Elena Rossi</p>
+                  <p className="font-bold text-ink text-[14px]">Elena Rossi</p>
                 </div>
                 <div className="w-10 h-10 bg-surface-container-high overflow-hidden border border-outline-variant relative">
                   <Image
@@ -231,7 +231,7 @@ export default function AddToPortfolioPage() {
             
             {/* Editorial Header */}
             <section className="pt-8 pb-10">
-              <h1 className="font-[family-name:var(--font-eb-garamond)] text-[32px] md:text-[48px] text-royal-navy mb-2 font-semibold leading-tight">
+              <h1 className="font-[family-name:var(--font-eb-garamond)] text-[32px] md:text-[48px] text-ink mb-2 font-semibold leading-tight">
                 Add to Portfolio
               </h1>
               <p className="text-warm-slate max-w-xs md:max-w-2xl font-[family-name:var(--font-montserrat)] text-sm leading-relaxed">
@@ -258,15 +258,15 @@ export default function AddToPortfolioPage() {
                       setIsDragOver(false);
                       alert("File upload is currently in simulation mode.");
                     }}
-                    className={`relative border-2 border-dashed border-champagne-taupe bg-white flex flex-col items-center justify-center py-12 px-6 text-center transition-colors duration-300 hover:bg-alabaster-white active:scale-[0.98] ${
-                      isDragOver ? "bg-alabaster-white border-royal-navy" : ""
+                    className={`relative border-2 border-dashed border-champagne-taupe bg-card flex flex-col items-center justify-center py-12 px-6 text-center transition-colors duration-300 hover:bg-surface-alt active:scale-[0.98] ${
+                      isDragOver ? "bg-surface-alt border-ink" : ""
                     }`}
                   >
                     <input className="absolute inset-0 opacity-0 cursor-pointer" type="file" disabled />
-                    <span className="material-symbols-outlined text-royal-navy text-4xl mb-4">
+                    <span className="material-symbols-outlined text-ink text-4xl mb-4">
                       cloud_upload
                     </span>
-                    <span className="font-bold text-royal-navy block text-sm">
+                    <span className="font-bold text-ink block text-sm">
                       Tap to Upload
                     </span>
                     <span className="text-warm-slate text-xs mt-1">
@@ -278,7 +278,7 @@ export default function AddToPortfolioPage() {
                 {/* Previews State */}
                 <section className="mb-12 overflow-hidden">
                   <div className="flex items-baseline justify-between mb-4">
-                    <h2 className="font-[family-name:var(--font-montserrat)] text-[12px] font-bold text-royal-navy uppercase tracking-widest">
+                    <h2 className="font-[family-name:var(--font-montserrat)] text-[12px] font-bold text-ink uppercase tracking-widest">
                       Upload Previews
                     </h2>
                     <span className="text-warm-slate text-xs">
@@ -306,18 +306,18 @@ export default function AddToPortfolioPage() {
                           <button
                             type="button"
                             onClick={() => removePreview(preview.id)}
-                            className="bg-white/90 p-1.5 shadow-sm active:scale-90 transition-transform flex items-center justify-center"
+                            className="bg-card/90 p-1.5 shadow-sm active:scale-90 transition-transform flex items-center justify-center"
                           >
-                            <span className="material-symbols-outlined text-royal-navy text-[20px]">close</span>
+                            <span className="material-symbols-outlined text-ink text-[20px]">close</span>
                           </button>
                           <button
                             type="button"
                             onClick={() => toggleStar(preview.id)}
                             className={`p-1.5 shadow-sm active:scale-90 transition-transform flex items-center justify-center ${
-                              preview.starred ? "bg-majestic-gold" : "bg-white/90"
+                              preview.starred ? "bg-majestic-gold" : "bg-card/90"
                             }`}
                           >
-                            <span className="material-symbols-outlined text-royal-navy text-[20px]" style={{ fontVariationSettings: preview.starred ? "'FILL' 1" : "'FILL' 0" }}>
+                            <span className={`material-symbols-outlined text-[20px] ${preview.starred ? "text-royal-navy" : "text-ink"}`} style={{ fontVariationSettings: preview.starred ? "'FILL' 1" : "'FILL' 0" }}>
                               star
                             </span>
                           </button>
@@ -336,8 +336,8 @@ export default function AddToPortfolioPage() {
 
               {/* Right Column: Project Details Form */}
               <div className="lg:col-span-5">
-                <section className="bg-white p-8 md:p-10 border border-outline-variant shadow-sm space-y-8">
-                  <h2 className="font-[family-name:var(--font-montserrat)] text-[12px] font-bold text-royal-navy uppercase tracking-widest pb-4 border-b border-outline-variant">
+                <section className="bg-card p-8 md:p-10 border border-outline-variant shadow-sm space-y-8">
+                  <h2 className="font-[family-name:var(--font-montserrat)] text-[12px] font-bold text-ink uppercase tracking-widest pb-4 border-b border-outline-variant">
                     Project Details
                   </h2>
                   <form className="space-y-6" onSubmit={handleSubmit}>
@@ -346,13 +346,13 @@ export default function AddToPortfolioPage() {
                     <div className="relative">
                       <label
                         className={`block font-[family-name:var(--font-montserrat)] text-[10px] font-bold uppercase mb-1 tracking-widest transition-colors duration-300 ${
-                          focusFields.title ? "text-royal-navy" : "text-champagne-taupe"
+                          focusFields.title ? "text-ink" : "text-champagne-taupe"
                         }`}
                       >
                         Project Title
                       </label>
                       <input
-                        className="w-full bg-white border-0 border-b border-champagne-taupe py-3 focus:ring-0 focus:border-royal-navy transition-colors placeholder:text-surface-variant text-sm font-semibold text-royal-navy"
+                        className="w-full bg-card border-0 border-b border-champagne-taupe py-3 focus:ring-0 focus:border-ink transition-colors placeholder:text-on-dark-variant text-sm font-semibold text-ink"
                         placeholder="e.g. Midnight Gala Transformation"
                         type="text"
                         value={projectTitle}
@@ -367,14 +367,14 @@ export default function AddToPortfolioPage() {
                     <div className="relative">
                       <label
                         className={`block font-[family-name:var(--font-montserrat)] text-[10px] font-bold uppercase mb-1 tracking-widest transition-colors duration-300 ${
-                          focusFields.category ? "text-royal-navy" : "text-champagne-taupe"
+                          focusFields.category ? "text-ink" : "text-champagne-taupe"
                         }`}
                       >
                         Technique/Category
                       </label>
                       <div className="relative">
                         <select
-                          className="w-full bg-white border-0 border-b border-champagne-taupe py-3 pr-8 focus:ring-0 focus:border-royal-navy transition-colors appearance-none text-sm font-semibold text-royal-navy"
+                          className="w-full bg-card border-0 border-b border-champagne-taupe py-3 pr-8 focus:ring-0 focus:border-ink transition-colors appearance-none text-sm font-semibold text-ink"
                           value={category}
                           onChange={(e) => setCategory(e.target.value)}
                           onFocus={() => handleFocus("category")}
@@ -386,7 +386,7 @@ export default function AddToPortfolioPage() {
                           <option value="Airbrush Artistry">Airbrush Artistry</option>
                           <option value="Period Makeup">Period Makeup</option>
                         </select>
-                        <span className="material-symbols-outlined absolute right-0 top-1/2 -translate-y-1/2 pointer-events-none text-royal-navy">
+                        <span className="material-symbols-outlined absolute right-0 top-1/2 -translate-y-1/2 pointer-events-none text-ink">
                           expand_more
                         </span>
                       </div>
@@ -396,13 +396,13 @@ export default function AddToPortfolioPage() {
                     <div className="relative">
                       <label
                         className={`block font-[family-name:var(--font-montserrat)] text-[10px] font-bold uppercase mb-1 tracking-widest transition-colors duration-300 ${
-                          focusFields.kit ? "text-royal-navy" : "text-champagne-taupe"
+                          focusFields.kit ? "text-ink" : "text-champagne-taupe"
                         }`}
                       >
                         Product Kit Used
                       </label>
                       <input
-                        className="w-full bg-white border-0 border-b border-champagne-taupe py-3 focus:ring-0 focus:border-royal-navy transition-colors placeholder:text-surface-variant text-sm font-semibold text-royal-navy"
+                        className="w-full bg-card border-0 border-b border-champagne-taupe py-3 focus:ring-0 focus:border-ink transition-colors placeholder:text-on-dark-variant text-sm font-semibold text-ink"
                         placeholder="e.g. Elite Bridal Kit, Dior Backstage"
                         type="text"
                         value={productKit}
@@ -416,13 +416,13 @@ export default function AddToPortfolioPage() {
                     <div className="relative">
                       <label
                         className={`block font-[family-name:var(--font-montserrat)] text-[10px] font-bold uppercase mb-1 tracking-widest transition-colors duration-300 ${
-                          focusFields.statement ? "text-royal-navy" : "text-champagne-taupe"
+                          focusFields.statement ? "text-ink" : "text-champagne-taupe"
                         }`}
                       >
                         Artistic Statement
                       </label>
                       <textarea
-                        className="w-full bg-white border border-champagne-taupe p-4 focus:ring-0 focus:border-royal-navy transition-colors placeholder:text-surface-variant text-sm font-medium text-royal-navy resize-none"
+                        className="w-full bg-card border border-champagne-taupe p-4 focus:ring-0 focus:border-ink transition-colors placeholder:text-on-dark-variant text-sm font-medium text-ink resize-none"
                         placeholder="Describe your creative vision and execution..."
                         rows={4}
                         value={artisticStatement}
@@ -446,7 +446,7 @@ export default function AddToPortfolioPage() {
                           onChange={(e) => setFeaturePublic(e.target.checked)}
                         />
                         <div className="w-11 h-6 bg-white/20 peer-focus:outline-none rounded-full transition-colors peer peer-checked:bg-majestic-gold flex items-center px-0.5">
-                          <div className="w-4 h-4 bg-white rounded-full transition-transform peer peer-checked:translate-x-5 peer-checked:bg-royal-navy"></div>
+                          <div className="w-4 h-4 bg-card rounded-full transition-transform peer peer-checked:translate-x-5 peer-checked:bg-royal-navy"></div>
                         </div>
                       </label>
                     </div>

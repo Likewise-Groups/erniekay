@@ -35,7 +35,7 @@ export default function LeadArtist() {
             <span className="font-[family-name:var(--font-montserrat)] text-[12px] leading-[16px] tracking-[0.3em] uppercase text-majestic-gold block mb-4">
               The Visionary
             </span>
-            <h2 className="font-[family-name:var(--font-eb-garamond)] text-[36px] md:text-[42px] leading-tight font-semibold text-primary mb-6">
+            <h2 className="font-[family-name:var(--font-eb-garamond)] text-[36px] md:text-[42px] leading-tight font-semibold text-ink mb-6">
               Meet Erniekay Splendor
             </h2>
             <p className="font-[family-name:var(--font-montserrat)] text-[16px] md:text-[18px] leading-[28px] text-on-surface-variant mb-6">
@@ -52,7 +52,7 @@ export default function LeadArtist() {
             {/* Credentials */}
             <div className="flex gap-8 items-center">
               <div>
-                <p className="font-[family-name:var(--font-montserrat)] text-[16px] leading-[26px] font-semibold text-primary">
+                <p className="font-[family-name:var(--font-montserrat)] text-[16px] leading-[26px] font-semibold text-ink">
                   Certified Specialist
                 </p>
                 <p className="font-[family-name:var(--font-montserrat)] text-[14px] leading-[22px] text-on-surface-variant">
@@ -61,7 +61,7 @@ export default function LeadArtist() {
               </div>
               <div className="w-px h-12 bg-outline-variant" />
               <div>
-                <p className="font-[family-name:var(--font-montserrat)] text-[16px] leading-[26px] font-semibold text-primary">
+                <p className="font-[family-name:var(--font-montserrat)] text-[16px] leading-[26px] font-semibold text-ink">
                   Vogue Featured
                 </p>
                 <p className="font-[family-name:var(--font-montserrat)] text-[14px] leading-[22px] text-on-surface-variant">

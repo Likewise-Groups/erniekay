@@ -15,7 +15,7 @@ export default function MobileBottomNav() {
           key={tab.label}
           href={tab.href}
           className={`flex flex-col items-center gap-1 ${
-            tab.active ? "text-royal-navy" : "text-warm-slate"
+            tab.active ? "text-ink" : "text-warm-slate"
           }`}
         >
           <span

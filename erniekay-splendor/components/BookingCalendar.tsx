@@ -147,12 +147,12 @@ export default function BookingCalendar({ value, onChange, hint }: Props) {
           onClick={() => step(-1)}
           disabled={!canGoBack}
           aria-label="Previous month"
-          className="flex h-8 w-8 items-center justify-center border border-outline-variant text-royal-navy transition-colors hover:bg-alabaster-white disabled:cursor-not-allowed disabled:opacity-30"
+          className="flex h-8 w-8 items-center justify-center border border-outline-variant text-ink transition-colors hover:bg-surface-alt disabled:cursor-not-allowed disabled:opacity-30"
         >
           <span className="material-symbols-outlined text-[18px]">chevron_left</span>
         </button>
 
-        <span className="font-body-bold text-royal-navy" aria-live="polite">
+        <span className="font-body-bold text-ink" aria-live="polite">
           {formatMonthLabel(cursor.year, cursor.month)}
         </span>
 
@@ -161,7 +161,7 @@ export default function BookingCalendar({ value, onChange, hint }: Props) {
           onClick={() => step(1)}
           disabled={!canGoForward}
           aria-label="Next month"
-          className="flex h-8 w-8 items-center justify-center border border-outline-variant text-royal-navy transition-colors hover:bg-alabaster-white disabled:cursor-not-allowed disabled:opacity-30"
+          className="flex h-8 w-8 items-center justify-center border border-outline-variant text-ink transition-colors hover:bg-surface-alt disabled:cursor-not-allowed disabled:opacity-30"
         >
           <span className="material-symbols-outlined text-[18px]">chevron_right</span>
         </button>
@@ -208,7 +208,7 @@ export default function BookingCalendar({ value, onChange, hint }: Props) {
                   selected
                     ? "border-majestic-gold bg-royal-navy font-bold text-majestic-gold"
                     : day.selectable
-                      ? "border-transparent text-royal-navy hover:border-royal-navy/40 hover:bg-alabaster-white"
+                      ? "border-transparent text-ink hover:border-ink/40 hover:bg-surface-alt"
                       : "cursor-not-allowed border-transparent text-outline"
                 } ${day.isToday && !selected ? "ring-1 ring-inset ring-champagne-taupe" : ""}`}
               >
@@ -256,7 +256,7 @@ export default function BookingCalendar({ value, onChange, hint }: Props) {
 
       {value.date ? (
         <div className="border-t border-outline-variant px-4 py-4">
-          <p className="mb-3 text-[11px] font-bold uppercase tracking-[0.12em] text-royal-navy">
+          <p className="mb-3 text-[11px] font-bold uppercase tracking-[0.12em] text-ink">
             {formatLongDate(value.date)}
           </p>
 
@@ -276,7 +276,7 @@ export default function BookingCalendar({ value, onChange, hint }: Props) {
                       ? "border-majestic-gold bg-royal-navy font-semibold text-majestic-gold"
                       : slot.unavailable
                         ? "cursor-not-allowed border-outline-variant/60 text-outline"
-                        : "border-outline-variant text-royal-navy hover:border-royal-navy"
+                        : "border-outline-variant text-ink hover:border-ink"
                   }`}
                 >
                   <span className={slot.unavailable === "full" ? "line-through" : ""}>

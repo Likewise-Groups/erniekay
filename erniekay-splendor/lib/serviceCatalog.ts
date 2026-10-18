@@ -27,6 +27,23 @@ export type SubService = {
   group?: string;
   /** Short display text under a group heading. Falls back to `name`. */
   label?: string;
+  /**
+   * Priced variants the customer must choose between. When present, the
+   * sub-service itself is only a toggle in the UI: the booking carries the
+   * chosen tier's `name` instead, and the bare parent name cannot be priced.
+   */
+  tiers?: SubService[];
+  /** Heading over the tier choice, e.g. "Hair length". Defaults to "Choose your <name>". */
+  tierTitle?: string;
+  /** Unpriced questions asked once this sub-service is selected. */
+  questions?: FollowUpQuestion[];
+};
+
+/** A one-answer question whose reply is recorded on the booking for the stylist. */
+export type FollowUpQuestion = {
+  id: string;
+  title: string;
+  options: { label: string; hint?: string }[];
 };
 
 export type ServiceCategory = {
@@ -93,18 +110,95 @@ export const SERVICE_CATEGORIES: ServiceCategory[] = [
     id: "styling",
     title: "Styling",
     subServices: [
-      { name: "Straightening", price: "70-150" },
-      { name: "Curling", price: "80-200" },
-      { name: "Pixie Curls", price: 150 },
-      { name: "Bridal Inspo", price: "300-1000" },
+      {
+        name: "Straightening",
+        price: "70-150",
+        tierTitle: "Straightening: hair length",
+        tiers: [
+          { name: "Straightening (8\"–12\")", label: "8\"–12\"", price: 70 },
+          { name: "Straightening (14\"–16\")", label: "14\"–16\"", price: 80 },
+          { name: "Straightening (18\"–20\")", label: "18\"–20\"", price: 90 },
+          { name: "Straightening (22\"–24\")", label: "22\"–24\"", price: 100 },
+          { name: "Straightening (26\"–28\")", label: "26\"–28\"", price: 120 },
+          { name: "Straightening (30\"–34\")", label: "30\"–34\"", price: 150 },
+        ],
+      },
+      {
+        name: "Curling",
+        price: "80-200",
+        tierTitle: "Curling: hair length",
+        tiers: [
+          { name: "Curling (8\"–12\")", label: "8\"–12\"", price: 80 },
+          { name: "Curling (14\"–16\")", label: "14\"–16\"", price: 100 },
+          { name: "Curling (18\"–20\")", label: "18\"–20\"", price: 120 },
+          { name: "Curling (22\"–24\")", label: "22\"–24\"", price: 150 },
+          { name: "Curling (26\"–28\")", label: "26\"–28\"", price: 180 },
+          { name: "Curling (30\"–34\")", label: "30\"–34\"", price: 200 },
+        ],
+      },
+      { name: "Pixie Curls only", price: 150 },
+      { name: "Bridal inspo only", price: "300-1000" },
     ],
   },
   {
     id: "revamp-colouring",
     title: "Revamp / Colouring",
     subServices: [
-      { name: "Revamp Only", price: "100-200" },
-      { name: "Colouring", price: "400-1000" },
+      { name: "Revamp Only", price: 150 },
+      {
+        name: "Colouring",
+        price: "400-1200",
+        tiers: [
+          { name: "Colouring (Colours)", label: "Colours", price: "400-1000" },
+          { name: "Colouring (Highlights)", label: "Highlights", price: "400-600" },
+          { name: "Colouring (Premium)", label: "Premium", price: "600-1200" },
+        ],
+        questions: [
+          {
+            id: "colour-service",
+            title: "Colour service",
+            options: [
+              { label: "Full Colour" },
+              { label: "Highlights" },
+              { label: "Balayage" },
+              { label: "Ombre" },
+              { label: "Root Colour" },
+              { label: "Colour Correction" },
+              { label: "Creative/Fashion Colour" },
+            ],
+          },
+          {
+            id: "hair-length",
+            title: "Hair length",
+            options: [
+              { label: "Short", hint: "Pixie / above shoulder" },
+              { label: "Medium", hint: "Shoulder length" },
+              { label: "Long", hint: "Below shoulder" },
+              { label: "Extra Long", hint: "Mid-back and below" },
+            ],
+          },
+          {
+            id: "hair-volume",
+            title: "Hair volume",
+            options: [
+              { label: "Light" },
+              { label: "Medium" },
+              { label: "Full/Thick" },
+              { label: "Extra Full" },
+            ],
+          },
+          {
+            id: "colour-type",
+            title: "Colour type",
+            options: [
+              { label: "Standard Colour" },
+              { label: "Premium Colour" },
+              { label: "Bleach + Colour" },
+              { label: "Special/Creative Colour" },
+            ],
+          },
+        ],
+      },
       { name: "Natural Hair", price: "300-500" },
     ],
   },
@@ -264,8 +358,12 @@ export function priceSelection(
   const items: { name: string; price: number }[] = [];
   const unknown: string[] = [];
 
+  // Tiered sub-services are priced by their tier; the parent alone is not a
+  // price, so it is deliberately absent from this list and reads as unknown.
+  const priceable = category.subServices.flatMap((sub) => sub.tiers ?? [sub]);
+
   for (const name of unique) {
-    const sub = category.subServices.find((candidate) => candidate.name === name);
+    const sub = priceable.find((candidate) => candidate.name === name);
     if (sub) items.push({ name: sub.name, price: parsePrice(sub.price) });
     else unknown.push(name);
   }

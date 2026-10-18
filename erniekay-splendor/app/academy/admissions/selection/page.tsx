@@ -83,16 +83,16 @@ export default function AdmissionsSelectionPage() {
   };
 
   return (
-    <div className="flex flex-col min-h-screen bg-alabaster-white">
+    <div className="flex flex-col min-h-screen bg-surface-alt">
       <AdmissionsTopNav />
 
       <div className="flex flex-grow">
         <AdmissionsSideNav currentStep="selection" />
 
-        <main className="flex-grow bg-alabaster-white px-margin-mobile md:px-margin-desktop py-12">
+        <main className="flex-grow bg-surface-alt px-margin-mobile md:px-margin-desktop py-12">
           {/* Header Section */}
           <section className="max-w-[900px] mb-12">
-            <h1 className="font-display-lg text-display-lg text-royal-navy mb-4">
+            <h1 className="font-display-lg text-display-lg text-ink mb-4">
               Choose Your Path to Mastery
             </h1>
             <p className="font-body-base text-body-base text-on-surface-variant leading-relaxed">
@@ -119,7 +119,7 @@ export default function AdmissionsSelectionPage() {
 
           {/* Action Area */}
           <div className="flex justify-between items-center border-t border-outline-variant pt-12">
-            <button className="flex items-center gap-2 text-on-surface-variant font-label-caps text-label-caps hover:text-royal-navy transition-all">
+            <button className="flex items-center gap-2 text-on-surface-variant font-label-caps text-label-caps hover:text-ink transition-all">
               <span className="material-symbols-outlined">arrow_back</span>
               Back to Overview
             </button>
@@ -141,8 +141,8 @@ export default function AdmissionsSelectionPage() {
       {/* Inquire Modal */}
       {showInquireModal && (
         <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
-          <div className="bg-white p-8 rounded-xl max-w-md w-full mx-4">
-            <h2 className="font-headline-md text-headline-md text-royal-navy mb-4">
+          <div className="bg-card p-8 rounded-xl max-w-md w-full mx-4">
+            <h2 className="font-headline-md text-headline-md text-ink mb-4">
               Bespoke Curriculum Inquiry
             </h2>
             <p className="text-on-surface-variant mb-6">
@@ -153,17 +153,17 @@ export default function AdmissionsSelectionPage() {
               <input
                 type="email"
                 placeholder="Your email"
-                className="w-full border border-outline-variant p-3 font-body-base focus:outline-none focus:border-royal-navy"
+                className="w-full border border-outline-variant p-3 font-body-base focus:outline-none focus:border-ink"
               />
               <textarea
                 placeholder="Tell us about your vision..."
                 rows={4}
-                className="w-full border border-outline-variant p-3 font-body-base focus:outline-none focus:border-royal-navy"
+                className="w-full border border-outline-variant p-3 font-body-base focus:outline-none focus:border-ink"
               />
               <div className="flex gap-4">
                 <button
                   onClick={() => setShowInquireModal(false)}
-                  className="flex-1 border border-royal-navy text-royal-navy py-3 font-label-caps text-label-caps hover:bg-royal-navy hover:text-white transition-all"
+                  className="flex-1 border border-ink text-ink py-3 font-label-caps text-label-caps hover:bg-royal-navy hover:text-white transition-all"
                 >
                   Cancel
                 </button>

@@ -12,7 +12,7 @@ export default function ShopCategoryNav() {
   const [active, setActive] = useState("hair");
 
   return (
-    <section className="bg-alabaster-white py-10 md:py-12 border-b border-outline-variant">
+    <section className="bg-surface-alt py-10 md:py-12 border-b border-outline-variant">
       <div className="max-w-[1280px] mx-auto px-6 md:px-[64px] flex flex-wrap justify-center gap-8 md:gap-12">
         {categories.map((cat) => (
           <button
@@ -23,7 +23,7 @@ export default function ShopCategoryNav() {
           >
             <span
               className={`font-[family-name:var(--font-montserrat)] text-[12px] leading-[16px] tracking-[0.15em] uppercase font-bold transition-colors ${
-                active === cat.id ? "text-majestic-gold" : "text-royal-navy group-hover:text-majestic-gold"
+                active === cat.id ? "text-majestic-gold" : "text-ink group-hover:text-majestic-gold"
               }`}
             >
               {cat.label}

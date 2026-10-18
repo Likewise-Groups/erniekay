@@ -23,14 +23,23 @@ export const metadata: Metadata = {
     "Step into a sanctuary where clinical precision meets editorial luxury. Explore our curated salon services — hair artistry, nail care, SPA, and professional makeup.",
 };
 
+const themeScript = `try{var t=localStorage.getItem("theme");if(t==="dark"||(!t&&matchMedia("(prefers-color-scheme: dark)").matches))document.documentElement.classList.add("dark")}catch(e){}`;
+
 export default function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" className={`${ebGaramond.variable} ${montserrat.variable}`}>
+    <html
+      lang="en"
+      className={`${ebGaramond.variable} ${montserrat.variable}`}
+      // The theme script below adds `dark` before hydration.
+      suppressHydrationWarning
+    >
       <head>
+        {/* Apply the saved theme (or the OS preference) before first paint so there's no light flash */}
+        <script dangerouslySetInnerHTML={{ __html: themeScript }} />
         {/* Material Symbols */}
         <link
           rel="stylesheet"

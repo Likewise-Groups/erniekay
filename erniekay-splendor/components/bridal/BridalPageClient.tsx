@@ -134,7 +134,7 @@ export default function BridalPageClient({ media }: { media?: MediaOverrides }) 
                       .getElementById("bridal-packages")
                       ?.scrollIntoView({ behavior: "smooth", block: "start" })
                   }
-                  className="font-label-caps text-label-caps bg-majestic-gold px-8 py-4 font-bold text-royal-navy shadow-[0_10px_30px_rgba(212,175,55,0.25)] transition-all duration-300 hover:-translate-y-1 hover:bg-white"
+                  className="font-label-caps text-label-caps bg-majestic-gold px-8 py-4 font-bold text-royal-navy shadow-[0_10px_30px_rgba(212,175,55,0.25)] transition-all duration-300 hover:-translate-y-1 hover:bg-card"
                 >
                   View Packages
                 </button>
@@ -145,7 +145,7 @@ export default function BridalPageClient({ media }: { media?: MediaOverrides }) 
                       .getElementById("bridal-enquiry")
                       ?.scrollIntoView({ behavior: "smooth", block: "start" })
                   }
-                  className="font-label-caps text-label-caps border border-alabaster-white/40 px-8 py-4 font-bold transition-colors hover:border-majestic-gold hover:text-majestic-gold"
+                  className="font-label-caps text-label-caps border border-surface-alt/40 px-8 py-4 font-bold transition-colors hover:border-majestic-gold hover:text-majestic-gold"
                 >
                   Make an Enquiry
                 </button>
@@ -210,17 +210,17 @@ export default function BridalPageClient({ media }: { media?: MediaOverrides }) 
 
                 {/* Package of interest (set from the collections above) */}
                 {selectedPackage && (
-                  <div className="flex items-center justify-between gap-4 border-l-4 border-majestic-gold bg-alabaster-white/60 px-5 py-4">
+                  <div className="flex items-center justify-between gap-4 border-l-4 border-majestic-gold bg-surface-alt/60 px-5 py-4">
                     <div>
                       <p className="font-label-caps text-[11px] font-bold text-champagne-taupe tracking-[0.15em] uppercase">
                         Package of Interest
                       </p>
-                      <p className="font-headline-md text-royal-navy mt-1">{selectedPackage}</p>
+                      <p className="font-headline-md text-ink mt-1">{selectedPackage}</p>
                     </div>
                     <button
                       type="button"
                       onClick={() => setSelectedPackage(null)}
-                      className="font-label-caps text-[11px] font-bold text-warm-slate hover:text-royal-navy transition-colors uppercase tracking-[0.15em]"
+                      className="font-label-caps text-[11px] font-bold text-warm-slate hover:text-ink transition-colors uppercase tracking-[0.15em]"
                     >
                       Clear
                     </button>
@@ -236,48 +236,48 @@ export default function BridalPageClient({ media }: { media?: MediaOverrides }) 
                     >
                       01
                     </span>
-                    <h2 className="font-headline-md text-headline-md text-royal-navy">The Individual</h2>
+                    <h2 className="font-headline-md text-headline-md text-ink">The Individual</h2>
                   </div>
                   <div className="space-y-6">
                     <div className="relative">
-                      <label className="font-label-caps text-[11px] font-bold text-royal-navy block mb-1">Full Name</label>
+                      <label className="font-label-caps text-[11px] font-bold text-ink block mb-1">Full Name</label>
                       <input
                         required
                         value={fullName}
                         onChange={(e) => setFullName(e.target.value)}
-                        className="w-full bg-transparent border-t-0 border-x-0 border-b border-champagne-taupe/40 py-3 focus:ring-0 focus:outline-none focus:border-b-royal-navy px-0 placeholder-warm-slate/30"
+                        className="w-full bg-transparent border-t-0 border-x-0 border-b border-champagne-taupe/40 py-3 focus:ring-0 focus:outline-none focus:border-b-ink px-0 placeholder-warm-slate/30"
                         placeholder="Genevieve Sterling"
                         type="text"
                       />
                     </div>
                     <div className="relative">
-                      <label className="font-label-caps text-[11px] font-bold text-royal-navy block mb-1">Email Address</label>
+                      <label className="font-label-caps text-[11px] font-bold text-ink block mb-1">Email Address</label>
                       <input
                         required
                         value={email}
                         onChange={(e) => setEmail(e.target.value)}
-                        className="w-full bg-transparent border-t-0 border-x-0 border-b border-champagne-taupe/40 py-3 focus:ring-0 focus:outline-none focus:border-b-royal-navy px-0 placeholder-warm-slate/30"
+                        className="w-full bg-transparent border-t-0 border-x-0 border-b border-champagne-taupe/40 py-3 focus:ring-0 focus:outline-none focus:border-b-ink px-0 placeholder-warm-slate/30"
                         placeholder="grace@example.com"
                         type="email"
                       />
                     </div>
                     <div className="relative">
-                      <label className="font-label-caps text-[11px] font-bold text-royal-navy block mb-1">Phone Number</label>
+                      <label className="font-label-caps text-[11px] font-bold text-ink block mb-1">Phone Number</label>
                       <input
                         required
                         value={phone}
                         onChange={(e) => setPhone(e.target.value)}
-                        className="w-full bg-transparent border-t-0 border-x-0 border-b border-champagne-taupe/40 py-3 focus:ring-0 focus:outline-none focus:border-b-royal-navy px-0 placeholder-warm-slate/30"
+                        className="w-full bg-transparent border-t-0 border-x-0 border-b border-champagne-taupe/40 py-3 focus:ring-0 focus:outline-none focus:border-b-ink px-0 placeholder-warm-slate/30"
                         placeholder="+1 (555) 000-0000"
                         type="tel"
                       />
                     </div>
                     <div className="relative">
-                      <label className="font-label-caps text-[11px] font-bold text-royal-navy block mb-1">Social Handle</label>
+                      <label className="font-label-caps text-[11px] font-bold text-ink block mb-1">Social Handle</label>
                       <input
                         value={social}
                         onChange={(e) => setSocial(e.target.value)}
-                        className="w-full bg-transparent border-t-0 border-x-0 border-b border-champagne-taupe/40 py-3 focus:ring-0 focus:outline-none focus:border-b-royal-navy px-0 placeholder-warm-slate/30"
+                        className="w-full bg-transparent border-t-0 border-x-0 border-b border-champagne-taupe/40 py-3 focus:ring-0 focus:outline-none focus:border-b-ink px-0 placeholder-warm-slate/30"
                         placeholder="@bridal_elegance"
                         type="text"
                       />
@@ -294,76 +294,76 @@ export default function BridalPageClient({ media }: { media?: MediaOverrides }) 
                     >
                       02
                     </span>
-                    <h2 className="font-headline-md text-headline-md text-royal-navy">The Occasion</h2>
+                    <h2 className="font-headline-md text-headline-md text-ink">The Occasion</h2>
                   </div>
                   <div className="space-y-6">
                     <div className="relative">
-                      <label className="font-label-caps text-[11px] font-bold text-royal-navy block mb-1">Date of Marriage</label>
+                      <label className="font-label-caps text-[11px] font-bold text-ink block mb-1">Date of Marriage</label>
                       <input
                         required
                         value={weddingDate}
                         onChange={(e) => setWeddingDate(e.target.value)}
-                        className="w-full bg-transparent border-t-0 border-x-0 border-b border-champagne-taupe/40 py-3 focus:ring-0 focus:outline-none focus:border-b-royal-navy px-0 text-warm-slate"
+                        className="w-full bg-transparent border-t-0 border-x-0 border-b border-champagne-taupe/40 py-3 focus:ring-0 focus:outline-none focus:border-b-ink px-0 text-warm-slate"
                         type="date"
                       />
                     </div>
                     <div className="relative">
-                      <label className="font-label-caps text-[11px] font-bold text-royal-navy block mb-1">Venue &amp; Location</label>
+                      <label className="font-label-caps text-[11px] font-bold text-ink block mb-1">Venue &amp; Location</label>
                       <input
                         required
                         value={venue}
                         onChange={(e) => setVenue(e.target.value)}
-                        className="w-full bg-transparent border-t-0 border-x-0 border-b border-champagne-taupe/40 py-3 focus:ring-0 focus:outline-none focus:border-b-royal-navy px-0 placeholder-warm-slate/30"
+                        className="w-full bg-transparent border-t-0 border-x-0 border-b border-champagne-taupe/40 py-3 focus:ring-0 focus:outline-none focus:border-b-ink px-0 placeholder-warm-slate/30"
                         placeholder="St. Regis, Florence"
                         type="text"
                       />
                     </div>
                     <div className="grid grid-cols-2 gap-6">
                       <div className="relative">
-                        <label className="font-label-caps text-[11px] font-bold text-royal-navy block mb-1">Total Guests</label>
+                        <label className="font-label-caps text-[11px] font-bold text-ink block mb-1">Total Guests</label>
                         <input
                           value={totalGuests}
                           onChange={(e) => setTotalGuests(e.target.value)}
-                          className="w-full bg-transparent border-t-0 border-x-0 border-b border-champagne-taupe/40 py-3 focus:ring-0 focus:outline-none focus:border-b-royal-navy px-0 placeholder-warm-slate/30"
+                          className="w-full bg-transparent border-t-0 border-x-0 border-b border-champagne-taupe/40 py-3 focus:ring-0 focus:outline-none focus:border-b-ink px-0 placeholder-warm-slate/30"
                           placeholder="150"
                           type="number"
                         />
                       </div>
                       <div className="relative">
-                        <label className="font-label-caps text-[11px] font-bold text-royal-navy block mb-1">Bridal Party Size</label>
+                        <label className="font-label-caps text-[11px] font-bold text-ink block mb-1">Bridal Party Size</label>
                         <input
                           value={bridalPartySize}
                           onChange={(e) => setBridalPartySize(e.target.value)}
-                          className="w-full bg-transparent border-t-0 border-x-0 border-b border-champagne-taupe/40 py-3 focus:ring-0 focus:outline-none focus:border-b-royal-navy px-0 placeholder-warm-slate/30"
+                          className="w-full bg-transparent border-t-0 border-x-0 border-b border-champagne-taupe/40 py-3 focus:ring-0 focus:outline-none focus:border-b-ink px-0 placeholder-warm-slate/30"
                           placeholder="6"
                           type="number"
                         />
                       </div>
                     </div>
                     <div className="relative">
-                      <label className="font-label-caps text-[11px] font-bold text-royal-navy block mb-1">Bridal Prep Location</label>
+                      <label className="font-label-caps text-[11px] font-bold text-ink block mb-1">Bridal Prep Location</label>
                       <input
                         value={prepLocation}
                         onChange={(e) => setPrepLocation(e.target.value)}
-                        className="w-full bg-transparent border-t-0 border-x-0 border-b border-champagne-taupe/40 py-3 focus:ring-0 focus:outline-none focus:border-b-royal-navy px-0 placeholder-warm-slate/30"
+                        className="w-full bg-transparent border-t-0 border-x-0 border-b border-champagne-taupe/40 py-3 focus:ring-0 focus:outline-none focus:border-b-ink px-0 placeholder-warm-slate/30"
                         placeholder="Hotel, home or studio where you'll get ready"
                         type="text"
                       />
                     </div>
                     <div className="grid grid-cols-2 gap-6">
                       <div className="relative">
-                        <label className="font-label-caps text-[11px] font-bold text-royal-navy block mb-1">Bridesmaids / Mothers Needing Makeup</label>
+                        <label className="font-label-caps text-[11px] font-bold text-ink block mb-1">Bridesmaids / Mothers Needing Makeup</label>
                         <input
                           value={extraMakeupCount}
                           onChange={(e) => setExtraMakeupCount(e.target.value)}
-                          className="w-full bg-transparent border-t-0 border-x-0 border-b border-champagne-taupe/40 py-3 focus:ring-0 focus:outline-none focus:border-b-royal-navy px-0 placeholder-warm-slate/30"
+                          className="w-full bg-transparent border-t-0 border-x-0 border-b border-champagne-taupe/40 py-3 focus:ring-0 focus:outline-none focus:border-b-ink px-0 placeholder-warm-slate/30"
                           placeholder="0"
                           type="number"
                           min="0"
                         />
                       </div>
                       <div className="relative">
-                        <label className="font-label-caps text-[11px] font-bold text-royal-navy block mb-2">Groom Service</label>
+                        <label className="font-label-caps text-[11px] font-bold text-ink block mb-2">Groom Service</label>
                         <div className="flex gap-3 pt-1">
                           {(["Yes", "No"] as const).map((option) => (
                             <button
@@ -373,7 +373,7 @@ export default function BridalPageClient({ media }: { media?: MediaOverrides }) 
                               className={`px-6 py-2 font-label-caps text-[11px] font-bold uppercase tracking-[0.15em] transition-all active:scale-95 ${
                                 groomService === option
                                   ? "border border-majestic-gold text-majestic-gold"
-                                  : "border border-outline-variant text-warm-slate hover:border-royal-navy"
+                                  : "border border-outline-variant text-warm-slate hover:border-ink"
                               }`}
                             >
                               {option}
@@ -394,21 +394,21 @@ export default function BridalPageClient({ media }: { media?: MediaOverrides }) 
                     >
                       03
                     </span>
-                    <h2 className="font-headline-md text-headline-md text-royal-navy">The Vision</h2>
+                    <h2 className="font-headline-md text-headline-md text-ink">The Vision</h2>
                   </div>
                   <div className="space-y-6">
                     <div className="relative">
-                      <label className="font-label-caps text-[11px] font-bold text-royal-navy block mb-1">Desired Aesthetic</label>
+                      <label className="font-label-caps text-[11px] font-bold text-ink block mb-1">Desired Aesthetic</label>
                       <textarea
                         value={aesthetic}
                         onChange={(e) => setAesthetic(e.target.value)}
-                        className="w-full bg-transparent border-t-0 border-x-0 border-b border-champagne-taupe/40 py-3 focus:ring-0 focus:outline-none focus:border-b-royal-navy px-0 placeholder-warm-slate/30 resize-none"
+                        className="w-full bg-transparent border-t-0 border-x-0 border-b border-champagne-taupe/40 py-3 focus:ring-0 focus:outline-none focus:border-b-ink px-0 placeholder-warm-slate/30 resize-none"
                         placeholder="Describe your dream look..."
                         rows={3}
                       ></textarea>
                     </div>
                     <div className="space-y-4">
-                      <label className="font-label-caps text-[11px] font-bold text-royal-navy block mb-2">Services of Interest</label>
+                      <label className="font-label-caps text-[11px] font-bold text-ink block mb-2">Services of Interest</label>
                       
                       {/* Responsive Grid view for Checkboxes */}
                       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -417,17 +417,17 @@ export default function BridalPageClient({ media }: { media?: MediaOverrides }) 
                           return (
                             <label
                               key={service}
-                              className={`flex items-center gap-3 p-4 border rounded-lg active:bg-alabaster-white transition-colors cursor-pointer ${
-                                isSelected ? "border-majestic-gold bg-alabaster-white/20" : "border-outline-variant"
+                              className={`flex items-center gap-3 p-4 border rounded-lg active:bg-surface-alt transition-colors cursor-pointer ${
+                                isSelected ? "border-majestic-gold bg-surface-alt/20" : "border-outline-variant"
                               }`}
                             >
                               <input
                                 type="checkbox"
                                 checked={isSelected}
                                 onChange={() => handleCheckboxChange(service)}
-                                className="w-5 h-5 rounded-none border-royal-navy text-majestic-gold focus:ring-0 cursor-pointer"
+                                className="w-5 h-5 rounded-none border-ink text-majestic-gold focus:ring-0 cursor-pointer"
                               />
-                              <span className="font-body-base text-royal-navy font-medium">
+                              <span className="font-body-base text-ink font-medium">
                                 {service}
                               </span>
                             </label>
@@ -465,7 +465,7 @@ export default function BridalPageClient({ media }: { media?: MediaOverrides }) 
                   {/* Step A */}
                   <div className="flex items-start gap-6 relative">
                     <div className="w-8 h-8 rounded-full bg-majestic-gold flex items-center justify-center shrink-0 z-10">
-                      <span className="material-symbols-outlined text-royal-navy text-sm font-bold">chat</span>
+                      <span className="material-symbols-outlined text-ink text-sm font-bold">chat</span>
                     </div>
                     <div className="space-y-1">
                       <h4 className="font-label-caps text-label-caps text-majestic-gold font-bold">CONSULTATION</h4>
@@ -571,16 +571,16 @@ export default function BridalPageClient({ media }: { media?: MediaOverrides }) 
         </section>
 
         {/* ── Desktop Sanctuary Gallery View (Visible on Desktop) ── */}
-        <section className="py-12 md:py-24 bg-alabaster-white hidden md:block">
+        <section className="py-12 md:py-24 bg-surface-alt hidden md:block">
           <div className="grid grid-cols-1 md:grid-cols-2 items-center gap-12 max-w-[1280px] mx-auto px-6">
             <div className="space-y-6">
-              <h2 className="font-display-lg text-[32px] md:text-[36px] text-royal-navy font-semibold leading-tight">
+              <h2 className="font-display-lg text-[32px] md:text-[36px] text-ink font-semibold leading-tight">
                 The Bridal Sanctuary
               </h2>
               <p className="font-body-base text-body-base text-warm-slate leading-relaxed">
                 Located in the heart of the city, our salon serves as a private sanctuary for brides. Every appointment is a curated experience, designed to provide tranquility before your grand occasion.
               </p>
-              <Link href="#" className="inline-flex items-center gap-3 text-royal-navy font-label-caps text-label-caps group font-bold">
+              <Link href="#" className="inline-flex items-center gap-3 text-ink font-label-caps text-label-caps group font-bold">
                 EXPLORE THE ATELIER
                 <span className="material-symbols-outlined group-hover:translate-x-2 transition-transform">arrow_forward</span>
               </Link>
@@ -612,7 +612,7 @@ export default function BridalPageClient({ media }: { media?: MediaOverrides }) 
 
         {/* ── Mobile Sanctuary Box View (Visible on Mobile) ── */}
         <section className="p-6 bg-surface md:hidden">
-          <div className="border border-outline-variant bg-white p-6 space-y-6">
+          <div className="border border-outline-variant bg-card p-6 space-y-6">
             <div className="relative w-full aspect-video overflow-hidden">
               <Image
                 alt="Our Atelier"
@@ -623,11 +623,11 @@ export default function BridalPageClient({ media }: { media?: MediaOverrides }) 
               />
             </div>
             <div>
-              <h3 className="font-headline-md text-headline-md text-royal-navy mb-2">The Bridal Sanctuary</h3>
+              <h3 className="font-headline-md text-headline-md text-ink mb-2">The Bridal Sanctuary</h3>
               <p className="font-body-base text-warm-slate mb-6 text-sm leading-relaxed">
                 Experience our signature services in the heart of our flagship salon—a space designed for the ultimate preparation ritual.
               </p>
-              <Link href="#" className="inline-flex items-center gap-2 font-label-caps text-royal-navy group font-bold">
+              <Link href="#" className="inline-flex items-center gap-2 font-label-caps text-ink group font-bold">
                 EXPLORE THE ATELIER
                 <span className="material-symbols-outlined transition-transform group-hover:translate-x-1">
                   arrow_forward

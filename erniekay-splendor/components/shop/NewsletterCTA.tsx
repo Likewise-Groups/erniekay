@@ -53,7 +53,7 @@ export default function NewsletterCTA() {
               <button
                 type="submit"
                 id="newsletter-subscribe"
-                className="bg-majestic-gold text-royal-navy px-8 py-3 font-[family-name:var(--font-montserrat)] text-[12px] leading-[16px] tracking-[0.15em] uppercase font-bold hover:bg-white transition-colors active:scale-[0.98] shrink-0"
+                className="bg-majestic-gold text-royal-navy px-8 py-3 font-[family-name:var(--font-montserrat)] text-[12px] leading-[16px] tracking-[0.15em] uppercase font-bold hover:bg-card transition-colors active:scale-[0.98] shrink-0"
               >
                 Subscribe
               </button>

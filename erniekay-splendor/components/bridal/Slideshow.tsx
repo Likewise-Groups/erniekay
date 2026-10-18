@@ -53,7 +53,7 @@ export default function Slideshow({
               aria-label={`Show slide ${i + 1}`}
               onClick={() => setIndex(i)}
               className={`h-1.5 rounded-full transition-all duration-500 ${
-                i === index ? "w-6 bg-majestic-gold" : "w-1.5 bg-white/60"
+                i === index ? "w-6 bg-majestic-gold" : "w-1.5 bg-card/60"
               }`}
             />
           ))}

@@ -32,13 +32,13 @@ export default function BridalHero() {
           <div className="flex flex-col sm:flex-row gap-4">
             <button
               id="bridal-hero-inquire"
-              className="bg-majestic-gold text-royal-navy font-[family-name:var(--font-montserrat)] text-[12px] leading-[16px] tracking-[0.15em] uppercase font-bold px-10 py-4 hover:bg-white transition-colors active:scale-95"
+              className="bg-majestic-gold text-royal-navy font-[family-name:var(--font-montserrat)] text-[12px] leading-[16px] tracking-[0.15em] uppercase font-bold px-10 py-4 hover:bg-card transition-colors active:scale-95"
             >
               Inquire Now
             </button>
             <button
               id="bridal-hero-gallery"
-              className="border border-white text-white font-[family-name:var(--font-montserrat)] text-[12px] leading-[16px] tracking-[0.15em] uppercase px-10 py-4 hover:bg-white hover:text-primary transition-colors active:scale-95"
+              className="border border-white text-white font-[family-name:var(--font-montserrat)] text-[12px] leading-[16px] tracking-[0.15em] uppercase px-10 py-4 hover:bg-card hover:text-ink transition-colors active:scale-95"
             >
               View Bridal Gallery
             </button>

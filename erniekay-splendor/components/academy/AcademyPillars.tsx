@@ -23,7 +23,7 @@ const pillars = [
 
 export default function AcademyPillars() {
   return (
-    <section className="py-[112px] bg-white">
+    <section className="py-[112px] bg-card">
       <div className="max-w-[1280px] mx-auto px-6 md:px-[64px]">
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
           {pillars.map((p, i) => (
@@ -32,7 +32,7 @@ export default function AcademyPillars() {
                 <span className="material-symbols-outlined text-[40px] text-majestic-gold mb-6 block">
                   {p.icon}
                 </span>
-                <h3 className="font-[family-name:var(--font-eb-garamond)] text-[28px] leading-[36px] tracking-[-0.005em] font-semibold text-royal-navy mb-4">
+                <h3 className="font-[family-name:var(--font-eb-garamond)] text-[28px] leading-[36px] tracking-[-0.005em] font-semibold text-ink mb-4">
                   {p.title}
                 </h3>
                 <p className="font-[family-name:var(--font-montserrat)] text-[16px] leading-[26px] text-warm-slate">

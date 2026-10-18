@@ -47,7 +47,7 @@ export default function Testimonials() {
           <span className="font-[family-name:var(--font-montserrat)] text-[12px] leading-[16px] tracking-[0.3em] uppercase text-majestic-gold block mb-4">
             Reviews
           </span>
-          <h2 className="font-[family-name:var(--font-eb-garamond)] text-[36px] md:text-[42px] leading-tight font-semibold text-primary">
+          <h2 className="font-[family-name:var(--font-eb-garamond)] text-[36px] md:text-[42px] leading-tight font-semibold text-ink">
             Brides of Splendor
           </h2>
         </div>
@@ -57,13 +57,13 @@ export default function Testimonials() {
           {testimonials.map((t) => (
             <div
               key={t.id}
-              className="bg-white border border-[#EBEBEB] p-10 md:p-12 text-center flex flex-col items-center"
+              className="bg-card border border-surface-container-high p-10 md:p-12 text-center flex flex-col items-center"
             >
               <StarRating />
-              <p className="font-[family-name:var(--font-eb-garamond)] text-[22px] leading-[32px] font-semibold text-primary mb-8 italic">
+              <p className="font-[family-name:var(--font-eb-garamond)] text-[22px] leading-[32px] font-semibold text-ink mb-8 italic">
                 &ldquo;{t.quote}&rdquo;
               </p>
-              <h5 className="font-[family-name:var(--font-montserrat)] text-[12px] leading-[16px] tracking-[0.15em] uppercase font-bold text-royal-navy">
+              <h5 className="font-[family-name:var(--font-montserrat)] text-[12px] leading-[16px] tracking-[0.15em] uppercase font-bold text-ink">
                 — {t.author}, {t.date}
               </h5>
             </div>

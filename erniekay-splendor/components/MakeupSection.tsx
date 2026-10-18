@@ -54,7 +54,7 @@ export default function MakeupSection({ media }: { media?: MediaOverrides }) {
             </p>
             <button
               onClick={() => setIsModalOpen(true)}
-              className="bg-majestic-gold text-royal-navy px-8 py-4 font-[family-name:var(--font-montserrat)] text-[12px] leading-[16px] tracking-[0.15em] uppercase font-bold hover:bg-white hover:-translate-y-1 transition-all duration-300 shadow-[0_10px_20px_rgba(212,175,55,0.2)]"
+              className="bg-majestic-gold text-royal-navy px-8 py-4 font-[family-name:var(--font-montserrat)] text-[12px] leading-[16px] tracking-[0.15em] uppercase font-bold hover:bg-card hover:-translate-y-1 transition-all duration-300 shadow-[0_10px_20px_rgba(212,175,55,0.2)]"
             >
               Book An Artist
             </button>

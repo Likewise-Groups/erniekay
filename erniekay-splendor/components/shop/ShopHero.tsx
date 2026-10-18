@@ -31,13 +31,13 @@ export default function ShopHero() {
           <div className="flex flex-col sm:flex-row gap-4">
             <button
               id="shop-hero-explore"
-              className="bg-majestic-gold text-royal-navy px-8 py-4 font-[family-name:var(--font-montserrat)] text-[12px] leading-[16px] tracking-[0.15em] uppercase font-bold hover:bg-white transition-colors active:scale-[0.98]"
+              className="bg-majestic-gold text-royal-navy px-8 py-4 font-[family-name:var(--font-montserrat)] text-[12px] leading-[16px] tracking-[0.15em] uppercase font-bold hover:bg-card transition-colors active:scale-[0.98]"
             >
               Explore All
             </button>
             <button
               id="shop-hero-academy"
-              className="border border-white text-white px-8 py-4 font-[family-name:var(--font-montserrat)] text-[12px] leading-[16px] tracking-[0.15em] uppercase hover:bg-white hover:text-royal-navy transition-colors active:scale-[0.98]"
+              className="border border-white text-white px-8 py-4 font-[family-name:var(--font-montserrat)] text-[12px] leading-[16px] tracking-[0.15em] uppercase hover:bg-card hover:text-ink transition-colors active:scale-[0.98]"
             >
               The Academy Set
             </button>

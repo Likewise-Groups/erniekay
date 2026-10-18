@@ -7,6 +7,7 @@ import Link from "next/link";
 import { useCart } from "@/context/CartContext";
 import BookingModal, { ServiceCategory } from "./BookingModal";
 import { SERVICE_CATEGORIES } from "@/lib/serviceCatalog";
+import ThemeToggle from "./ThemeToggle";
 
 /* Service categories for the booking modal. Sourced from lib/serviceCatalog
    so the nav cannot drift from the section pages — it previously carried its
@@ -123,7 +124,7 @@ export default function Navbar() {
           {/* Hamburger â€” mobile only */}
           <button
             id="mobile-menu-trigger"
-            className="md:hidden text-royal-navy"
+            className="md:hidden text-ink"
             aria-label="Open menu"
             onClick={() => setMenuOpen(true)}
           >
@@ -133,11 +134,19 @@ export default function Navbar() {
           {/* Logo */}
           <Link href="/" className="flex items-center">
             <Image
-              src="/erniekayLogoW.jpeg"
+              src="/erniekay-splendor.png"
               alt="Erniekay Splendor Logo"
               width={200}
               height={72}
-              className="h-9 md:h-11 w-auto object-contain"
+              className="h-9 md:h-11 w-auto object-contain dark:hidden"
+              priority
+            />
+            <Image
+              src="/erniekay-splendor-dark.png"
+              alt="Erniekay Splendor Logo"
+              width={200}
+              height={72}
+              className="h-9 md:h-11 w-auto object-contain hidden dark:block"
               priority
             />
           </Link>
@@ -152,8 +161,8 @@ export default function Navbar() {
               onClick={() => setMenuOpen(false)}
               className={`group relative font-[family-name:var(--font-montserrat)] text-[15px] leading-[26px] transition-colors duration-300 ${
                 isActive(link.href)
-                  ? "text-royal-navy font-semibold"
-                  : "text-on-surface-variant hover:text-royal-navy"
+                  ? "text-ink font-semibold"
+                  : "text-on-surface-variant hover:text-ink"
               }`}
             >
               {link.label}
@@ -166,24 +175,26 @@ export default function Navbar() {
           ))}
         </div>
 
-        {/* Right: icons + Book Now */}
+        {/* Right: icons + Book Now (desktop) */}
         <div className="flex items-center justify-end gap-1 md:gap-2 flex-1">
           {/* Search Button */}
           <button
             id="nav-search"
             aria-label="Search"
             onClick={() => setSearchOpen(true)}
-            className="w-10 h-10 rounded-full flex items-center justify-center text-royal-navy hover:bg-royal-navy/5 hover:text-majestic-gold transition-all duration-300 active:scale-90"
+            className="w-10 h-10 rounded-full flex items-center justify-center text-ink hover:bg-ink/5 hover:text-majestic-gold transition-all duration-300 active:scale-90"
           >
             <span className="material-symbols-outlined">search</span>
           </button>
+
+          <ThemeToggle className="w-10 h-10 rounded-full flex items-center justify-center text-ink hover:bg-ink/5 hover:text-majestic-gold transition-all duration-300 active:scale-90" />
 
           {/* Shopping bag with cart count */}
           <Link
             href="/shop"
             id="nav-cart"
             aria-label="Shopping bag"
-            className="relative w-10 h-10 rounded-full flex items-center justify-center text-royal-navy hover:bg-royal-navy/5 hover:text-majestic-gold transition-all duration-300 active:scale-90"
+            className="relative w-10 h-10 rounded-full flex items-center justify-center text-ink hover:bg-ink/5 hover:text-majestic-gold transition-all duration-300 active:scale-90"
           >
             <span className="material-symbols-outlined">shopping_bag</span>
             {cartCount > 0 && (
@@ -196,7 +207,7 @@ export default function Navbar() {
           <button
             id="nav-book-now"
             onClick={() => setShowCategoryPicker(true)}
-            className="ml-1 md:ml-2 bg-royal-navy text-white px-5 md:px-8 py-2.5 md:py-3 rounded-full font-[family-name:var(--font-montserrat)] text-[11px] md:text-[12px] leading-[16px] tracking-[0.15em] uppercase font-bold border border-majestic-gold/60 shadow-[0_6px_20px_rgba(17,24,68,0.15)] hover:bg-majestic-gold hover:text-royal-navy hover:border-majestic-gold hover:-translate-y-0.5 hover:shadow-[0_10px_25px_rgba(212,175,55,0.3)] transition-all duration-300 active:translate-y-0 active:scale-95 flex items-center justify-center"
+            className="hidden md:flex ml-2 bg-royal-navy text-white px-8 py-3 rounded-full font-[family-name:var(--font-montserrat)] text-[12px] leading-[16px] tracking-[0.15em] uppercase font-bold border border-majestic-gold/60 shadow-[0_6px_20px_rgba(17,24,68,0.15)] hover:bg-majestic-gold hover:text-royal-navy hover:border-majestic-gold hover:-translate-y-0.5 hover:shadow-[0_10px_25px_rgba(212,175,55,0.3)] transition-all duration-300 active:translate-y-0 active:scale-95 items-center justify-center"
           >
             Book Now
           </button>
@@ -232,7 +243,7 @@ export default function Navbar() {
               className={`font-[family-name:var(--font-eb-garamond)] text-[28px] leading-[36px] font-semibold transition-colors ${
                 isActive(link.href)
                   ? "text-majestic-gold border-b-2 border-majestic-gold pb-1 self-start"
-                  : "text-surface-variant hover:text-majestic-gold"
+                  : "text-on-dark-variant hover:text-majestic-gold"
               }`}
             >
               {link.label}
@@ -249,7 +260,7 @@ export default function Navbar() {
             height={72}
             className="h-12 w-auto object-contain mb-4 rounded"
           />
-          <p className="text-surface-variant font-[family-name:var(--font-montserrat)] text-[12px] leading-[16px] tracking-[0.15em] uppercase">
+          <p className="text-on-dark-variant font-[family-name:var(--font-montserrat)] text-[12px] leading-[16px] tracking-[0.15em] uppercase">
             Timeless Editorial Elegance
           </p>
         </div>
@@ -354,7 +365,7 @@ export default function Navbar() {
       {/* â”€â”€ Category Picker Modal â”€â”€ */}
       {showCategoryPicker && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm">
-          <div className="bg-white w-full max-w-lg rounded-none border border-majestic-gold shadow-2xl overflow-hidden flex flex-col max-h-[90vh]">
+          <div className="bg-card w-full max-w-lg rounded-none border border-majestic-gold shadow-2xl overflow-hidden flex flex-col max-h-[90vh]">
             {/* Header */}
             <div className="bg-royal-navy p-6 flex justify-between items-center text-white">
               <div>
@@ -384,17 +395,17 @@ export default function Navbar() {
                       setShowCategoryPicker(false);
                       setBookingOpen(true);
                     }}
-                    className="w-full flex items-center justify-between p-4 border border-outline-variant hover:border-majestic-gold hover:bg-alabaster-white transition-all text-left group"
+                    className="w-full flex items-center justify-between p-4 border border-outline-variant hover:border-majestic-gold hover:bg-surface-alt transition-all text-left group"
                   >
                     <div>
-                      <span className="font-[family-name:var(--font-eb-garamond)] text-lg font-semibold text-royal-navy group-hover:text-majestic-gold transition-colors">
+                      <span className="font-[family-name:var(--font-eb-garamond)] text-lg font-semibold text-ink group-hover:text-majestic-gold transition-colors">
                         {cat.title}
                       </span>
                       <span className="block font-[family-name:var(--font-montserrat)] text-[11px] text-on-surface-variant mt-0.5">
                         {cat.subServices.length} services
                       </span>
                     </div>
-                    <span className="text-royal-navy group-hover:text-majestic-gold group-hover:translate-x-1 transition-all text-lg">â†’</span>
+                    <span className="text-ink group-hover:text-majestic-gold group-hover:translate-x-1 transition-all text-lg">â†’</span>
                   </button>
                 ))}
               </div>

@@ -399,12 +399,12 @@ function InfoRows({ rows }: { rows: InfoRow[] }) {
       {rows.map((row) => (
         <div
           key={row.label}
-          className="flex items-baseline justify-between gap-4 border-b border-[#F0F0F0] pb-3 last:border-0"
+          className="flex items-baseline justify-between gap-4 border-b border-surface-container pb-3 last:border-0"
         >
           <dt className="font-[family-name:var(--font-montserrat)] text-[13px] leading-[20px] text-on-surface-variant">
             {row.label}
           </dt>
-          <dd className="font-[family-name:var(--font-montserrat)] text-[13px] leading-[20px] font-bold text-royal-navy text-right shrink-0">
+          <dd className="font-[family-name:var(--font-montserrat)] text-[13px] leading-[20px] font-bold text-ink text-right shrink-0">
             {row.value}
           </dd>
         </div>
@@ -436,11 +436,11 @@ export default function BridalPackages({
     mode === "hair" ? [...hairInfoCards, ...universalInfoCards] : universalInfoCards;
 
   return (
-    <section className="py-[112px] bg-alabaster-white">
+    <section className="py-[112px] bg-surface-alt">
       <div className="max-w-[1280px] mx-auto px-6 md:px-[64px]">
         {/* Header */}
         <div className="text-center mb-10">
-          <h2 className="font-[family-name:var(--font-eb-garamond)] text-[48px] leading-[56px] tracking-[-0.01em] font-semibold text-primary mb-4">
+          <h2 className="font-[family-name:var(--font-eb-garamond)] text-[48px] leading-[56px] tracking-[-0.01em] font-semibold text-ink mb-4">
             Curated Bridal Collections
           </h2>
           <p className="font-[family-name:var(--font-montserrat)] text-[14px] leading-[22px] text-on-surface-variant">
@@ -451,7 +451,7 @@ export default function BridalPackages({
 
         {/* Service toggle — Makeup / Hair Styling */}
         <div className="mb-14 flex justify-center">
-          <div className="inline-flex border border-outline bg-white p-1">
+          <div className="inline-flex border border-outline bg-card p-1">
             {MODES.map((m) => (
               <button
                 key={m.key}
@@ -460,7 +460,7 @@ export default function BridalPackages({
                 className={`px-8 py-3 font-[family-name:var(--font-montserrat)] text-[12px] leading-[16px] tracking-[0.15em] uppercase font-bold transition-colors ${
                   mode === m.key
                     ? "bg-royal-navy text-white"
-                    : "text-royal-navy hover:text-majestic-gold"
+                    : "text-ink hover:text-majestic-gold"
                 }`}
               >
                 {m.label}
@@ -479,12 +479,12 @@ export default function BridalPackages({
             return (
               <FadeIn key={pkg.id} className="h-full" delay={(index % 3) * 120}>
               <div
-                className={`bg-white group hover:editorial-shadow transition-all duration-500 relative flex h-full flex-col p-8 hover:-translate-y-1 ${
+                className={`bg-card group hover:editorial-shadow transition-all duration-500 relative flex h-full flex-col p-8 hover:-translate-y-1 ${
                   isSelected
-                    ? "border-2 border-royal-navy"
+                    ? "border-2 border-ink"
                     : pkg.featured
                       ? "border-2 border-majestic-gold"
-                      : "border border-[#EBEBEB]"
+                      : "border border-surface-container-high"
                 }`}
               >
                 {/* Most Requested badge */}
@@ -504,7 +504,7 @@ export default function BridalPackages({
                 {/* Header image (edge-to-edge, breaking out of card padding).
                     object-contain so the full portrait image is always visible. */}
                 {pkg.imgSrc && (
-                  <div className="relative -mx-8 -mt-8 mb-6 aspect-[3/4] overflow-hidden bg-alabaster-white">
+                  <div className="relative -mx-8 -mt-8 mb-6 aspect-[3/4] overflow-hidden bg-surface-alt">
                     <Image
                       // The slot id carries the package id, so a card keeps its
                       // picture when the rate card is reordered. Falls back to
@@ -538,7 +538,7 @@ export default function BridalPackages({
                 </p>
 
                 {/* PRICE — the emphasis */}
-                <p className="font-[family-name:var(--font-eb-garamond)] text-[56px] leading-[60px] font-semibold text-royal-navy mb-4">
+                <p className="font-[family-name:var(--font-eb-garamond)] text-[56px] leading-[60px] font-semibold text-ink mb-4">
                   {currency.format(Number(pkg.price))}
                 </p>
 
@@ -574,7 +574,7 @@ export default function BridalPackages({
                       ? "bg-royal-navy text-white"
                       : pkg.featured
                         ? "bg-royal-navy text-white hover:bg-black"
-                        : "border border-royal-navy text-royal-navy hover:bg-royal-navy hover:text-white"
+                        : "border border-ink text-ink hover:bg-royal-navy hover:text-white"
                   }`}
                 >
                   {isSelected ? "Selected — Enquire Below" : "Enquire About This Package"}
@@ -593,7 +593,7 @@ export default function BridalPackages({
                 key={add.name}
                 className="font-[family-name:var(--font-montserrat)] text-[13px] leading-[20px] text-on-surface-variant"
               >
-                <span className="font-bold text-royal-navy">
+                <span className="font-bold text-ink">
                   {currency.format(Number(add.price))}
                 </span>{" "}
                 — {add.name}
@@ -608,7 +608,7 @@ export default function BridalPackages({
         {/* ── Good to Know — informational cards ── */}
         <div className="mt-24">
           <div className="text-center mb-12">
-            <h3 className="font-[family-name:var(--font-eb-garamond)] text-[36px] leading-[44px] font-semibold text-primary mb-4">
+            <h3 className="font-[family-name:var(--font-eb-garamond)] text-[36px] leading-[44px] font-semibold text-ink mb-4">
               Good to Know
             </h3>
             <div className="h-[2px] w-16 bg-majestic-gold mx-auto" />
@@ -618,7 +618,7 @@ export default function BridalPackages({
             {infoCards.map((card) => (
               <div
                 key={card.id}
-                className="bg-white border border-[#EBEBEB] p-8 flex flex-col"
+                className="bg-card border border-surface-container-high p-8 flex flex-col"
               >
                 <div className="flex items-center gap-3 mb-6">
                   <span
@@ -627,7 +627,7 @@ export default function BridalPackages({
                   >
                     {card.icon}
                   </span>
-                  <h4 className="font-[family-name:var(--font-eb-garamond)] text-[22px] leading-[28px] font-semibold text-royal-navy">
+                  <h4 className="font-[family-name:var(--font-eb-garamond)] text-[22px] leading-[28px] font-semibold text-ink">
                     {card.title}
                   </h4>
                 </div>

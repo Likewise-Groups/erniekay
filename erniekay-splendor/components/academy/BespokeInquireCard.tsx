@@ -16,7 +16,7 @@ export default function BespokeInquireCard({ onInquire }: BespokeInquireCardProp
         auto_awesome
       </span>
 
-      <h3 className="font-headline-md text-headline-md text-royal-navy mb-2">
+      <h3 className="font-headline-md text-headline-md text-ink mb-2">
         Bespoke Curriculum
       </h3>
 
@@ -27,7 +27,7 @@ export default function BespokeInquireCard({ onInquire }: BespokeInquireCardProp
 
       <button
         onClick={onInquire}
-        className="text-royal-navy font-label-caps text-label-caps border-b border-royal-navy pb-1 hover:text-majestic-gold hover:border-majestic-gold transition-all"
+        className="text-ink font-label-caps text-label-caps border-b border-ink pb-1 hover:text-majestic-gold hover:border-majestic-gold transition-all"
       >
         Inquire Privately
       </button>

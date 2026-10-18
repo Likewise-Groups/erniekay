@@ -44,7 +44,7 @@ export default function NailsSection({ media }: { media?: MediaOverrides }) {
   const categoryData = requireCategory("nail-care");
 
   return (
-    <section id="nails" className="py-[80px] md:py-[140px] bg-gradient-to-b from-[#fffcfb] to-[#fdf8f5] relative overflow-hidden">
+    <section id="nails" className="py-[80px] md:py-[140px] bg-gradient-to-b from-[#fffcfb] to-[#fdf8f5] dark:from-surface dark:to-surface-container-low relative overflow-hidden">
       {/* Decorative floating shapes */}
       <div className="absolute top-20 right-10 w-[400px] h-[400px] bg-majestic-gold/5 rounded-full blur-[80px] pointer-events-none" />
       <div className="absolute bottom-20 left-10 w-[500px] h-[500px] bg-royal-navy/5 rounded-full blur-[100px] pointer-events-none" />
@@ -58,7 +58,7 @@ export default function NailsSection({ media }: { media?: MediaOverrides }) {
               <span className="font-[family-name:var(--font-montserrat)] text-[12px] leading-[16px] tracking-[0.2em] uppercase font-bold text-majestic-gold mb-4 block">
                 Impeccable Finish
               </span>
-              <h2 className="font-[family-name:var(--font-eb-garamond)] text-[48px] md:text-[64px] leading-[52px] md:leading-[68px] tracking-[-0.01em] font-semibold text-royal-navy mb-6">
+              <h2 className="font-[family-name:var(--font-eb-garamond)] text-[48px] md:text-[64px] leading-[52px] md:leading-[68px] tracking-[-0.01em] font-semibold text-ink mb-6">
                 Nail Care <br className="hidden md:block"/> &amp; Artistry
               </h2>
               <p className="font-[family-name:var(--font-montserrat)] text-[16px] leading-[28px] text-on-surface-variant max-w-lg mb-8">
@@ -79,22 +79,22 @@ export default function NailsSection({ media }: { media?: MediaOverrides }) {
               {nailServices.map((svc, idx) => (
                 <div 
                   key={svc.id} 
-                  className="group relative bg-white/70 backdrop-blur-md rounded-2xl p-6 md:pl-20 border border-white shadow-[0_4px_20px_-10px_rgba(0,0,0,0.05)] hover:shadow-[0_20px_40px_-15px_rgba(212,175,55,0.15)] hover:border-majestic-gold/40 transition-all duration-500 hover:-translate-y-1 cursor-pointer overflow-hidden"
+                  className="group relative bg-card/70 backdrop-blur-md rounded-2xl p-6 md:pl-20 border border-white shadow-[0_4px_20px_-10px_rgba(0,0,0,0.05)] hover:shadow-[0_20px_40px_-15px_rgba(212,175,55,0.15)] hover:border-majestic-gold/40 transition-all duration-500 hover:-translate-y-1 cursor-pointer overflow-hidden"
                   onClick={() => setIsModalOpen(true)}
                 >
                   <div className="absolute right-0 top-0 w-32 h-32 bg-majestic-gold/5 blur-2xl rounded-full translate-x-1/2 -translate-y-1/2 opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
                   
                   {/* Step dot */}
-                  <div className="hidden md:flex absolute left-6 top-1/2 -translate-y-1/2 w-4 h-4 rounded-full bg-white border-2 border-majestic-gold items-center justify-center group-hover:scale-150 group-hover:bg-majestic-gold transition-all duration-500 shadow-[0_0_10px_rgba(212,175,55,0.5)] z-20">
+                  <div className="hidden md:flex absolute left-6 top-1/2 -translate-y-1/2 w-4 h-4 rounded-full bg-card border-2 border-majestic-gold items-center justify-center group-hover:scale-150 group-hover:bg-majestic-gold transition-all duration-500 shadow-[0_0_10px_rgba(212,175,55,0.5)] z-20">
                     <div className="w-1 h-1 bg-royal-navy rounded-full opacity-0 group-hover:opacity-100 transition-opacity delay-100" />
                   </div>
 
                   <div className="relative z-10">
                     <div className="flex justify-between items-start mb-2 gap-4">
-                      <h4 className="font-[family-name:var(--font-eb-garamond)] text-[22px] md:text-[26px] leading-[30px] font-semibold text-royal-navy group-hover:text-majestic-gold transition-colors duration-300">
+                      <h4 className="font-[family-name:var(--font-eb-garamond)] text-[22px] md:text-[26px] leading-[30px] font-semibold text-ink group-hover:text-majestic-gold transition-colors duration-300">
                         {svc.title}
                       </h4>
-                      <span className="font-[family-name:var(--font-montserrat)] text-[14px] font-bold text-royal-navy bg-white px-3 py-1 rounded-full border border-majestic-gold/20 shrink-0">
+                      <span className="font-[family-name:var(--font-montserrat)] text-[14px] font-bold text-ink bg-card px-3 py-1 rounded-full border border-majestic-gold/20 shrink-0">
                         {svc.price} GH₵
                       </span>
                     </div>
@@ -140,9 +140,9 @@ export default function NailsSection({ media }: { media?: MediaOverrides }) {
             </div>
             
             {/* Floating badge */}
-            <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 bg-white/90 backdrop-blur-md px-6 py-4 rounded-2xl shadow-xl border border-majestic-gold/20 z-20 flex flex-col items-center">
+            <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 bg-card/90 backdrop-blur-md px-6 py-4 rounded-2xl shadow-xl border border-majestic-gold/20 z-20 flex flex-col items-center">
               <span className="font-[family-name:var(--font-eb-garamond)] text-[24px] font-bold text-majestic-gold">100%</span>
-              <span className="font-[family-name:var(--font-montserrat)] text-[10px] uppercase tracking-widest font-bold text-royal-navy text-center">Sanitized<br/>Tools</span>
+              <span className="font-[family-name:var(--font-montserrat)] text-[10px] uppercase tracking-widest font-bold text-ink text-center">Sanitized<br/>Tools</span>
             </div>
 
           </div>

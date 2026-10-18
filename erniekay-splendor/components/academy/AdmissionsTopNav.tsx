@@ -5,7 +5,7 @@ import Image from "next/image";
 
 export default function AdmissionsTopNav() {
   return (
-    <nav className="bg-background dark:bg-inverse-surface border-b border-outline-variant dark:border-on-surface-variant flex justify-between items-center px-margin-desktop py-4 max-w-[1280px] mx-auto w-full z-50 sticky top-0">
+    <nav className="bg-background border-b border-outline-variant flex justify-between items-center px-margin-desktop py-4 max-w-[1280px] mx-auto w-full z-50 sticky top-0">
       <Link href="/academy" className="hover:opacity-80 transition-opacity">
         <Image
           src="/erniekayacademy logo.jpeg"
@@ -20,25 +20,25 @@ export default function AdmissionsTopNav() {
       <div className="hidden md:flex gap-8 items-center">
         <Link
           href="/academy/programs"
-          className="text-on-surface-variant dark:text-outline-variant hover:text-majestic-gold transition-colors duration-300 font-label-caps text-label-caps"
+          className="text-on-surface-variant hover:text-majestic-gold transition-colors duration-300 font-label-caps text-label-caps"
         >
           Programs
         </Link>
         <Link
           href="/academy"
-          className="text-on-surface-variant dark:text-outline-variant hover:text-majestic-gold transition-colors duration-300 font-label-caps text-label-caps"
+          className="text-on-surface-variant hover:text-majestic-gold transition-colors duration-300 font-label-caps text-label-caps"
         >
           Academy
         </Link>
         <Link
           href="/academy/admissions"
-          className="text-royal-navy dark:text-majestic-gold border-b-2 border-majestic-gold pb-1 font-label-caps text-label-caps"
+          className="text-ink border-b-2 border-majestic-gold pb-1 font-label-caps text-label-caps"
         >
           Admissions
         </Link>
         <Link
           href="/bridal"
-          className="text-on-surface-variant dark:text-outline-variant hover:text-majestic-gold transition-colors duration-300 font-label-caps text-label-caps"
+          className="text-on-surface-variant hover:text-majestic-gold transition-colors duration-300 font-label-caps text-label-caps"
         >
           Bespoke
         </Link>

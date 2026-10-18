@@ -84,7 +84,7 @@ function ProductCard({ product }: { product: Product }) {
   return (
     <div className="group">
       {/* Image container */}
-      <div className="relative aspect-[4/5] bg-white border border-[#EBEBEB] overflow-hidden mb-6 transition-all duration-500 hover:shadow-sm">
+      <div className="relative aspect-[4/5] bg-card border border-surface-container-high overflow-hidden mb-6 transition-all duration-500 hover:shadow-sm">
         <Image
           src={product.imgSrc}
           alt={product.imgAlt}
@@ -112,7 +112,7 @@ function ProductCard({ product }: { product: Product }) {
             onClick={() =>
               addItem({ productId: product.id, title: product.title, price: product.price })
             }
-            className="w-full bg-white text-royal-navy py-4 font-[family-name:var(--font-montserrat)] text-[12px] leading-[16px] tracking-[0.15em] uppercase font-bold border border-royal-navy hover:bg-royal-navy hover:text-white transition-colors"
+            className="w-full bg-card text-ink py-4 font-[family-name:var(--font-montserrat)] text-[12px] leading-[16px] tracking-[0.15em] uppercase font-bold border border-ink hover:bg-royal-navy hover:text-white transition-colors"
           >
             Add to Ritual
           </button>
@@ -125,10 +125,10 @@ function ProductCard({ product }: { product: Product }) {
           {product.brand}
         </span>
         <div className="flex justify-between items-start">
-          <h3 className="font-[family-name:var(--font-eb-garamond)] text-[22px] leading-[30px] font-semibold text-royal-navy">
+          <h3 className="font-[family-name:var(--font-eb-garamond)] text-[22px] leading-[30px] font-semibold text-ink">
             {product.title}
           </h3>
-          <span className="font-[family-name:var(--font-montserrat)] text-[16px] leading-[26px] text-royal-navy font-medium">
+          <span className="font-[family-name:var(--font-montserrat)] text-[16px] leading-[26px] text-ink font-medium">
             ${product.price}
           </span>
         </div>

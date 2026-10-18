@@ -91,7 +91,7 @@ export default function BridalInquiry() {
           </div>
 
           {/* Right — form */}
-          <div className="lg:w-2/3 bg-white p-8 md:p-12 text-primary">
+          <div className="lg:w-2/3 bg-card p-8 md:p-12 text-ink">
             <form className="space-y-10" onSubmit={(e) => e.preventDefault()}>
               {/* Grid inputs */}
               <div className="grid grid-cols-1 md:grid-cols-2 gap-8 md:gap-10">
@@ -150,7 +150,7 @@ export default function BridalInquiry() {
                       className={`px-6 py-2 font-[family-name:var(--font-montserrat)] text-[10px] leading-[16px] tracking-[0.15em] uppercase font-bold transition-all active:scale-95 ${
                         selectedPkg === pkg
                           ? "border border-majestic-gold text-majestic-gold"
-                          : "border border-outline text-on-surface-variant hover:border-royal-navy"
+                          : "border border-outline text-on-surface-variant hover:border-ink"
                       }`}
                     >
                       {pkg}

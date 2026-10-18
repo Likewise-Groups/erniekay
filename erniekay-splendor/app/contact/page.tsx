@@ -72,7 +72,7 @@ export default function ContactPage() {
                 <span className="font-[family-name:var(--font-montserrat)] text-[12px] leading-[16px] tracking-[0.3em] text-champagne-taupe mb-4 block uppercase font-bold">
                   CONNECT WITH US
                 </span>
-                <h1 className="font-[family-name:var(--font-eb-garamond)] text-[48px] leading-[56px] font-semibold text-royal-navy mb-8">
+                <h1 className="font-[family-name:var(--font-eb-garamond)] text-[48px] leading-[56px] font-semibold text-ink mb-8">
                   Contact &amp; Inquiry
                 </h1>
                 <p className="font-[family-name:var(--font-montserrat)] text-[16px] leading-[26px] text-warm-slate max-w-xl mb-12 border-l-2 border-majestic-gold pl-6">
@@ -80,7 +80,7 @@ export default function ContactPage() {
                 </p>
               </div>
               <div className="col-span-5 h-[600px] relative">
-                <div className="absolute inset-0 bg-alabaster-white border border-outline-variant transform translate-x-4 translate-y-4"></div>
+                <div className="absolute inset-0 bg-surface-alt border border-outline-variant transform translate-x-4 translate-y-4"></div>
                 <div className="absolute inset-0 z-0 overflow-hidden">
                   <Image
                     className="w-full h-full object-cover grayscale hover:grayscale-0 transition-all duration-700"
@@ -95,13 +95,13 @@ export default function ContactPage() {
           </section>
 
           {/* Desktop Inquiry Details Grid */}
-          <section className="py-[112px] px-[64px] bg-alabaster-white">
+          <section className="py-[112px] px-[64px] bg-surface-alt">
             <div className="max-w-[1280px] mx-auto grid grid-cols-12 gap-16">
               
               {/* Contact Details (Left Column) */}
               <div className="col-span-4 space-y-12">
                 <div>
-                  <h3 className="font-[family-name:var(--font-montserrat)] text-[12px] font-bold text-royal-navy mb-6 tracking-widest border-b border-outline-variant pb-2 inline-block">
+                  <h3 className="font-[family-name:var(--font-montserrat)] text-[12px] font-bold text-ink mb-6 tracking-widest border-b border-outline-variant pb-2 inline-block">
                     THE ATELIER
                   </h3>
                   <p className="font-[family-name:var(--font-montserrat)] text-sm text-warm-slate leading-relaxed">
@@ -110,7 +110,7 @@ export default function ContactPage() {
                   </p>
                 </div>
                 <div>
-                  <h3 className="font-[family-name:var(--font-montserrat)] text-[12px] font-bold text-royal-navy mb-6 tracking-widest border-b border-outline-variant pb-2 inline-block">
+                  <h3 className="font-[family-name:var(--font-montserrat)] text-[12px] font-bold text-ink mb-6 tracking-widest border-b border-outline-variant pb-2 inline-block">
                     DIRECT LINE
                   </h3>
                   <p className="font-[family-name:var(--font-montserrat)] text-sm text-warm-slate leading-relaxed">
@@ -119,7 +119,7 @@ export default function ContactPage() {
                   </p>
                 </div>
                 <div>
-                  <h3 className="font-[family-name:var(--font-montserrat)] text-[12px] font-bold text-royal-navy mb-6 tracking-widest border-b border-outline-variant pb-2 inline-block">
+                  <h3 className="font-[family-name:var(--font-montserrat)] text-[12px] font-bold text-ink mb-6 tracking-widest border-b border-outline-variant pb-2 inline-block">
                     CORRESPONDENCE
                   </h3>
                   <p className="font-[family-name:var(--font-montserrat)] text-sm text-warm-slate leading-relaxed">
@@ -144,7 +144,7 @@ export default function ContactPage() {
               <div className="col-span-8 bg-surface p-16 border border-outline-variant shadow-sm">
                 <form className="space-y-10" onSubmit={handleSubmit}>
                   <div className="grid grid-cols-2 gap-10">
-                    <div className="relative border-b border-champagne-taupe pb-2 focus-within:border-royal-navy transition-colors">
+                    <div className="relative border-b border-champagne-taupe pb-2 focus-within:border-ink transition-colors">
                       <input
                         className="w-full bg-transparent border-none focus:ring-0 p-0 font-[family-name:var(--font-montserrat)] text-on-surface placeholder:text-warm-slate/30 text-sm outline-none"
                         id="name"
@@ -158,7 +158,7 @@ export default function ContactPage() {
                         Full Name
                       </label>
                     </div>
-                    <div className="relative border-b border-champagne-taupe pb-2 focus-within:border-royal-navy transition-colors">
+                    <div className="relative border-b border-champagne-taupe pb-2 focus-within:border-ink transition-colors">
                       <input
                         className="w-full bg-transparent border-none focus:ring-0 p-0 font-[family-name:var(--font-montserrat)] text-on-surface placeholder:text-warm-slate/30 text-sm outline-none"
                         id="email"
@@ -174,7 +174,7 @@ export default function ContactPage() {
                     </div>
                   </div>
                   <div className="grid grid-cols-2 gap-10">
-                    <div className="relative border-b border-champagne-taupe pb-2 focus-within:border-royal-navy transition-colors">
+                    <div className="relative border-b border-champagne-taupe pb-2 focus-within:border-ink transition-colors">
                       <input
                         className="w-full bg-transparent border-none focus:ring-0 p-0 font-[family-name:var(--font-montserrat)] text-on-surface placeholder:text-warm-slate/30 text-sm outline-none"
                         id="phone"
@@ -187,7 +187,7 @@ export default function ContactPage() {
                         Phone Number
                       </label>
                     </div>
-                    <div className="relative border-b border-champagne-taupe pb-2 focus-within:border-royal-navy transition-colors">
+                    <div className="relative border-b border-champagne-taupe pb-2 focus-within:border-ink transition-colors">
                       <select
                         className="w-full bg-transparent border-none focus:ring-0 p-0 font-[family-name:var(--font-montserrat)] text-on-surface appearance-none cursor-pointer text-sm outline-none"
                         id="department"
@@ -208,7 +208,7 @@ export default function ContactPage() {
                       </span>
                     </div>
                   </div>
-                  <div className="relative border-b border-champagne-taupe pb-2 focus-within:border-royal-navy transition-colors">
+                  <div className="relative border-b border-champagne-taupe pb-2 focus-within:border-ink transition-colors">
                     <textarea
                       className="w-full bg-transparent border-none focus:ring-0 p-0 font-[family-name:var(--font-montserrat)] text-on-surface resize-none text-sm outline-none"
                       id="message"
@@ -248,14 +248,14 @@ export default function ContactPage() {
             />
             <div className="absolute inset-0 z-20 flex items-center justify-center">
               <div className="bg-surface/95 backdrop-blur-sm p-8 border border-majestic-gold max-w-xs text-center shadow-lg">
-                <h5 className="font-[family-name:var(--font-eb-garamond)] text-[22px] font-semibold text-royal-navy mb-2">
+                <h5 className="font-[family-name:var(--font-eb-garamond)] text-[22px] font-semibold text-ink mb-2">
                   Visit Us
                 </h5>
                 <p className="font-[family-name:var(--font-montserrat)] text-[13px] text-warm-slate leading-relaxed mb-4">
                   Monday — Saturday<br />9:00 AM — 7:00 PM
                 </p>
                 <a
-                  className="font-[family-name:var(--font-montserrat)] text-[10px] text-majestic-gold underline font-bold tracking-widest uppercase hover:text-royal-navy transition-colors"
+                  className="font-[family-name:var(--font-montserrat)] text-[10px] text-majestic-gold underline font-bold tracking-widest uppercase hover:text-ink transition-colors"
                   href="#"
                 >
                   GET DIRECTIONS
@@ -271,7 +271,7 @@ export default function ContactPage() {
                 <span className="font-[family-name:var(--font-montserrat)] text-[12px] leading-[16px] tracking-[0.3em] uppercase font-bold text-champagne-taupe mb-4 block">
                   RESOURCES
                 </span>
-                <h2 className="font-[family-name:var(--font-eb-garamond)] text-[36px] md:text-[44px] font-semibold text-royal-navy">
+                <h2 className="font-[family-name:var(--font-eb-garamond)] text-[36px] md:text-[44px] font-semibold text-ink">
                   Essential Inquiries
                 </h2>
               </div>
@@ -279,13 +279,13 @@ export default function ContactPage() {
                 {faqs.map((faq, idx) => (
                   <div
                     key={idx}
-                    className="border border-outline-variant bg-white transition-all duration-300"
+                    className="border border-outline-variant bg-card transition-all duration-300"
                   >
                     <button
                       onClick={() => toggleAccordion(idx)}
                       className="w-full flex justify-between items-center p-6 cursor-pointer text-left outline-none"
                     >
-                      <span className="font-[family-name:var(--font-montserrat)] text-[14px] font-bold text-royal-navy">
+                      <span className="font-[family-name:var(--font-montserrat)] text-[14px] font-bold text-ink">
                         {faq.q}
                       </span>
                       <span
@@ -320,7 +320,7 @@ export default function ContactPage() {
               <span className="font-[family-name:var(--font-montserrat)] text-[10px] text-champagne-taupe block mb-4 uppercase tracking-[0.2em] font-bold">
                 CONNECT WITH SPLENDOR
               </span>
-              <h2 className="font-[family-name:var(--font-eb-garamond)] text-[32px] font-semibold text-royal-navy mb-6 leading-tight">
+              <h2 className="font-[family-name:var(--font-eb-garamond)] text-[32px] font-semibold text-ink mb-6 leading-tight">
                 Artistry and Education, <br /><span className="italic font-normal">perfectly distilled.</span>
               </h2>
               <div className="w-full aspect-[4/5] overflow-hidden bg-surface-container relative mb-8">
@@ -339,9 +339,9 @@ export default function ContactPage() {
           </section>
 
           {/* Mobile Atelier Section */}
-          <section className="bg-alabaster-white py-16 px-6">
+          <section className="bg-surface-alt py-16 px-6">
             <div className="max-w-md mx-auto">
-              <h3 className="font-[family-name:var(--font-eb-garamond)] text-[22px] font-semibold text-royal-navy border-b border-champagne-taupe/20 pb-4 mb-8">
+              <h3 className="font-[family-name:var(--font-eb-garamond)] text-[22px] font-semibold text-ink border-b border-champagne-taupe/20 pb-4 mb-8">
                 The Atelier
               </h3>
               <div className="space-y-10">
@@ -350,7 +350,7 @@ export default function ContactPage() {
                     DIRECT LINE
                   </span>
                   <a
-                    className="font-[family-name:var(--font-montserrat)] text-[18px] font-bold text-royal-navy underline decoration-majestic-gold decoration-2 underline-offset-4"
+                    className="font-[family-name:var(--font-montserrat)] text-[18px] font-bold text-ink underline decoration-majestic-gold decoration-2 underline-offset-4"
                     href="tel:+15550109988"
                   >
                     +1 (555) 010-9988
@@ -361,7 +361,7 @@ export default function ContactPage() {
                     CORRESPONDENCE
                   </span>
                   <a
-                    className="font-[family-name:var(--font-montserrat)] text-[18px] font-bold text-royal-navy underline decoration-majestic-gold decoration-2 underline-offset-4"
+                    className="font-[family-name:var(--font-montserrat)] text-[18px] font-bold text-ink underline decoration-majestic-gold decoration-2 underline-offset-4"
                     href="mailto:atelier@erniekay.com"
                   >
                     atelier@erniekay.com
@@ -371,7 +371,7 @@ export default function ContactPage() {
                   <span className="font-[family-name:var(--font-montserrat)] text-[11px] font-bold text-champagne-taupe tracking-wider uppercase">
                     LOCATION
                   </span>
-                  <p className="font-[family-name:var(--font-montserrat)] text-[14px] leading-relaxed text-royal-navy">
+                  <p className="font-[family-name:var(--font-montserrat)] text-[14px] leading-relaxed text-ink">
                     425 Madison Avenue, 12th Floor<br />New York, NY 10017
                   </p>
                 </div>
@@ -382,16 +382,16 @@ export default function ContactPage() {
           {/* Mobile Submit Inquiry form */}
           <section className="bg-surface-bright py-16 px-6">
             <div className="max-w-md mx-auto">
-              <h3 className="font-[family-name:var(--font-eb-garamond)] text-[22px] font-semibold text-royal-navy mb-2">
+              <h3 className="font-[family-name:var(--font-eb-garamond)] text-[22px] font-semibold text-ink mb-2">
                 Submit Inquiry
               </h3>
               <p className="font-[family-name:var(--font-montserrat)] text-sm text-warm-slate mb-10">
                 Allow us to curate your experience. Please provide the details below.
               </p>
               <form className="space-y-8" onSubmit={handleSubmit}>
-                <div className="relative border-b border-champagne-taupe pb-2 focus-within:border-royal-navy transition-colors">
+                <div className="relative border-b border-champagne-taupe pb-2 focus-within:border-ink transition-colors">
                   <input
-                    className="w-full bg-transparent border-none outline-none py-1 font-[family-name:var(--font-montserrat)] text-[14px] text-on-surface placeholder:text-surface-dim"
+                    className="w-full bg-transparent border-none outline-none py-1 font-[family-name:var(--font-montserrat)] text-[14px] text-on-surface placeholder:text-on-dark-dim"
                     id="name"
                     placeholder="Your Name"
                     type="text"
@@ -403,9 +403,9 @@ export default function ContactPage() {
                     FULL NAME
                   </label>
                 </div>
-                <div className="relative border-b border-champagne-taupe pb-2 focus-within:border-royal-navy transition-colors">
+                <div className="relative border-b border-champagne-taupe pb-2 focus-within:border-ink transition-colors">
                   <input
-                    className="w-full bg-transparent border-none outline-none py-1 font-[family-name:var(--font-montserrat)] text-[14px] text-on-surface placeholder:text-surface-dim"
+                    className="w-full bg-transparent border-none outline-none py-1 font-[family-name:var(--font-montserrat)] text-[14px] text-on-surface placeholder:text-on-dark-dim"
                     id="email"
                     placeholder="email@address.com"
                     type="email"
@@ -417,9 +417,9 @@ export default function ContactPage() {
                     EMAIL ADDRESS
                   </label>
                 </div>
-                <div className="relative border-b border-champagne-taupe pb-2 focus-within:border-royal-navy transition-colors">
+                <div className="relative border-b border-champagne-taupe pb-2 focus-within:border-ink transition-colors">
                   <input
-                    className="w-full bg-transparent border-none outline-none py-1 font-[family-name:var(--font-montserrat)] text-[14px] text-on-surface placeholder:text-surface-dim"
+                    className="w-full bg-transparent border-none outline-none py-1 font-[family-name:var(--font-montserrat)] text-[14px] text-on-surface placeholder:text-on-dark-dim"
                     id="phone"
                     placeholder="+1 (000) 000-0000"
                     type="tel"
@@ -430,7 +430,7 @@ export default function ContactPage() {
                     PHONE
                   </label>
                 </div>
-                <div className="relative border-b border-champagne-taupe pb-2 focus-within:border-royal-navy transition-colors">
+                <div className="relative border-b border-champagne-taupe pb-2 focus-within:border-ink transition-colors">
                   <select
                     className="w-full bg-transparent border-none outline-none py-1 font-[family-name:var(--font-montserrat)] text-[14px] text-on-surface appearance-none"
                     id="department"
@@ -448,7 +448,7 @@ export default function ContactPage() {
                     DEPARTMENT
                   </label>
                 </div>
-                <div className="relative border-b border-champagne-taupe pb-2 focus-within:border-royal-navy transition-colors">
+                <div className="relative border-b border-champagne-taupe pb-2 focus-within:border-ink transition-colors">
                   <textarea
                     className="w-full bg-transparent border-none outline-none py-1 font-[family-name:var(--font-montserrat)] text-[14px] text-on-surface resize-none"
                     id="message"
@@ -497,20 +497,20 @@ export default function ContactPage() {
           {/* Mobile FAQ list */}
           <section className="bg-surface-bright py-16 px-6">
             <div className="max-w-md mx-auto">
-              <h3 className="font-[family-name:var(--font-eb-garamond)] text-[22px] font-semibold text-royal-navy mb-8">
+              <h3 className="font-[family-name:var(--font-eb-garamond)] text-[22px] font-semibold text-ink mb-8">
                 Essential Inquiries
               </h3>
               <div className="space-y-4">
                 {faqs.map((faq, idx) => (
                   <div
                     key={idx}
-                    className="border border-champagne-taupe/20 bg-white"
+                    className="border border-champagne-taupe/20 bg-card"
                   >
                     <button
                       onClick={() => toggleAccordion(idx + 10)}
                       className="w-full flex items-center justify-between p-6 cursor-pointer text-left outline-none"
                     >
-                      <span className="font-[family-name:var(--font-montserrat)] text-sm font-bold text-royal-navy">
+                      <span className="font-[family-name:var(--font-montserrat)] text-sm font-bold text-ink">
                         {faq.q}
                       </span>
                       <span

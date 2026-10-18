@@ -268,13 +268,13 @@ export default function BookingPage() {
           <div className="flex items-center gap-3">
             <button
               onClick={() => setStep(1)}
-              className="w-8 h-8 rounded-full border border-royal-navy flex items-center justify-center bg-royal-navy text-majestic-gold"
+              className="w-8 h-8 rounded-full border border-ink flex items-center justify-center bg-royal-navy text-majestic-gold"
             >
               <span className="material-symbols-outlined text-[16px]" style={{ fontVariationSettings: "'FILL' 1" }}>
                 check
               </span>
             </button>
-            <span className="text-label-caps font-label-caps text-royal-navy">Service</span>
+            <span className="text-label-caps font-label-caps text-ink">Service</span>
           </div>
           <div className={`w-12 h-[1px] ${step > 1 ? "bg-royal-navy" : "bg-outline-variant"}`}></div>
 
@@ -282,7 +282,7 @@ export default function BookingPage() {
             <button
               onClick={() => (selectedService || isBridalBespokeSelected) && setStep(2)}
               disabled={!selectedService && !isBridalBespokeSelected}
-              className={`w-8 h-8 rounded-full border border-royal-navy flex items-center justify-center ${
+              className={`w-8 h-8 rounded-full border border-ink flex items-center justify-center ${
                 step > 2 ? "bg-royal-navy text-majestic-gold" : "bg-surface"
               }`}
             >
@@ -294,7 +294,7 @@ export default function BookingPage() {
                 <div className={`rounded-full ${step === 2 ? "w-2 h-2 bg-majestic-gold" : "w-1.5 h-1.5 bg-champagne-taupe"}`}></div>
               )}
             </button>
-            <span className={`text-label-caps font-label-caps ${step >= 2 ? "text-royal-navy" : "text-warm-slate"}`}>Artist</span>
+            <span className={`text-label-caps font-label-caps ${step >= 2 ? "text-ink" : "text-warm-slate"}`}>Artist</span>
           </div>
           <div className={`w-12 h-[1px] ${step > 2 ? "bg-royal-navy" : "bg-outline-variant"}`}></div>
 
@@ -302,7 +302,7 @@ export default function BookingPage() {
             <button
               onClick={() => selectedArtist && setStep(3)}
               disabled={!selectedArtist}
-              className={`w-8 h-8 rounded-full border border-royal-navy flex items-center justify-center ${
+              className={`w-8 h-8 rounded-full border border-ink flex items-center justify-center ${
                 step > 3 ? "bg-royal-navy text-majestic-gold" : "bg-surface"
               }`}
             >
@@ -314,15 +314,15 @@ export default function BookingPage() {
                 <div className={`rounded-full ${step === 3 ? "w-2 h-2 bg-majestic-gold" : "w-1.5 h-1.5 bg-champagne-taupe"}`}></div>
               )}
             </button>
-            <span className={`text-label-caps font-label-caps ${step >= 3 ? "text-royal-navy" : "text-warm-slate"}`}>Time</span>
+            <span className={`text-label-caps font-label-caps ${step >= 3 ? "text-ink" : "text-warm-slate"}`}>Time</span>
           </div>
           <div className={`w-12 h-[1px] ${step > 3 ? "bg-royal-navy" : "bg-outline-variant"}`}></div>
 
           <div className="flex items-center gap-3">
-            <div className="w-8 h-8 rounded-full border-2 border-royal-navy flex items-center justify-center bg-surface">
+            <div className="w-8 h-8 rounded-full border-2 border-ink flex items-center justify-center bg-surface">
               <div className={`rounded-full ${step >= 4 ? "w-2 h-2 bg-majestic-gold" : "w-1.5 h-1.5 bg-champagne-taupe"}`}></div>
             </div>
-            <span className={`text-label-caps font-label-caps ${step >= 4 ? "text-royal-navy" : "text-warm-slate"}`}>Confirm</span>
+            <span className={`text-label-caps font-label-caps ${step >= 4 ? "text-ink" : "text-warm-slate"}`}>Confirm</span>
           </div>
         </div>
 
@@ -332,7 +332,7 @@ export default function BookingPage() {
             {/* Left Side: Category Navigation */}
             <aside className="md:w-1/4 w-full">
               <div className="sticky top-40 space-y-8">
-                <h2 className="text-headline-md font-headline-md text-royal-navy">Select Category</h2>
+                <h2 className="text-headline-md font-headline-md text-ink">Select Category</h2>
                 <ul className="flex flex-col gap-6">
                   {["All", "Hair", "Makeup", "Bridal", "Aesthetics", "Home Services"].map((cat) => {
                     const isActive = selectedCategory === cat;
@@ -341,7 +341,7 @@ export default function BookingPage() {
                         <button
                           onClick={() => setSelectedCategory(cat)}
                           className={`group flex items-center justify-between w-full text-left transition-all border-b border-champagne-taupe/20 pb-4 ${
-                            isActive ? "text-royal-navy" : "text-warm-slate hover:text-royal-navy"
+                            isActive ? "text-ink" : "text-warm-slate hover:text-ink"
                           }`}
                         >
                           <span className={`text-label-caps font-label-caps ${isActive ? "text-majestic-gold" : ""}`}>
@@ -355,12 +355,12 @@ export default function BookingPage() {
                     );
                   })}
                 </ul>
-                <div className="mt-12 p-6 border border-champagne-taupe/30 bg-alabaster-white">
-                  <p className="text-body-bold font-body-bold text-royal-navy mb-2">Need Assistance?</p>
+                <div className="mt-12 p-6 border border-champagne-taupe/30 bg-surface-alt">
+                  <p className="text-body-bold font-body-bold text-ink mb-2">Need Assistance?</p>
                   <p className="text-body-base font-body-base text-warm-slate text-sm mb-4">
                     Our concierge is available for bespoke bridal consultations and academy inquiries.
                   </p>
-                  <a className="text-label-caps font-label-caps text-royal-navy underline decoration-majestic-gold underline-offset-4" href="#">
+                  <a className="text-label-caps font-label-caps text-ink underline decoration-majestic-gold underline-offset-4" href="#">
                     Contact Us
                   </a>
                 </div>
@@ -376,9 +376,9 @@ export default function BookingPage() {
                     <div
                       key={service.id}
                       onClick={() => handleSelectService(service)}
-                      className={`bg-white border p-8 flex flex-col group cursor-pointer transition-colors duration-300 ${
+                      className={`bg-card border p-8 flex flex-col group cursor-pointer transition-colors duration-300 ${
                         isSelected
-                          ? "border-majestic-gold ring-1 ring-majestic-gold bg-alabaster-white/20"
+                          ? "border-majestic-gold ring-1 ring-majestic-gold bg-surface-alt/20"
                           : "border-surface-variant hover:border-majestic-gold"
                       }`}
                     >
@@ -386,11 +386,11 @@ export default function BookingPage() {
                         <span className="text-label-caps font-label-caps text-champagne-taupe uppercase">
                           {service.duration}
                         </span>
-                        <span className="text-body-bold font-body-bold text-royal-navy">
+                        <span className="text-body-bold font-body-bold text-ink">
                           {service.price}
                         </span>
                       </div>
-                      <h3 className="text-headline-md font-headline-md text-royal-navy mb-4 group-hover:text-majestic-gold transition-colors">
+                      <h3 className="text-headline-md font-headline-md text-ink mb-4 group-hover:text-majestic-gold transition-colors">
                         {service.name}
                       </h3>
                       <p className="text-body-base font-body-base text-warm-slate mb-8 flex-grow">
@@ -441,7 +441,7 @@ export default function BookingPage() {
                           className={`w-full py-4 text-label-caps font-label-caps transition-all ${
                             isBridalBespokeSelected
                               ? "bg-premium-green text-white border border-premium-green"
-                              : "bg-majestic-gold text-royal-navy hover:bg-white"
+                              : "bg-majestic-gold text-royal-navy hover:bg-card"
                           }`}
                         >
                           {isBridalBespokeSelected ? "Selected Couture Package" : "Enquire Today"}
@@ -476,7 +476,7 @@ export default function BookingPage() {
             {/* Filter Sidebar */}
             <aside className="md:col-span-3 space-y-8 sticky top-28">
               <div>
-                <h3 className="text-[12px] leading-[16px] tracking-[0.15em] font-bold font-label-caps text-royal-navy mb-4 border-b border-champagne-taupe/30 pb-2 uppercase">
+                <h3 className="text-[12px] leading-[16px] tracking-[0.15em] font-bold font-label-caps text-ink mb-4 border-b border-champagne-taupe/30 pb-2 uppercase">
                   Specialization
                 </h3>
                 <div className="space-y-3">
@@ -486,9 +486,9 @@ export default function BookingPage() {
                         type="checkbox"
                         checked={selectedSpecializations.includes(spec)}
                         onChange={() => toggleSpecialization(spec)}
-                        className="form-checkbox w-4 h-4 text-royal-navy border-champagne-taupe rounded-sm focus:ring-majestic-gold cursor-pointer"
+                        className="form-checkbox w-4 h-4 text-ink border-champagne-taupe rounded-sm focus:ring-majestic-gold cursor-pointer"
                       />
-                      <span className="text-[14px] font-[family-name:var(--font-montserrat)] text-warm-slate group-hover:text-royal-navy transition-colors">
+                      <span className="text-[14px] font-[family-name:var(--font-montserrat)] text-warm-slate group-hover:text-ink transition-colors">
                         {spec}
                       </span>
                     </label>
@@ -496,14 +496,14 @@ export default function BookingPage() {
                 </div>
               </div>
 
-              <div className="p-6 bg-alabaster-white border border-champagne-taupe/20">
-                <h4 className="text-[12px] leading-[16px] tracking-[0.15em] font-bold font-label-caps text-royal-navy mb-2 uppercase">
+              <div className="p-6 bg-surface-alt border border-champagne-taupe/20">
+                <h4 className="text-[12px] leading-[16px] tracking-[0.15em] font-bold font-label-caps text-ink mb-2 uppercase">
                   Need Guidance?
                 </h4>
                 <p className="text-[13px] leading-relaxed text-warm-slate mb-4">
                   Unsure who best fits your hair goals? Take our 2-minute Artisan Matchmaker quiz.
                 </p>
-                <button className="w-full py-2 border border-royal-navy text-royal-navy text-[12px] font-bold tracking-[0.1em] font-label-caps uppercase hover:bg-royal-navy hover:text-white transition-all">
+                <button className="w-full py-2 border border-ink text-ink text-[12px] font-bold tracking-[0.1em] font-label-caps uppercase hover:bg-royal-navy hover:text-white transition-all">
                   Start Quiz
                 </button>
               </div>
@@ -518,13 +518,13 @@ export default function BookingPage() {
                     <div
                       key={artist.id}
                       onClick={() => setSelectedArtist(artist)}
-                      className={`artist-card group relative bg-white border p-6 transition-all duration-500 cursor-pointer hover:-translate-y-1 ${
+                      className={`artist-card group relative bg-card border p-6 transition-all duration-500 cursor-pointer hover:-translate-y-1 ${
                         isSelected
-                          ? "border-majestic-gold bg-alabaster-white"
+                          ? "border-majestic-gold bg-surface-alt"
                           : "border-surface-variant hover:border-majestic-gold"
                       }`}
                     >
-                      <div className="aspect-[4/5] overflow-hidden mb-6 bg-alabaster-white relative">
+                      <div className="aspect-[4/5] overflow-hidden mb-6 bg-surface-alt relative">
                         <Image
                           src={artist.image}
                           alt={artist.name}
@@ -538,7 +538,7 @@ export default function BookingPage() {
                         <span className="text-[12px] font-bold font-label-caps tracking-[0.15em] text-champagne-taupe uppercase">
                           {artist.role}
                         </span>
-                        <h3 className="font-[family-name:var(--font-eb-garamond)] text-[24px] md:text-[28px] font-semibold text-royal-navy leading-tight">
+                        <h3 className="font-[family-name:var(--font-eb-garamond)] text-[24px] md:text-[28px] font-semibold text-ink leading-tight">
                           {artist.name}
                         </h3>
                         <p className="font-[family-name:var(--font-montserrat)] text-[14px] leading-[22px] text-warm-slate italic line-clamp-2">
@@ -553,13 +553,13 @@ export default function BookingPage() {
                           >
                             star
                           </span>
-                          <span className="text-[11px] font-bold tracking-[0.1em] font-label-caps text-royal-navy">
+                          <span className="text-[11px] font-bold tracking-[0.1em] font-label-caps text-ink">
                             {artist.rating} ({artist.reviews})
                           </span>
                         </div>
                         <button
                           className={`text-[12px] font-bold font-label-caps tracking-[0.1em] uppercase transition-all flex items-center gap-2 ${
-                            isSelected ? "text-premium-green font-semibold" : "text-royal-navy group-hover:text-majestic-gold"
+                            isSelected ? "text-premium-green font-semibold" : "text-ink group-hover:text-majestic-gold"
                           }`}
                         >
                           {isSelected ? (
@@ -586,7 +586,7 @@ export default function BookingPage() {
               <div className="flex justify-between items-center pt-6">
                 <button
                   onClick={handlePrevStep}
-                  className="flex items-center gap-2 px-6 py-3 font-bold font-label-caps text-[12px] tracking-[0.1em] uppercase border border-royal-navy text-royal-navy hover:bg-royal-navy hover:text-white transition-all"
+                  className="flex items-center gap-2 px-6 py-3 font-bold font-label-caps text-[12px] tracking-[0.1em] uppercase border border-ink text-ink hover:bg-royal-navy hover:text-white transition-all"
                 >
                   <span className="material-symbols-outlined text-[16px]">arrow_back</span> Back
                 </button>
@@ -608,14 +608,14 @@ export default function BookingPage() {
 
         {/* STEP 3: SCHEDULE RESERVE */}
         {step === 3 && (
-          <div className="max-w-4xl mx-auto bg-white border border-surface-variant p-6 md:p-10 shadow-sm">
-            <h3 className="font-[family-name:var(--font-eb-garamond)] text-[28px] text-royal-navy font-bold mb-6 pb-2 border-b border-champagne-taupe/20">
+          <div className="max-w-4xl mx-auto bg-card border border-surface-variant p-6 md:p-10 shadow-sm">
+            <h3 className="font-[family-name:var(--font-eb-garamond)] text-[28px] text-ink font-bold mb-6 pb-2 border-b border-champagne-taupe/20">
               Select Appointment Slot
             </h3>
 
             {/* Date and time — one control, live availability */}
             <div className="mb-10">
-              <span className="text-[12px] font-bold font-label-caps tracking-[0.15em] text-royal-navy block mb-4 uppercase">
+              <span className="text-[12px] font-bold font-label-caps tracking-[0.15em] text-ink block mb-4 uppercase">
                 Choose a date and time
               </span>
 
@@ -639,7 +639,7 @@ export default function BookingPage() {
             <div className="flex justify-between items-center pt-4">
               <button
                 onClick={handlePrevStep}
-                className="flex items-center gap-2 px-6 py-3 font-bold font-label-caps text-[12px] tracking-[0.1em] uppercase border border-royal-navy text-royal-navy hover:bg-royal-navy hover:text-white transition-all"
+                className="flex items-center gap-2 px-6 py-3 font-bold font-label-caps text-[12px] tracking-[0.1em] uppercase border border-ink text-ink hover:bg-royal-navy hover:text-white transition-all"
               >
                 <span className="material-symbols-outlined text-[16px]">arrow_back</span> Back
               </button>
@@ -662,27 +662,27 @@ export default function BookingPage() {
         {step === 4 && (
           <div className="grid grid-cols-1 md:grid-cols-12 gap-gutter-desktop items-start">
             {/* Left: Booking Summary */}
-            <div className="md:col-span-5 bg-white border border-[#EBEBEB] p-10 relative overflow-hidden">
-              <div className="absolute top-0 right-0 w-32 h-32 bg-alabaster-white -mr-16 -mt-16 rotate-45"></div>
-              <h2 className="font-headline-md text-headline-md text-royal-navy mb-8">Booking Summary</h2>
+            <div className="md:col-span-5 bg-card border border-surface-container-high p-10 relative overflow-hidden">
+              <div className="absolute top-0 right-0 w-32 h-32 bg-surface-alt -mr-16 -mt-16 rotate-45"></div>
+              <h2 className="font-headline-md text-headline-md text-ink mb-8">Booking Summary</h2>
               
               <div className="space-y-8 relative z-10">
                 <div className="group">
                   <p className="text-label-caps font-label-caps text-champagne-taupe mb-2">SERVICE</p>
-                  <p className="font-body-bold text-body-bold text-royal-navy">
+                  <p className="font-body-bold text-body-bold text-ink">
                     {isBridalBespokeSelected ? "Bespoke Bridal Styling & Trial" : selectedService?.name}
                   </p>
                   <p className="text-body-base text-warm-slate mt-1">
                     {isBridalBespokeSelected ? "120 Minutes" : selectedService?.duration} • {isBridalBespokeSelected ? "$250.00" : selectedService?.price}
                   </p>
-                  <div className="h-[1px] bg-gradient-to-r from-[#8E7A5A] to-transparent mt-4 w-1/4 group-hover:w-full transition-all duration-500"></div>
+                  <div className="h-[1px] bg-gradient-to-r from-champagne-taupe to-transparent mt-4 w-1/4 group-hover:w-full transition-all duration-500"></div>
                 </div>
 
                 <div className="group">
                   <p className="text-label-caps font-label-caps text-champagne-taupe mb-2">ARTIST</p>
                   <div className="flex items-center gap-4">
                     {selectedArtist && (
-                      <div className="relative w-12 h-12 rounded-full overflow-hidden border border-[#EBEBEB]">
+                      <div className="relative w-12 h-12 rounded-full overflow-hidden border border-surface-container-high">
                         <Image
                           className="object-cover"
                           src={selectedArtist.image}
@@ -693,27 +693,27 @@ export default function BookingPage() {
                       </div>
                     )}
                     <div>
-                      <p className="font-body-bold text-body-bold text-royal-navy">{selectedArtist?.name}</p>
+                      <p className="font-body-bold text-body-bold text-ink">{selectedArtist?.name}</p>
                       <p className="text-body-base text-warm-slate">{selectedArtist?.role}</p>
                     </div>
                   </div>
-                  <div className="h-[1px] bg-gradient-to-r from-[#8E7A5A] to-transparent mt-4 w-1/4 group-hover:w-full transition-all duration-500"></div>
+                  <div className="h-[1px] bg-gradient-to-r from-champagne-taupe to-transparent mt-4 w-1/4 group-hover:w-full transition-all duration-500"></div>
                 </div>
 
                 <div className="group">
                   <p className="text-label-caps font-label-caps text-champagne-taupe mb-2">DATE &amp; TIME</p>
-                  <p className="font-body-bold text-body-bold text-royal-navy">
+                  <p className="font-body-bold text-body-bold text-ink">
                     {activeDateLabel || selectedDate}
                   </p>
                   <p className="text-body-base text-warm-slate mt-1">
                     {selectedTimeSlot ? formatSlot(selectedTimeSlot) : ""}
                   </p>
-                  <div className="h-[1px] bg-gradient-to-r from-[#8E7A5A] to-transparent mt-4 w-1/4 group-hover:w-full transition-all duration-500"></div>
+                  <div className="h-[1px] bg-gradient-to-r from-champagne-taupe to-transparent mt-4 w-1/4 group-hover:w-full transition-all duration-500"></div>
                 </div>
 
                 <div className="group">
                   <p className="text-label-caps font-label-caps text-champagne-taupe mb-2">LOCATION</p>
-                  <p className="font-body-bold text-body-bold text-royal-navy">
+                  <p className="font-body-bold text-body-bold text-ink">
                     {selectedService?.category === "Home Services" ? "Home Visit" : "Erniekay Flagship Salon"}
                   </p>
                   <p className="text-body-base text-warm-slate mt-1">
@@ -721,14 +721,14 @@ export default function BookingPage() {
                       ? (address ? address : "Address required in next step")
                       : "128 Luxury Plaza, Victoria Island, Lagos"}
                   </p>
-                  <div className="h-[1px] bg-gradient-to-r from-[#8E7A5A] to-transparent mt-4 w-1/4 group-hover:w-full transition-all duration-500"></div>
+                  <div className="h-[1px] bg-gradient-to-r from-champagne-taupe to-transparent mt-4 w-1/4 group-hover:w-full transition-all duration-500"></div>
                 </div>
               </div>
 
-              <div className="mt-12 pt-8 border-t border-[#EBEBEB] flex justify-between items-end">
+              <div className="mt-12 pt-8 border-t border-surface-container-high flex justify-between items-end">
                 <div>
                   <p className="text-label-caps font-label-caps text-warm-slate">ESTIMATED TOTAL</p>
-                  <p className="font-headline-md text-headline-md text-royal-navy">
+                  <p className="font-headline-md text-headline-md text-ink">
                     {isBridalBespokeSelected ? "$250.00" : selectedService?.price}
                   </p>
                 </div>
@@ -739,8 +739,8 @@ export default function BookingPage() {
             </div>
 
             {/* Right: Customer Info Form */}
-            <div className="md:col-span-7 bg-white border border-[#EBEBEB] p-10">
-              <h2 className="font-headline-md text-headline-md text-royal-navy mb-4">Personal Information</h2>
+            <div className="md:col-span-7 bg-card border border-surface-container-high p-10">
+              <h2 className="font-headline-md text-headline-md text-ink mb-4">Personal Information</h2>
               <p className="text-body-base text-warm-slate mb-10">
                 Please provide your details to finalize the appointment. Your information is handled with the utmost discretion.
               </p>
@@ -753,7 +753,7 @@ export default function BookingPage() {
                       required
                       value={fullName}
                       onChange={(e) => setFullName(e.target.value)}
-                      className="w-full bg-white border-b border-champagne-taupe py-4 font-body-base text-royal-navy placeholder:text-[#D1D1D1] focus:outline-none focus:border-b-royal-navy"
+                      className="w-full bg-card border-b border-champagne-taupe py-4 font-body-base text-ink placeholder:text-outline/60 focus:outline-none focus:border-b-ink"
                       placeholder="e.g. Adanna Okoro"
                       type="text"
                     />
@@ -764,7 +764,7 @@ export default function BookingPage() {
                       required
                       value={email}
                       onChange={(e) => setEmail(e.target.value)}
-                      className="w-full bg-white border-b border-champagne-taupe py-4 font-body-base text-royal-navy placeholder:text-[#D1D1D1] focus:outline-none focus:border-b-royal-navy"
+                      className="w-full bg-card border-b border-champagne-taupe py-4 font-body-base text-ink placeholder:text-outline/60 focus:outline-none focus:border-b-ink"
                       placeholder="adanna.okoro@example.com"
                       type="email"
                     />
@@ -778,14 +778,14 @@ export default function BookingPage() {
                       required
                       value={phone}
                       onChange={(e) => setPhone(e.target.value)}
-                      className="w-full bg-white border-b border-champagne-taupe py-4 font-body-base text-royal-navy placeholder:text-[#D1D1D1] focus:outline-none focus:border-b-royal-navy"
+                      className="w-full bg-card border-b border-champagne-taupe py-4 font-body-base text-ink placeholder:text-outline/60 focus:outline-none focus:border-b-ink"
                       placeholder="+234 --- --- ----"
                       type="tel"
                     />
                   </div>
                   <div className="relative">
                     <label className="text-label-caps font-label-caps text-champagne-taupe absolute -top-4 left-0">Service Type</label>
-                    <div className="w-full bg-white border-b border-champagne-taupe py-4 font-body-base text-royal-navy">
+                    <div className="w-full bg-card border-b border-champagne-taupe py-4 font-body-base text-ink">
                       Selected: {isBridalBespokeSelected ? "Bridal Styling Suite" : selectedService?.name}
                     </div>
                   </div>
@@ -798,7 +798,7 @@ export default function BookingPage() {
                       required
                       value={address}
                       onChange={(e) => setAddress(e.target.value)}
-                      className="w-full bg-white border-b border-champagne-taupe py-4 font-body-base text-royal-navy placeholder:text-[#D1D1D1] focus:outline-none focus:border-b-royal-navy"
+                      className="w-full bg-card border-b border-champagne-taupe py-4 font-body-base text-ink placeholder:text-outline/60 focus:outline-none focus:border-b-ink"
                       placeholder="Enter your full residential address"
                       type="text"
                     />
@@ -810,7 +810,7 @@ export default function BookingPage() {
                   <textarea
                     value={notes}
                     onChange={(e) => setNotes(e.target.value)}
-                    className="w-full bg-white border-b border-champagne-taupe py-4 font-body-base text-royal-navy placeholder:text-[#D1D1D1] resize-none focus:outline-none focus:border-b-royal-navy"
+                    className="w-full bg-card border-b border-champagne-taupe py-4 font-body-base text-ink placeholder:text-outline/60 resize-none focus:outline-none focus:border-b-ink"
                     placeholder="Share any specific requests or hair concerns with your stylist..."
                     rows={3}
                   ></textarea>
@@ -821,12 +821,12 @@ export default function BookingPage() {
                     required
                     checked={agreeTerms}
                     onChange={(e) => setAgreeTerms(e.target.checked)}
-                    className="mt-1 border-champagne-taupe rounded-sm text-royal-navy focus:ring-royal-navy cursor-pointer"
+                    className="mt-1 border-champagne-taupe rounded-sm text-ink focus:ring-ink cursor-pointer"
                     id="terms"
                     type="checkbox"
                   />
                   <label className="text-body-base text-warm-slate text-sm cursor-pointer" htmlFor="terms">
-                    I agree to the <a className="text-royal-navy underline font-body-bold" href="#">Terms of Service</a> and acknowledge the 24-hour cancellation policy.
+                    I agree to the <a className="text-ink underline font-body-bold" href="#">Terms of Service</a> and acknowledge the 24-hour cancellation policy.
                   </label>
                 </div>
 
@@ -834,7 +834,7 @@ export default function BookingPage() {
                   <button
                     onClick={handlePrevStep}
                     type="button"
-                    className="text-label-caps font-label-caps text-warm-slate hover:text-royal-navy flex items-center gap-2 group transition-colors"
+                    className="text-label-caps font-label-caps text-warm-slate hover:text-ink flex items-center gap-2 group transition-colors"
                   >
                     <span className="material-symbols-outlined group-hover:-translate-x-1 transition-transform">arrow_back</span>
                     Back to Calendar
@@ -854,7 +854,7 @@ export default function BookingPage() {
 
         {/* STEP 5: SUCCESS / CONFIRMATION RECEIPT */}
         {step === 5 && (
-          <div className="max-w-2xl mx-auto bg-white border border-majestic-gold p-8 md:p-12 text-center shadow-lg space-y-8">
+          <div className="max-w-2xl mx-auto bg-card border border-majestic-gold p-8 md:p-12 text-center shadow-lg space-y-8">
             <div className="w-16 h-16 rounded-full bg-premium-green/10 border border-premium-green flex items-center justify-center mx-auto text-premium-green">
               <span className="material-symbols-outlined text-[36px]" style={{ fontVariationSettings: "'FILL' 1" }}>
                 check_circle
@@ -865,7 +865,7 @@ export default function BookingPage() {
               <span className="text-[12px] font-bold font-label-caps tracking-[0.2em] text-champagne-taupe uppercase block">
                 Reservation Confirmed
               </span>
-              <h2 className="font-[family-name:var(--font-eb-garamond)] text-[32px] md:text-[40px] text-royal-navy font-bold">
+              <h2 className="font-[family-name:var(--font-eb-garamond)] text-[32px] md:text-[40px] text-ink font-bold">
                 Your Luxury Ritual is Locked
               </h2>
               <p className="text-warm-slate text-[15px] font-[family-name:var(--font-montserrat)] leading-[24px]">
@@ -874,35 +874,35 @@ export default function BookingPage() {
             </div>
 
             {/* Invoice card */}
-            <div className="border border-champagne-taupe/20 bg-alabaster-white/50 p-6 text-left space-y-4">
-              <h4 className="text-[12px] font-bold font-label-caps tracking-[0.15em] text-royal-navy border-b border-champagne-taupe/20 pb-2 uppercase">
+            <div className="border border-champagne-taupe/20 bg-surface-alt/50 p-6 text-left space-y-4">
+              <h4 className="text-[12px] font-bold font-label-caps tracking-[0.15em] text-ink border-b border-champagne-taupe/20 pb-2 uppercase">
                 Reservation Receipt Details
               </h4>
               <div className="space-y-2 text-[14px] font-[family-name:var(--font-montserrat)] text-warm-slate">
                 <div className="flex justify-between">
                   <span>Guest Name</span>
-                  <span className="font-bold text-royal-navy">{fullName}</span>
+                  <span className="font-bold text-ink">{fullName}</span>
                 </div>
                 <div className="flex justify-between">
                   <span>Selected Service</span>
-                  <span className="font-bold text-royal-navy">
+                  <span className="font-bold text-ink">
                     {isBridalBespokeSelected ? "Bespoke Bridal Styling & Trial" : selectedService?.name}
                   </span>
                 </div>
                 <div className="flex justify-between">
                   <span>Specialist Artisan</span>
-                  <span className="font-bold text-royal-navy">{selectedArtist?.name}</span>
+                  <span className="font-bold text-ink">{selectedArtist?.name}</span>
                 </div>
                 <div className="flex justify-between">
                   <span>Date &amp; Time</span>
-                  <span className="font-semibold text-royal-navy">
+                  <span className="font-semibold text-ink">
                     {activeDateLabel || selectedDate}
                     {selectedTimeSlot ? ` at ${formatSlot(selectedTimeSlot)}` : ""}
                   </span>
                 </div>
                 <div className="flex justify-between border-t border-dashed border-champagne-taupe/30 pt-3 text-[16px]">
-                  <span className="font-bold text-royal-navy">Total Est. Price</span>
-                  <span className="font-bold text-royal-navy">
+                  <span className="font-bold text-ink">Total Est. Price</span>
+                  <span className="font-bold text-ink">
                     {isBridalBespokeSelected ? "$250.00" : selectedService?.price}
                   </span>
                 </div>
@@ -913,7 +913,7 @@ export default function BookingPage() {
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
               <Link
                 href="/"
-                className="px-8 py-3 text-royal-navy border border-royal-navy font-bold font-label-caps text-[12px] tracking-[0.1em] uppercase hover:bg-royal-navy hover:text-white transition-all text-center"
+                className="px-8 py-3 text-ink border border-ink font-bold font-label-caps text-[12px] tracking-[0.1em] uppercase hover:bg-royal-navy hover:text-white transition-all text-center"
               >
                 Return to Salon
               </Link>

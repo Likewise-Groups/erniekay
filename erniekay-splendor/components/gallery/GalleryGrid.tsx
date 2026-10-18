@@ -41,7 +41,7 @@ const galleryItems: GalleryItem[] = [
   { id: "br-2", type: "image", src: "/makeup5.jpg", category: "bridal", displayCategory: "Bridal Excellence", title: "Traditional Splendor", alt: "Traditional bridal makeup and gele.", aspectClass: "aspect-[3/4]" },
 
   // ── Salon (Hair · Nails · Skin) ─────────────────────────
-  { id: "sl-hair", type: "video", src: "/hair.MOV", category: "salon", displayCategory: "Salon Artistry", title: "Hair Artistry", alt: "Couture hair styling session.", aspectClass: "aspect-[3/4]" },
+  { id: "sl-hair", type: "video", src: "/hair.mp4", category: "salon", displayCategory: "Salon Artistry", title: "Hair Artistry", alt: "Couture hair styling session.", aspectClass: "aspect-[3/4]" },
   { id: "sl-n1", type: "video", src: "/nail%20service.mp4",   category: "salon", displayCategory: "Nail Couture", title: "Nail Couture",     alt: "Luxury nail service.", aspectClass: "aspect-[3/4]" },
   { id: "sl-n2", type: "video", src: "/nail%20service%202.mp4", category: "salon", displayCategory: "Nail Couture", title: "Gel Perfection", alt: "Gel nail application.", aspectClass: "aspect-[3/4]" },
   { id: "sl-n3", type: "video", src: "/nail%20service%203.mp4", category: "salon", displayCategory: "Nail Couture", title: "Sculpted Tips",  alt: "Sculpted nail tips.", aspectClass: "aspect-[3/4]" },

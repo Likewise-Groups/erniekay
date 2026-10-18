@@ -4,7 +4,7 @@ import React, { useMemo, useState } from "react";
 
 import BookingCalendar from "@/components/BookingCalendar";
 import { formatLongDate, formatSlot } from "@/lib/availability";
-import { subServiceRows, type ServiceCategory, type SubService } from "@/lib/serviceCatalog";
+import { depositFor, priceLabel, subServiceRows, type ServiceCategory, type SubService } from "@/lib/serviceCatalog";
 
 export type { ServiceCategory, SubService };
 
@@ -12,6 +12,12 @@ type BookingModalProps = {
   isOpen: boolean;
   onClose: () => void;
   category: ServiceCategory | null;
+  /**
+   * Name of the sub-service the customer clicked. The modal opens with it
+   * selected and leads with it, rather than repeating the whole list the page
+   * has just shown. Read on mount only: remount (e.g. via `key`) to change it.
+   */
+  initialService?: string;
 };
 
 type PaymentMethod = "momo" | "card";
@@ -67,9 +73,14 @@ const formatPriceRange = (price: string | number): string => {
 // lib/availability.ts now — they were previously declared here and, differently
 // again, in the /booking wizard.
 
-export default function BookingModal({ isOpen, onClose, category }: BookingModalProps) {
+export default function BookingModal({ isOpen, onClose, category, initialService }: BookingModalProps) {
   const [step, setStep] = useState<ModalStep>("services");
-  const [selectedSubServices, setSelectedSubServices] = useState<SubService[]>([]);
+  const focusService = initialService
+    ? category?.subServices.find((sub) => sub.name === initialService)
+    : undefined;
+  const [selectedSubServices, setSelectedSubServices] = useState<SubService[]>(
+    focusService ? [focusService] : []
+  );
   /** Chosen tier per tiered sub-service, keyed by the parent's name. */
   const [tierChoices, setTierChoices] = useState<Record<string, SubService>>({});
   /** Follow-up answers, keyed by `${sub.name}:${question.id}`. */
@@ -78,6 +89,7 @@ export default function BookingModal({ isOpen, onClose, category }: BookingModal
     name: "",
     email: "",
     phone: "",
+    address: "",
     date: "",
     time: "",
     notes: "",
@@ -129,7 +141,17 @@ export default function BookingModal({ isOpen, onClose, category }: BookingModal
       (!sub.tiers || tierChoices[sub.name]) &&
       (sub.questions ?? []).every((question) => answers[`${sub.name}:${question.id}`])
   );
-  const canContinueToPayment = formData.name && formData.email && formData.phone && formData.date && formData.time;
+  const isHomeService = Boolean(category.homeService);
+  // What is charged now. The server applies the same rule; this is the quote.
+  const dueNow = depositFor(category, totalPrice);
+  const hasDeposit = dueNow < totalPrice;
+  const canContinueToPayment =
+    formData.name &&
+    formData.email &&
+    formData.phone &&
+    formData.date &&
+    formData.time &&
+    (!isHomeService || formData.address.trim());
   const canContinue =
     step === "services"
       ? selectedSubServices.length > 0
@@ -139,10 +161,10 @@ export default function BookingModal({ isOpen, onClose, category }: BookingModal
 
   const reset = () => {
     setStep("services");
-    setSelectedSubServices([]);
+    setSelectedSubServices(focusService ? [focusService] : []);
     setTierChoices({});
     setAnswers({});
-    setFormData({ name: "", email: "", phone: "", date: "", time: "", notes: "" });
+    setFormData({ name: "", email: "", phone: "", address: "", date: "", time: "", notes: "" });
     setPaymentMethod("momo");
     setIsSubmitting(false);
     setError("");
@@ -181,6 +203,7 @@ export default function BookingModal({ isOpen, onClose, category }: BookingModal
         fullName: formData.name,
         email: formData.email,
         phone: formData.phone,
+        address: isHomeService ? formData.address.trim() : undefined,
         serviceId: category.id,
         serviceName: category.title,
         category: category.title,
@@ -379,50 +402,105 @@ export default function BookingModal({ isOpen, onClose, category }: BookingModal
 
           {step === "services" && (
             <div>
-              <h3 className="font-headline-md text-headline-md text-ink">Choose your services</h3>
+              <h3 className="font-headline-md text-headline-md text-ink">
+                {focusService ? "Your appointment" : "Choose your services"}
+              </h3>
               {category.note && (
                 <p className="mt-4 border-l-2 border-majestic-gold bg-majestic-gold/10 px-4 py-3 text-sm text-ink">
                   <span className="font-body-bold">Please note: </span>
                   {category.note}
                 </p>
               )}
-              <div className="mt-5 grid gap-3">
-                {subServiceRows(category.subServices).map((row) => {
-                  if (row.kind === "heading") {
-                    return (
-                      <p
-                        key={row.key}
-                        className="text-label-caps font-label-caps mt-3 text-warm-slate first:mt-0"
-                      >
-                        {row.title}
+              {focusService ? (
+                <>
+                  <p className="mt-5 text-label-caps font-label-caps text-champagne-taupe">Your selection</p>
+                  <div className="mt-3 border border-majestic-gold bg-majestic-gold/10 p-5 md:p-6">
+                    <div className="flex items-start justify-between gap-4">
+                      <h4 className="font-headline-md text-[26px] leading-[32px] text-ink md:text-[30px] md:leading-[36px]">
+                        {focusService.label ?? focusService.name}
+                      </h4>
+                      <span className="whitespace-nowrap pt-1 font-body-bold text-lg text-ink">{priceLabel(focusService)}</span>
+                    </div>
+                    {focusService.description && (
+                      <p className="mt-3 text-sm leading-6 text-warm-slate">{focusService.description}</p>
+                    )}
+                    {needsOptions(focusService) && (
+                      <p className="mt-3 flex items-center gap-2 text-sm text-ink">
+                        <span className="material-symbols-outlined text-[18px] text-champagne-taupe">tune</span>
+                        You&apos;ll choose your options on the next step.
                       </p>
-                    );
-                  }
+                    )}
+                  </div>
 
-                  const { sub } = row;
-                  const selected = selectedSubServices.some((service) => service.name === sub.name);
+                  {category.subServices.length > 1 && (
+                    <div className="mt-8">
+                      <p className="text-label-caps font-label-caps text-warm-slate">
+                        Add to your visit <span className="normal-case tracking-normal">(optional)</span>
+                      </p>
+                      <div className="mt-3 divide-y divide-outline-variant border-y border-outline-variant">
+                        {category.subServices
+                          .filter((sub) => sub.name !== focusService.name)
+                          .map((sub) => {
+                            const selected = selectedSubServices.some((service) => service.name === sub.name);
+                            return (
+                              <button
+                                key={sub.name}
+                                type="button"
+                                aria-pressed={selected}
+                                onClick={() => toggleSubService(sub)}
+                                className="flex w-full items-center justify-between gap-4 py-3 text-left transition-colors hover:bg-majestic-gold/5"
+                              >
+                                <span className="flex items-center gap-3">
+                                  <span className={`flex h-5 w-5 items-center justify-center border ${selected ? "border-majestic-gold bg-majestic-gold" : "border-outline"}`}>
+                                    {selected && <span className="material-symbols-outlined text-[14px] text-royal-navy">check</span>}
+                                  </span>
+                                  <span className="text-sm text-ink">{sub.label ?? sub.name}</span>
+                                </span>
+                                <span className="whitespace-nowrap text-sm font-body-bold text-ink">{priceLabel(sub)}</span>
+                              </button>
+                            );
+                          })}
+                      </div>
+                    </div>
+                  )}
+                </>
+              ) : (
+                <div className="mt-5 grid gap-3">
+                  {subServiceRows(category.subServices).map((row) => {
+                    if (row.kind === "heading") {
+                      return (
+                        <p
+                          key={row.key}
+                          className="text-label-caps font-label-caps mt-3 text-warm-slate first:mt-0"
+                        >
+                          {row.title}
+                        </p>
+                      );
+                    }
 
-                  return (
-                    <button
-                      key={row.key}
-                      onClick={() => toggleSubService(sub)}
-                      className={`flex min-h-[72px] items-center justify-between border px-4 py-3 text-left transition-all ${
-                        selected ? "border-majestic-gold bg-majestic-gold/10" : "border-outline-variant hover:border-ink"
-                      }`}
-                    >
-                      <span className="flex items-center gap-3">
-                        <span className={`flex h-6 w-6 items-center justify-center border ${selected ? "border-majestic-gold bg-majestic-gold" : "border-outline"}`}>
-                          {selected && <span className="material-symbols-outlined text-[16px] text-ink">check</span>}
+                    const { sub } = row;
+                    const selected = selectedSubServices.some((service) => service.name === sub.name);
+
+                    return (
+                      <button
+                        key={row.key}
+                        onClick={() => toggleSubService(sub)}
+                        className={`flex min-h-[72px] items-center justify-between border px-4 py-3 text-left transition-all ${
+                          selected ? "border-majestic-gold bg-majestic-gold/10" : "border-outline-variant hover:border-ink"
+                        }`}
+                      >
+                        <span className="flex items-center gap-3">
+                          <span className={`flex h-6 w-6 items-center justify-center border ${selected ? "border-majestic-gold bg-majestic-gold" : "border-outline"}`}>
+                            {selected && <span className="material-symbols-outlined text-[16px] text-royal-navy">check</span>}
+                          </span>
+                          <span className="font-body-bold text-ink">{row.label}</span>
                         </span>
-                        <span className="font-body-bold text-ink">{row.label}</span>
-                      </span>
-                      <span className="font-body-bold text-ink">
-                        {sub.tiers ? `From ${currency.format(parsePrice(sub.price))}` : currency.format(parsePrice(sub.price))}
-                      </span>
-                    </button>
-                  );
-                })}
-              </div>
+                        <span className="font-body-bold text-ink">{priceLabel(sub)}</span>
+                      </button>
+                    );
+                  })}
+                </div>
+              )}
             </div>
           )}
 
@@ -511,6 +589,20 @@ export default function BookingModal({ isOpen, onClose, category }: BookingModal
                 <input required value={formData.name} onChange={(e) => setFormData({ ...formData, name: e.target.value })} placeholder="Full name" className="border border-outline-variant px-4 py-3 font-body-base" />
                 <input required value={formData.email} onChange={(e) => setFormData({ ...formData, email: e.target.value })} placeholder="Email address" type="email" className="border border-outline-variant px-4 py-3 font-body-base" />
                 <input required value={formData.phone} onChange={(e) => setFormData({ ...formData, phone: e.target.value })} placeholder="MTN MoMo phone number" type="tel" className="border border-outline-variant px-4 py-3 font-body-base" />
+                {isHomeService && (
+                  <div className="md:col-span-2">
+                    <input
+                      required
+                      value={formData.address}
+                      onChange={(e) => setFormData({ ...formData, address: e.target.value })}
+                      placeholder="Home service address (area, street, landmark)"
+                      className="w-full border border-outline-variant px-4 py-3 font-body-base"
+                    />
+                    <p className="mt-2 text-xs text-warm-slate">
+                      Prices include transport within Kumasi. Locations outside Kumasi may attract an extra travel charge.
+                    </p>
+                  </div>
+                )}
                 <div className="md:col-span-2">
                   <span className="mb-2 block text-[11px] font-bold uppercase tracking-[0.12em] text-ink">
                     Appointment
@@ -575,8 +667,23 @@ export default function BookingModal({ isOpen, onClose, category }: BookingModal
                 <div className="mt-5 border-t border-outline-variant pt-4">
                   <div className="flex justify-between">
                     <span className="font-body-bold text-ink">Total</span>
-                    <span className="font-headline-md text-2xl text-ink">{currency.format(totalPrice)}</span>
+                    <span className={hasDeposit ? "font-body-bold text-ink" : "font-headline-md text-2xl text-ink"}>
+                      {currency.format(totalPrice)}
+                    </span>
                   </div>
+                  {hasDeposit && (
+                    <>
+                      <div className="mt-3 flex justify-between">
+                        <span className="font-body-bold text-ink">
+                          Deposit now ({Math.round((category.depositRate ?? 1) * 100)}%)
+                        </span>
+                        <span className="font-headline-md text-2xl text-ink">{currency.format(dueNow)}</span>
+                      </div>
+                      <p className="mt-2 text-xs text-warm-slate">
+                        Balance of {currency.format(totalPrice - dueNow)} is paid at your appointment.
+                      </p>
+                    </>
+                  )}
                 </div>
               </div>
             </div>
@@ -657,14 +764,19 @@ export default function BookingModal({ isOpen, onClose, category }: BookingModal
                   </span>
                 </div>
                 <div className="flex justify-between pt-3">
-                  <span className="font-body-bold text-ink">Total</span>
+                  <span className="font-body-bold text-ink">{hasDeposit ? "Deposit" : "Total"}</span>
                   {/* The server's figure, not the browser's — this is what was
                       actually charged. They agree today; if they ever diverge,
                       the customer should see the authoritative one. */}
                   <span className="font-headline-md text-2xl text-ink">
-                    {currency.format(bookingResult.amountDue || totalPrice)}
+                    {currency.format(bookingResult.amountDue || dueNow)}
                   </span>
                 </div>
+                {hasDeposit && (
+                  <p className="pt-2 text-right text-xs text-warm-slate">
+                    Balance of {currency.format(totalPrice - (bookingResult.amountDue || dueNow))} due at your appointment.
+                  </p>
+                )}
               </div>
             </div>
           )}

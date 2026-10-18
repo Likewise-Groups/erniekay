@@ -101,11 +101,30 @@ export async function POST(req: Request) {
     // means "not priced here" — such a booking can never be auto-confirmed,
     // because no payment can cover a price we never computed.
     const catalogueCategory = getCategory(normalizedServiceId);
+
+    // Home service is performed at the client's address; without one the
+    // booking cannot be carried out, so refuse it rather than take a deposit.
+    if (catalogueCategory?.homeService && !String(address ?? "").trim()) {
+      return NextResponse.json({ error: "Please enter the address for your home service." }, { status: 400 });
+    }
+
+    // amountDue is what MoMo is asked for and what a payment must cover to
+    // confirm the booking: the deposit for categories that take one. The full
+    // price is kept alongside it for the Service row and the staff notes.
     let amountDue = 0;
+    let fullPrice = 0;
+    const pricingNotes: string[] = [];
 
     if (catalogueCategory && selection.length) {
       try {
-        amountDue = priceSelection(normalizedServiceId, selection).total;
+        const priced = priceSelection(normalizedServiceId, selection);
+        amountDue = priced.dueNow;
+        fullPrice = priced.total;
+        if (priced.dueNow < priced.total) {
+          pricingNotes.push(
+            `Total: GHS ${priced.total} | Deposit due now: GHS ${priced.dueNow} | Balance at appointment: GHS ${priced.total - priced.dueNow}`,
+          );
+        }
       } catch (pricingError) {
         // Selection did not match the catalogue. Recorded as unpriced rather
         // than guessed at; staff settle it manually.
@@ -160,7 +179,7 @@ export async function POST(req: Request) {
         name: normalizedServiceName,
         category: normalizedCategory,
         durationMinutes: 60,
-        price: amountDue,
+        price: fullPrice,
       })
       .onConflictDoNothing({ target: services.id });
 
@@ -210,7 +229,7 @@ export async function POST(req: Request) {
         .insert(appointments)
         .values({
           appointmentDate: normalizedDate,
-          notes: finalNotes,
+          notes: [finalNotes, ...pricingNotes].join("\n\n"),
           userId,
           serviceId: normalizedServiceId,
           selectedServices: JSON.stringify(selection),

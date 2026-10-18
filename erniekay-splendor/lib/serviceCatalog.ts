@@ -27,6 +27,8 @@ export type SubService = {
   group?: string;
   /** Short display text under a group heading. Falls back to `name`. */
   label?: string;
+  /** Customer-facing summary, shown on the section card and in the booking modal. */
+  description?: string;
   /**
    * Priced variants the customer must choose between. When present, the
    * sub-service itself is only a toggle in the UI: the booking carries the
@@ -52,6 +54,13 @@ export type ServiceCategory = {
   subServices: SubService[];
   /** Customer-facing caveat shown above the sub-service list when booking. */
   note?: string;
+  /** Performed at the client's address: booking requires one. */
+  homeService?: boolean;
+  /**
+   * Fraction of the price taken up front to secure the booking (0.5 = 50%).
+   * The rest is settled at the appointment. Absent means the whole price is due.
+   */
+  depositRate?: number;
 };
 
 /**
@@ -66,6 +75,16 @@ export const parsePrice = (price: string | number): number => {
   if (typeof price === "number") return price;
   const match = price.match(/\d+/);
   return match ? parseInt(match[0], 10) : 0;
+};
+
+/**
+ * How a sub-service's price is quoted to customers: "GH₵150", or "From GH₵100"
+ * when it is open-ended, a range, or set by a tier chosen later.
+ */
+export const priceLabel = (sub: Pick<SubService, "price" | "tiers">): string => {
+  const amount = `GH₵${parsePrice(sub.price).toLocaleString("en-GH")}`;
+  const variable = Boolean(sub.tiers) || (typeof sub.price === "string" && /\+|\d\D+\d/.test(sub.price));
+  return variable ? `From ${amount}` : amount;
 };
 
 export const SERVICE_CATEGORIES: ServiceCategory[] = [
@@ -219,31 +238,122 @@ export const SERVICE_CATEGORIES: ServiceCategory[] = [
     id: "nail-care",
     title: "Nail Care & Artistry",
     subServices: [
-      { name: "Artisan Manicure", price: "150" },
-      { name: "The Splendor Pedicure", price: "200" },
-      { name: "Gel Extensions (Full Set)", price: "250" },
-      { name: "Editorial Nail Art", price: "100+" },
+      {
+        name: "Artisan Manicure",
+        price: "150",
+        description: "Includes shaping, cuticle care, luxury exfoliation, and high-shine polish finish.",
+      },
+      {
+        name: "The Splendor Pedicure",
+        price: "200",
+        description:
+          "A regenerative treatment with essential oil soak, volcanic stone massage, and paraffin hydration.",
+      },
+      {
+        name: "Gel Extensions (Full Set)",
+        price: "250",
+        description:
+          "Sculpted enhancements tailored to your desired length and shape for ultimate durability and elegance.",
+      },
+      {
+        name: "Editorial Nail Art",
+        price: "100+",
+        description: "Bespoke designs, hand-painted details, and premium embellishments for a unique statement.",
+      },
     ],
   },
   {
     id: "spa-skin",
     title: "SPA & Skin Rejuvenation",
     subServices: [
-      { name: "Glow Facial", price: "150" },
-      { name: "Dermaplaning Luxe", price: "220" },
-      { name: "Red Carpet Peel", price: "275" },
+      {
+        name: "Glow Facial",
+        price: "150",
+        description:
+          "Our signature introductory skin ritual focused on hydration, lymphatic drainage, and instant radiance.",
+      },
+      {
+        name: "Dermaplaning Luxe",
+        price: "220",
+        description:
+          "Physical exfoliation combined with a specialty enzyme peel and cooling collagen mask for glass-like skin.",
+      },
+      {
+        name: "Red Carpet Peel",
+        price: "275",
+        description:
+          "Advanced chemical resurfacing with zero downtime. Perfect for prepping for a major event or gala.",
+      },
     ],
   },
   {
     id: "professional-makeup",
     title: "Professional Makeup",
     subServices: [
-      { name: "Special Occasion Makeup", price: "150" },
-      { name: "Editorial / Photoshoot", price: "250" },
-      { name: "Makeup Consultation & Class", price: "180" },
+      {
+        name: "Full Glam",
+        price: 500,
+        description: "Bold, camera-ready glam with full coverage, sculpted features and lashes.",
+      },
+      {
+        name: "Soft Glam",
+        price: 450,
+        description: "Polished and radiant, with softly defined eyes and a seamless finish.",
+      },
+      {
+        name: "Natural Glam",
+        price: 350,
+        description: "Your skin, but better: light coverage that enhances without hiding.",
+      },
+    ],
+  },
+  // ── Home service (2026 price list). Prices include transport within Kumasi.
+  {
+    id: "home-makeup",
+    title: "Home Service: Makeup",
+    homeService: true,
+    depositRate: 0.5,
+    subServices: [
+      { name: "Event Glam Makeup", price: 1500 },
+      { name: "Birthday Shoot Glam Makeup", price: 1500 },
+      { name: "Party Glam Makeup", price: 1500 },
+      { name: "Bridesmaid Makeup", price: 1000 },
+    ],
+  },
+  {
+    id: "home-hairstyling",
+    title: "Home Service: Hairstyling",
+    homeService: true,
+    depositRate: 0.5,
+    subServices: [
+      { name: "Wig Installation (Basic Styling)", price: 1200 },
+      { name: "Wig Styling Only (Curls, Straightening, etc.)", price: "800-1000" },
+      { name: "Installation & Bridal Updo Hairstyling", price: "1500-2000" },
+      { name: "Bridal Updo Hairstyling Only", price: "800-1200" },
+    ],
+  },
+  {
+    id: "home-combo",
+    title: "Home Service: Combo Packages",
+    homeService: true,
+    depositRate: 0.5,
+    subServices: [
+      { name: "Makeup + Wig Installation & Styling", price: 3000 },
+      { name: "Makeup + Hair Styling Only", price: 2500 },
+      { name: "Makeup + Basic Styling (Straight or Curl)", price: 2000 },
     ],
   },
 ];
+
+/** Categories booked at the salon, i.e. everything except home service. */
+export const SALON_CATEGORIES = SERVICE_CATEGORIES.filter((category) => !category.homeService);
+
+/**
+ * The amount taken now to secure a booking. Rounded to whole cedis, since
+ * that is what MoMo is asked for and what the customer is quoted.
+ */
+export const depositFor = (category: Pick<ServiceCategory, "depositRate">, total: number): number =>
+  category.depositRate ? Math.round(total * category.depositRate) : total;
 
 /**
  * Canonical form of a selection: NFC-normalised, trimmed, deduplicated, sorted.
@@ -322,7 +432,10 @@ export const subServicesOf = (categoryId: string): SubService[] =>
 export type PricedSelection = {
   category: ServiceCategory;
   items: { name: string; price: number }[];
+  /** Full price of the selection. */
   total: number;
+  /** What must be paid now: `total`, or the category's deposit share of it. */
+  dueNow: number;
 };
 
 /**
@@ -374,9 +487,12 @@ export function priceSelection(
     );
   }
 
+  const total = items.reduce((sum, item) => sum + item.price, 0);
+
   return {
     category,
     items,
-    total: items.reduce((sum, item) => sum + item.price, 0),
+    total,
+    dueNow: depositFor(category, total),
   };
 }

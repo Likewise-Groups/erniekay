@@ -60,6 +60,15 @@ export default function SlotMedia({
         loop
         muted
         playsInline
+        // React applies `muted` as a property after the browser has already
+        // weighed autoplay against the server HTML, so a muted-only autoplay
+        // can be refused and the video sits on a blank first frame. Mute and
+        // start it explicitly once it is in the DOM.
+        ref={(el) => {
+          if (!el) return;
+          el.muted = true;
+          if (el.paused) el.play().catch(() => {});
+        }}
         aria-label={label || undefined}
         className={className}
       />

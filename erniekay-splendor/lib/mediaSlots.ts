@@ -80,20 +80,20 @@ export const MEDIA_SLOTS: MediaSlot[] = [
   {
     id: "salon.hair.featured",
     group: "Salon — Hair",
-    label: "Featured card (mobile)",
+    label: "Featured card (not currently shown)",
     kind: "video",
-    defaultUrl: "/hair.MOV",
+    defaultUrl: "/hair.mp4",
     aspect: "4 / 5",
-    note: "Autoplays muted. Behind the “Editor's Choice · Custom Wigging” caption.",
+    note: "Unused since the Hair section redesign; the Custom Wigging card uses the Showcase slot on every screen size.",
   },
   {
     id: "salon.hair.showcase",
     group: "Salon — Hair",
-    label: "Showcase tile (desktop bento)",
+    label: "Custom Wigging card (all screens)",
     kind: "video",
-    defaultUrl: "/hair.MOV",
+    defaultUrl: "/hair.mp4",
     aspect: "1 / 2",
-    note: "Rendered at 40% opacity behind text — pick something with a calm centre.",
+    note: "Autoplays muted behind the “Editor's Choice · Custom Wigging” text, darkened towards the bottom. Portrait footage works best.",
   },
 
   // ── Salon: Nails ──────────────────────────────────────────────────────────
@@ -140,7 +140,7 @@ export const MEDIA_SLOTS: MediaSlot[] = [
   // ── Bridal: showreel ──────────────────────────────────────────────────────
   { id: "bridal.showreel.primary", group: "Bridal — Showreel", label: "Large video", kind: "video", defaultUrl: "/obremsmakeover_19-Jun-2026.mp4", aspect: "3 / 4" },
   { id: "bridal.showreel.primary-poster", group: "Bridal — Showreel", label: "Large video · poster frame", kind: "image", defaultUrl: "/makeup4.jpg", aspect: "3 / 4" },
-  { id: "bridal.showreel.secondary", group: "Bridal — Showreel", label: "Overlapping video", kind: "video", defaultUrl: "/hair.MOV", aspect: "1 / 1" },
+  { id: "bridal.showreel.secondary", group: "Bridal — Showreel", label: "Overlapping video", kind: "video", defaultUrl: "/hair.mp4", aspect: "1 / 1" },
   { id: "bridal.showreel.secondary-poster", group: "Bridal — Showreel", label: "Overlapping video · poster frame", kind: "image", defaultUrl: "/hair1.jpg", aspect: "1 / 1" },
 
   // ── Bridal: package cards ─────────────────────────────────────────────────
@@ -280,7 +280,7 @@ export const MEDIA_SLOTS: MediaSlot[] = [
   { id: "gallery.br-1", group: "Gallery — Bridal", label: "Bridal Soft Glam", kind: "image", defaultUrl: "/makeup4.jpg", aspect: "3 / 4" },
   { id: "gallery.br-2", group: "Gallery — Bridal", label: "Traditional Splendor", kind: "image", defaultUrl: "/makeup5.jpg", aspect: "3 / 4" },
 
-  { id: "gallery.sl-hair", group: "Gallery — Salon", label: "Hair Artistry", kind: "video", defaultUrl: "/hair.MOV", aspect: "3 / 4" },
+  { id: "gallery.sl-hair", group: "Gallery — Salon", label: "Hair Artistry", kind: "video", defaultUrl: "/hair.mp4", aspect: "3 / 4" },
   { id: "gallery.sl-n1", group: "Gallery — Salon", label: "Nail Couture", kind: "video", defaultUrl: "/nail%20service.mp4", aspect: "3 / 4" },
   { id: "gallery.sl-n2", group: "Gallery — Salon", label: "Gel Perfection", kind: "video", defaultUrl: "/nail%20service%202.mp4", aspect: "3 / 4" },
   { id: "gallery.sl-n3", group: "Gallery — Salon", label: "Sculpted Tips", kind: "video", defaultUrl: "/nail%20service%203.mp4", aspect: "3 / 4" },

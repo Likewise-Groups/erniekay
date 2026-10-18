@@ -167,16 +167,12 @@ export default function HairSection({ media }: { media?: MediaOverrides }) {
         <ul className="grid gap-6 md:grid-cols-2 lg:grid-cols-3 lg:gap-8">
           {/* Featured: Custom Wigging */}
           <li className="group relative min-h-[400px] overflow-hidden rounded-[28px] bg-midnight-ink text-white shadow-[0_30px_60px_-20px_rgba(17,24,68,0.45)]">
-            {/* Mobile and desktop have separate admin slots; keep honouring both. */}
-            <SlotMedia
-              media={media}
-              slot="salon.hair.featured"
-              className="absolute inset-0 h-full w-full object-cover transition-transform duration-1000 group-hover:scale-105 md:hidden"
-            />
+            {/* One element only: two copies of the same video (one CSS-hidden)
+                download in parallel and the visible one intermittently stalls. */}
             <SlotMedia
               media={media}
               slot="salon.hair.showcase"
-              className="absolute inset-0 hidden h-full w-full object-cover transition-transform duration-1000 group-hover:scale-105 md:block"
+              className="absolute inset-0 h-full w-full object-cover transition-transform duration-1000 group-hover:scale-105"
             />
             <div className="absolute inset-0 bg-gradient-to-t from-midnight-ink via-midnight-ink/60 to-midnight-ink/10" />
 

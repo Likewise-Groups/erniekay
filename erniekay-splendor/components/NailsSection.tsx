@@ -3,43 +3,16 @@
 import { useState } from "react";
 import BookingModal from "./BookingModal";
 // Prices come from the catalogue the server charges against.
-import { requireCategory } from "@/lib/serviceCatalog";
+import { priceLabel, requireCategory } from "@/lib/serviceCatalog";
 import { type MediaOverrides } from "@/lib/mediaSlots";
 import SlotMedia from "./SlotMedia";
 
-const nailServices = [
-  {
-    id: "artisan-manicure",
-    title: "Artisan Manicure",
-    price: "150",
-    description:
-      "Includes shaping, cuticle care, luxury exfoliation, and high-shine polish finish.",
-  },
-  {
-    id: "splendor-pedicure",
-    title: "The Splendor Pedicure",
-    price: "200",
-    description:
-      "A regenerative treatment with essential oil soak, volcanic stone massage, and paraffin hydration.",
-  },
-  {
-    id: "gel-extensions",
-    title: "Gel Extensions (Full Set)",
-    price: "250",
-    description:
-      "Sculpted enhancements tailored to your desired length and shape for ultimate durability and elegance.",
-  },
-  {
-    id: "editorial-nail-art",
-    title: "Editorial Nail Art",
-    price: "100+",
-    description:
-      "Bespoke designs, hand-painted details, and premium embellishments for a unique statement.",
-  },
-];
+// One modal at a time: `service` set means a card was clicked and the modal
+// leads with that service; unset is the general "Book Appointment" entry.
+type BookingIntent = { service?: string } | null;
 
 export default function NailsSection({ media }: { media?: MediaOverrides }) {
-  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [booking, setBooking] = useState<BookingIntent>(null);
 
   const categoryData = requireCategory("nail-care");
 
@@ -65,7 +38,7 @@ export default function NailsSection({ media }: { media?: MediaOverrides }) {
                 Experience our signature nail services designed to provide the ultimate in relaxation and refined beauty. Let our artisans elevate your look.
               </p>
               <button 
-                onClick={() => setIsModalOpen(true)}
+                onClick={() => setBooking({})}
                 className="inline-flex items-center gap-3 px-8 py-4 bg-royal-navy text-white font-[family-name:var(--font-montserrat)] text-[12px] tracking-[0.15em] uppercase font-bold hover:bg-majestic-gold hover:text-royal-navy transition-all duration-300 shadow-[0_10px_20px_rgba(17,24,68,0.15)] hover:shadow-[0_15px_25px_rgba(212,175,55,0.3)] hover:-translate-y-1"
               >
                 Book Appointment <span className="text-lg">→</span>
@@ -76,11 +49,12 @@ export default function NailsSection({ media }: { media?: MediaOverrides }) {
               {/* Connecting line */}
               <div className="absolute left-8 top-8 bottom-8 w-px bg-majestic-gold/20 hidden md:block" />
 
-              {nailServices.map((svc, idx) => (
-                <div 
-                  key={svc.id} 
-                  className="group relative bg-card/70 backdrop-blur-md rounded-2xl p-6 md:pl-20 border border-white shadow-[0_4px_20px_-10px_rgba(0,0,0,0.05)] hover:shadow-[0_20px_40px_-15px_rgba(212,175,55,0.15)] hover:border-majestic-gold/40 transition-all duration-500 hover:-translate-y-1 cursor-pointer overflow-hidden"
-                  onClick={() => setIsModalOpen(true)}
+              {categoryData.subServices.map((svc) => (
+                <button
+                  type="button"
+                  key={svc.name}
+                  className="group relative bg-card/70 backdrop-blur-md rounded-2xl p-6 md:pl-20 border border-white shadow-[0_4px_20px_-10px_rgba(0,0,0,0.05)] hover:shadow-[0_20px_40px_-15px_rgba(212,175,55,0.15)] hover:border-majestic-gold/40 transition-all duration-500 hover:-translate-y-1 cursor-pointer overflow-hidden text-left w-full"
+                  onClick={() => setBooking({ service: svc.name })}
                 >
                   <div className="absolute right-0 top-0 w-32 h-32 bg-majestic-gold/5 blur-2xl rounded-full translate-x-1/2 -translate-y-1/2 opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
                   
@@ -92,17 +66,17 @@ export default function NailsSection({ media }: { media?: MediaOverrides }) {
                   <div className="relative z-10">
                     <div className="flex justify-between items-start mb-2 gap-4">
                       <h4 className="font-[family-name:var(--font-eb-garamond)] text-[22px] md:text-[26px] leading-[30px] font-semibold text-ink group-hover:text-majestic-gold transition-colors duration-300">
-                        {svc.title}
+                        {svc.name}
                       </h4>
                       <span className="font-[family-name:var(--font-montserrat)] text-[14px] font-bold text-ink bg-card px-3 py-1 rounded-full border border-majestic-gold/20 shrink-0">
-                        {svc.price} GH₵
+                        {priceLabel(svc)}
                       </span>
                     </div>
                     <p className="font-[family-name:var(--font-montserrat)] text-[14px] leading-[24px] text-on-surface-variant max-w-[90%]">
                       {svc.description}
                     </p>
                   </div>
-                </div>
+                </button>
               ))}
             </div>
           </div>
@@ -150,11 +124,15 @@ export default function NailsSection({ media }: { media?: MediaOverrides }) {
         </div>
       </div>
       
-      <BookingModal 
-        isOpen={isModalOpen} 
-        onClose={() => setIsModalOpen(false)} 
-        category={categoryData} 
-      />
+      {booking && (
+        <BookingModal
+          key={booking.service ?? "all"}
+          isOpen
+          onClose={() => setBooking(null)}
+          category={categoryData}
+          initialService={booking.service}
+        />
+      )}
     </section>
   );
 }

@@ -4,15 +4,19 @@ import Image from "next/image";
 import { useState } from "react";
 import BookingModal from "./BookingModal";
 // Prices come from the catalogue the server charges against.
-import { requireCategory } from "@/lib/serviceCatalog";
+import { priceLabel, requireCategory } from "@/lib/serviceCatalog";
 import { type MediaOverrides } from "@/lib/mediaSlots";
 import SlotMedia from "./SlotMedia";
 
-const makeupServices = [
-  { id: "special-occasion", icon: "star", label: "Special Occasion Makeup", price: "150", desc: "Flawless glam tailored for your most important events." },
-  { id: "editorial", icon: "camera_enhance", label: "Editorial / Photoshoot", price: "250", desc: "High-fashion techniques that look perfect under any lighting." },
-  { id: "consultation", icon: "school", label: "Makeup Consultation & Class", price: "180", desc: "Learn signature techniques and discover products that fit your skin." },
-];
+/** Card icons by catalogue name; names, prices and descriptions come from the catalogue. */
+const makeupIcons: Record<string, string> = {
+  "Full Glam": "auto_awesome",
+  "Soft Glam": "star",
+  "Natural Glam": "spa",
+};
+
+// `service` set: a card was clicked and the modal leads with that service.
+type BookingIntent = { service?: string } | null;
 
 const gallery = [
   { src: "/makeup.jpg",  alt: "Soft glam editorial makeup look" },
@@ -23,7 +27,7 @@ const gallery = [
 ];
 
 export default function MakeupSection({ media }: { media?: MediaOverrides }) {
-  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [booking, setBooking] = useState<BookingIntent>(null);
 
   const categoryData = requireCategory("professional-makeup");
 
@@ -53,7 +57,7 @@ export default function MakeupSection({ media }: { media?: MediaOverrides }) {
               From soft glam to high-fashion editorial, our artists specialize in techniques that enhance your features and radiate confidence.
             </p>
             <button
-              onClick={() => setIsModalOpen(true)}
+              onClick={() => setBooking({})}
               className="bg-majestic-gold text-royal-navy px-8 py-4 font-[family-name:var(--font-montserrat)] text-[12px] leading-[16px] tracking-[0.15em] uppercase font-bold hover:bg-card hover:-translate-y-1 transition-all duration-300 shadow-[0_10px_20px_rgba(212,175,55,0.2)]"
             >
               Book An Artist
@@ -66,38 +70,39 @@ export default function MakeupSection({ media }: { media?: MediaOverrides }) {
           
           {/* Services List */}
           <div className="lg:col-span-5 flex flex-col gap-6">
-            {makeupServices.map((svc) => (
-              <div 
-                key={svc.id}
-                className="group relative bg-white/5 border border-white/10 rounded-3xl p-6 md:p-8 hover:bg-white/10 hover:border-majestic-gold/40 transition-all duration-500 overflow-hidden cursor-pointer"
-                onClick={() => setIsModalOpen(true)}
+            {categoryData.subServices.map((svc) => (
+              <button
+                type="button"
+                key={svc.name}
+                className="group relative bg-white/5 border border-white/10 rounded-3xl p-6 md:p-8 hover:bg-white/10 hover:border-majestic-gold/40 transition-all duration-500 overflow-hidden cursor-pointer text-left w-full"
+                onClick={() => setBooking({ service: svc.name })}
               >
                 <div className="absolute right-0 top-0 w-32 h-32 bg-majestic-gold/10 blur-2xl rounded-full translate-x-1/2 -translate-y-1/2 opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
                 
                 <div className="flex items-start justify-between mb-4 relative z-10">
                   <div className="flex items-center gap-4">
                     <div className="w-12 h-12 rounded-full bg-majestic-gold/10 flex items-center justify-center text-majestic-gold group-hover:scale-110 transition-transform duration-300">
-                      <span className="material-symbols-outlined">{svc.icon}</span>
+                      <span className="material-symbols-outlined">{makeupIcons[svc.name] ?? "brush"}</span>
                     </div>
                     <h3 className="font-[family-name:var(--font-eb-garamond)] text-[22px] md:text-[26px] font-semibold text-white group-hover:text-majestic-gold transition-colors">
-                      {svc.label}
+                      {svc.name}
                     </h3>
                   </div>
                 </div>
                 
                 <p className="font-[family-name:var(--font-montserrat)] text-[14px] leading-[24px] text-white/60 mb-6 relative z-10 pl-16">
-                  {svc.desc}
+                  {svc.description}
                 </p>
                 
                 <div className="flex items-center justify-between pl-16 relative z-10">
                   <span className="font-[family-name:var(--font-montserrat)] text-[16px] font-bold text-white">
-                    {svc.price} GH₵
+                    {priceLabel(svc)}
                   </span>
                   <span className="font-[family-name:var(--font-montserrat)] text-[12px] uppercase tracking-widest font-bold text-majestic-gold group-hover:translate-x-2 transition-transform duration-300">
                     Book →
                   </span>
                 </div>
-              </div>
+              </button>
             ))}
           </div>
 
@@ -173,11 +178,15 @@ export default function MakeupSection({ media }: { media?: MediaOverrides }) {
         </div>
       </div>
 
-      <BookingModal 
-        isOpen={isModalOpen} 
-        onClose={() => setIsModalOpen(false)} 
-        category={categoryData} 
-      />
+      {booking && (
+        <BookingModal
+          key={booking.service ?? "all"}
+          isOpen
+          onClose={() => setBooking(null)}
+          category={categoryData}
+          initialService={booking.service}
+        />
+      )}
     </section>
   );
 }

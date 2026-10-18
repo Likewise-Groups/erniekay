@@ -74,15 +74,29 @@
 /* Eyebrow */
 .eyebrow {
   display: flex;
+  flex-wrap: wrap;
   align-items: center;
-  gap: 16px;
+  column-gap: 14px;
+  row-gap: 6px;
   font-family: var(--font-montserrat), sans-serif;
-  font-size: 0.72rem;
   letter-spacing: 0.25em;
   font-weight: 700;
   text-transform: uppercase;
   color: #FFD400;
   margin-bottom: 24px;
+}
+/* Two-line lockup: the brand name leads, the tagline sits under it, a step
+   smaller and aligned with the brand text (line width 44px + 14px gap). */
+.eyebrowBrand {
+  font-size: 1.05rem;
+  letter-spacing: 0.22em;
+}
+.eyebrowTagline {
+  flex-basis: 100%;
+  padding-left: 58px;
+  font-size: 0.72rem;
+  letter-spacing: 0.3em;
+  color: rgba(255, 212, 0, 0.75);
 }
 .eyebrowLine {
   width: 44px;
@@ -284,6 +298,11 @@
     margin-left: auto;
     margin-right: auto;
   }
+  /* Centred layout: the tagline centres under the line + brand. */
+  .eyebrowTagline {
+    padding-left: 0;
+    text-align: center;
+  }
   .title {
     font-size: 3.5rem;
   }
@@ -302,6 +321,12 @@
   }
   .title {
     font-size: 2.7rem;
+  }
+  .eyebrowBrand {
+    font-size: 0.92rem;
+  }
+  .eyebrowTagline {
+    font-size: 0.66rem;
   }
   .stats {
     gap: 18px;

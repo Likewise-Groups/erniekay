@@ -34,7 +34,8 @@ export default function HeroSection({ media }: { media?: MediaOverrides }) {
         <div className={styles.textContent}>
           <div className={`${styles.eyebrow} ${styles.slideUp1}`}>
             <span className={styles.eyebrowLine} />
-            ERNIEKAY SPLENDOR · BEAUTY REDEFINED
+            <span className={styles.eyebrowBrand}>Erniekay Splendor</span>
+            <span className={styles.eyebrowTagline}>Beauty Redefined</span>
           </div>
 
           <h1 className={`${styles.title} ${styles.slideUp1}`}>

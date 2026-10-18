@@ -6,17 +6,19 @@ import Image from "next/image";
 import Link from "next/link";
 import { useCart } from "@/context/CartContext";
 import BookingModal, { ServiceCategory } from "./BookingModal";
-import { SERVICE_CATEGORIES } from "@/lib/serviceCatalog";
+import { SALON_CATEGORIES } from "@/lib/serviceCatalog";
 import ThemeToggle from "./ThemeToggle";
 
 /* Service categories for the booking modal. Sourced from lib/serviceCatalog
    so the nav cannot drift from the section pages — it previously carried its
    own copy that priced Shampooing at 120 against the section page's 200. */
-const allServiceCategories: ServiceCategory[] = SERVICE_CATEGORIES;
+// Home service has its own page and deposit terms, so it is not offered here.
+const allServiceCategories: ServiceCategory[] = SALON_CATEGORIES;
 
 const navLinks = [
   { label: "Salon Services",   href: "/" },
   { label: "Bridal Artistry",  href: "/bridal" },
+  { label: "Home Service",     href: "/home-service" },
   // { label: "Beauty Academy",   href: "/academy" },
   { label: "Gallery",          href: "/gallery" },
   { label: "About",            href: "/about" },
@@ -31,6 +33,7 @@ interface SearchItem {
 }
 
 const searchDatabase: SearchItem[] = [
+  { category: "Home Service", title: "Home Service Makeup & Hairstyling", url: "/home-service", description: "Event glam, wig installation, bridal updos and combo packages, at your doorstep in Kumasi." },
   { category: "Salon Services", title: "Editorial Hair Styling", url: "/#hair", description: "Bespoke cuts, couture balayages, blowouts, and advanced texturizing services." },
   { category: "Salon Services", title: "Bespoke Skin Rituals", url: "/#skin", description: "Advanced clinical facials, skin peels, dermaplaning, and microcurrent therapy." },
   { category: "Salon Services", title: "Precision Nails & Manicures", url: "/#nails", description: "Artistic gel extensions, structured manicures, and custom nail art designs." },
@@ -120,11 +123,11 @@ export default function Navbar() {
         `}
       >
         {/* Mobile left: hamburger + logo | Desktop left: logo */}
-        <div className="flex items-center gap-4 flex-1">
+        <div className="flex items-center gap-4 flex-1 xl:flex-none">
           {/* Hamburger â€” mobile only */}
           <button
             id="mobile-menu-trigger"
-            className="md:hidden text-ink"
+            className="xl:hidden text-ink"
             aria-label="Open menu"
             onClick={() => setMenuOpen(true)}
           >
@@ -153,13 +156,13 @@ export default function Navbar() {
         </div>
 
         {/* Desktop nav links (Center) */}
-        <div className="hidden md:flex gap-8 items-center justify-center flex-none">
+        <div className="hidden xl:flex flex-1 gap-7 items-center justify-center px-8">
           {navLinks.map((link) => (
             <Link
               key={link.label}
               href={link.href}
               onClick={() => setMenuOpen(false)}
-              className={`group relative font-[family-name:var(--font-montserrat)] text-[15px] leading-[26px] transition-colors duration-300 ${
+              className={`group relative whitespace-nowrap font-[family-name:var(--font-montserrat)] text-[14px] xl:text-[15px] leading-[26px] transition-colors duration-300 ${
                 isActive(link.href)
                   ? "text-ink font-semibold"
                   : "text-on-surface-variant hover:text-ink"
@@ -176,7 +179,7 @@ export default function Navbar() {
         </div>
 
         {/* Right: icons + Book Now (desktop) */}
-        <div className="flex items-center justify-end gap-1 md:gap-2 flex-1">
+        <div className="flex items-center justify-end gap-1 md:gap-2 flex-1 xl:flex-none">
           {/* Search Button */}
           <button
             id="nav-search"
@@ -207,7 +210,7 @@ export default function Navbar() {
           <button
             id="nav-book-now"
             onClick={() => setShowCategoryPicker(true)}
-            className="hidden md:flex ml-2 bg-royal-navy text-white px-8 py-3 rounded-full font-[family-name:var(--font-montserrat)] text-[12px] leading-[16px] tracking-[0.15em] uppercase font-bold border border-majestic-gold/60 shadow-[0_6px_20px_rgba(17,24,68,0.15)] hover:bg-majestic-gold hover:text-royal-navy hover:border-majestic-gold hover:-translate-y-0.5 hover:shadow-[0_10px_25px_rgba(212,175,55,0.3)] transition-all duration-300 active:translate-y-0 active:scale-95 items-center justify-center"
+            className="hidden lg:flex ml-2 whitespace-nowrap bg-royal-navy text-white px-6 xl:px-8 py-3 rounded-full font-[family-name:var(--font-montserrat)] text-[12px] leading-[16px] tracking-[0.15em] uppercase font-bold border border-majestic-gold/60 shadow-[0_6px_20px_rgba(17,24,68,0.15)] hover:bg-majestic-gold hover:text-royal-navy hover:border-majestic-gold hover:-translate-y-0.5 hover:shadow-[0_10px_25px_rgba(212,175,55,0.3)] transition-all duration-300 active:translate-y-0 active:scale-95 items-center justify-center"
           >
             Book Now
           </button>

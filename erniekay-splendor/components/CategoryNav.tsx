@@ -5,8 +5,8 @@ import { useState } from "react";
 const categories = [
   { label: "Hair Artistry", href: "#hair" },
   { label: "Nail Care", href: "#nails" },
-  { label: "SPA", href: "#skin" },
   { label: "Professional Makeup", href: "#makeup" },
+  { label: "SPA", href: "#skin" },
 ];
 
 export default function CategoryNav() {

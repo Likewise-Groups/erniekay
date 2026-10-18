@@ -162,9 +162,20 @@ body {
 }
 
 /* Material Symbols */
+/* Each icon is held to one glyph wide, so if the icon font is slow or blocked
+   the ligature name ("shopping_bag") is clipped instead of spilling across the
+   layout. Unlayered, so it beats Tailwind utilities: no icon sets its own width
+   or display, so nothing relies on overriding these. */
 .material-symbols-outlined {
   font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
   vertical-align: middle;
+  width: 1em;
+  overflow: hidden;
+}
+/* Until the icon font has loaded (layout.tsx adds .icons-ready), show nothing
+   rather than the first letters of each icon's name. Space is still reserved. */
+html:not(.icons-ready) .material-symbols-outlined {
+  visibility: hidden;
 }
 
 /* Nail card hover line animation */

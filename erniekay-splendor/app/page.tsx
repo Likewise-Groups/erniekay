@@ -31,8 +31,8 @@ export default async function SalonServicesPage() {
         <CategoryNav />
         <HairSection media={media} />
         <NailsSection media={media} />
-        <SkinSection media={media} />
         <MakeupSection media={media} />
+        <SkinSection media={media} />
         <CTASection />
       </main>
       <Footer />

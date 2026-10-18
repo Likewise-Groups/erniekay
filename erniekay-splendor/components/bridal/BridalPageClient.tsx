@@ -10,6 +10,7 @@ import Slideshow from "@/components/bridal/Slideshow";
 import { submitBridalInquiry } from "@/app/actions/bridal";
 import SlotMedia from "@/components/SlotMedia";
 import type { MediaOverrides } from "@/lib/mediaSlots";
+import { ACADEMY_URL } from "@/lib/site";
 
 export default function BridalPageClient({ media }: { media?: MediaOverrides }) {
   const [fullName, setFullName] = useState("");
@@ -649,9 +650,11 @@ export default function BridalPageClient({ media }: { media?: MediaOverrides }) 
             <Link className="font-label-caps text-alabaster-white opacity-70 hover:text-majestic-gold hover:opacity-100 transition-all" href="#">
               The Salon
             </Link>
-            <Link className="font-label-caps text-alabaster-white opacity-70 hover:text-majestic-gold hover:opacity-100 transition-all" href="/academy">
-              The Academy
-            </Link>
+            {ACADEMY_URL && (
+              <Link className="font-label-caps text-alabaster-white opacity-70 hover:text-majestic-gold hover:opacity-100 transition-all" href={ACADEMY_URL}>
+                The Academy
+              </Link>
+            )}
             <Link className="font-label-caps text-majestic-gold underline decoration-1 underline-offset-4" href="/bridal">
               Bridal Rituals
             </Link>

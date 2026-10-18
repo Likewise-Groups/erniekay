@@ -1,11 +1,12 @@
 import Link from "next/link";
+import { ACADEMY_URL, withHref } from "@/lib/site";
 
-const quickLinks = [
+const quickLinks = withHref([
   { label: "Salon Services", href: "#" },
   { label: "Bridal Artistry", href: "#" },
-  { label: "Beauty Academy", href: "#" },
+  { label: "Beauty Academy", href: ACADEMY_URL },
   { label: "Career Opportunities", href: "#" },
-];
+]);
 
 const policyLinks = [
   { label: "Privacy Policy", href: "#" },

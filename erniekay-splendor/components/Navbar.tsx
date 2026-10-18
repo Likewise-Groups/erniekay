@@ -8,6 +8,7 @@ import { useCart } from "@/context/CartContext";
 import BookingModal, { ServiceCategory } from "./BookingModal";
 import { SALON_CATEGORIES } from "@/lib/serviceCatalog";
 import ThemeToggle from "./ThemeToggle";
+import { ACADEMY_URL } from "@/lib/site";
 
 /* Service categories for the booking modal. Sourced from lib/serviceCatalog
    so the nav cannot drift from the section pages — it previously carried its
@@ -19,7 +20,7 @@ const navLinks = [
   { label: "Salon Services",   href: "/" },
   { label: "Bridal Artistry",  href: "/bridal" },
   { label: "Home Service",     href: "/home-service" },
-  // { label: "Beauty Academy",   href: "/academy" },
+  // The academy is its own site now (see lib/site.ts); linked from the footers.
   { label: "Gallery",          href: "/gallery" },
   { label: "About",            href: "/about" },
   { label: "Shop",             href: "/shop" },
@@ -39,8 +40,13 @@ const searchDatabase: SearchItem[] = [
   { category: "Salon Services", title: "Precision Nails & Manicures", url: "/#nails", description: "Artistic gel extensions, structured manicures, and custom nail art designs." },
   { category: "Salon Services", title: "High-Definition Makeup Artistry", url: "/#makeup", description: "Editorial makeup applications, event styling, and face-sculpting." },
   { category: "Bridal Artistry", title: "Luxury Bridal Styling Packages", url: "/bridal", description: "Full-day wedding styling support, trial sessions, and bride/bridal party makeup packages." },
-  { category: "Beauty Academy", title: "Bridal Artistry Masterclass", url: "/academy", description: "Learn bridal prep, high-fashion styling, and advanced skincare integration." },
-  { category: "Beauty Academy", title: "Editorial Hair Sculpting Course", url: "/academy", description: "Hands-on certificate course for professional hair cutting, sectioning, and styling." },
+  // Academy courses live on the academy site; only searchable once it has an address.
+  ...(ACADEMY_URL
+    ? [
+        { category: "Beauty Academy", title: "Bridal Artistry Masterclass", url: ACADEMY_URL, description: "Learn bridal prep, high-fashion styling, and advanced skincare integration." },
+        { category: "Beauty Academy", title: "Editorial Hair Sculpting Course", url: ACADEMY_URL, description: "Hands-on certificate course for professional hair cutting, sectioning, and styling." },
+      ]
+    : []),
   { category: "Luxury Shop", title: "Editorial Styling Serum", url: "/shop", description: "Ultra-lightweight shine serum designed for studio photography and daily protection." },
   { category: "Luxury Shop", title: "Botanical Skin Essence", url: "/shop", description: "Nourishing hydration tonic containing clinical humectants and rose distillate." },
   { category: "Luxury Shop", title: "Professional Makeup Brush Set", url: "/shop", description: "Twelve synthetic fibers designed specifically for seamless airbrushed-finish blending." },

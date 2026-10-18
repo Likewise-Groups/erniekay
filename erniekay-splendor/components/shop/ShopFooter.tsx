@@ -1,10 +1,11 @@
 import Link from "next/link";
+import { ACADEMY_URL, withHref } from "@/lib/site";
 
-const experience = [
+const experience = withHref([
   { label: "Salon Services",   href: "/" },
   { label: "Bridal Artistry",  href: "/bridal" },
-  { label: "Beauty Academy",   href: "/academy" },
-];
+  { label: "Beauty Academy",   href: ACADEMY_URL },
+]);
 
 const company = [
   { label: "Privacy Policy",  href: "#" },

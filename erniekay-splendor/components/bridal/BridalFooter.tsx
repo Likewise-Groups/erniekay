@@ -1,18 +1,19 @@
 import Link from "next/link";
+import { ACADEMY_URL, withHref } from "@/lib/site";
 
-const services = [
+const services = withHref([
   { label: "Bridal Packages", href: "/bridal" },
-  { label: "Academy Courses", href: "/academy" },
+  { label: "Academy Courses", href: ACADEMY_URL },
   { label: "Editorial Styling", href: "#" },
   { label: "Salon Bookings", href: "/" },
-];
+]);
 
-const resources = [
+const resources = withHref([
   { label: "Bridal Guide", href: "#" },
-  { label: "Academy Enrollment", href: "/academy" },
+  { label: "Academy Enrollment", href: ACADEMY_URL },
   { label: "Privacy Policy", href: "#" },
   { label: "Terms of Service", href: "#" },
-];
+]);
 
 export default function BridalFooter() {
   return (
